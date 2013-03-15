@@ -1,0 +1,5 @@
+connect
+/subsystem=security/security-domain=overlord-idp:add(cache-type=default)
+/subsystem=security/security-domain=overlord-idp/authentication=classic:add(login-modules=[{"code"=>"UsersRoles","flag"=>"required","module-options"=>[("usersProperties"=>"${jboss.server.config.dir}/overlord-idp-users.properties"),("rolesProperties"=>"${jboss.server.config.dir}/overlord-idp-roles.properties")]}])
+:reload
+:reload
