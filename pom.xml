@@ -92,6 +92,7 @@
 
   <modules>
   <module>overlord-commons-idp</module>
+  <module>overlord-commons-auth</module>
   </modules>
 
   <build>
