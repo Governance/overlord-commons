@@ -31,6 +31,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.jacc.PolicyContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 
@@ -39,12 +40,13 @@ import org.jboss.security.SimpleGroup;
 import org.jboss.security.auth.spi.AbstractServerLoginModule;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.parsers.saml.SAMLAssertionParser;
-import org.picketlink.identity.federation.core.saml.v2.util.AssertionUtil;
+import org.picketlink.identity.federation.core.saml.v2.util.XMLTimeUtil;
 import org.picketlink.identity.federation.saml.v2.assertion.AssertionType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType.ASTChoiceType;
 import org.picketlink.identity.federation.saml.v2.assertion.AudienceRestrictionType;
 import org.picketlink.identity.federation.saml.v2.assertion.ConditionAbstractType;
+import org.picketlink.identity.federation.saml.v2.assertion.ConditionsType;
 import org.picketlink.identity.federation.saml.v2.assertion.NameIDType;
 import org.picketlink.identity.federation.saml.v2.assertion.StatementAbstractType;
 import org.picketlink.identity.federation.saml.v2.assertion.SubjectType;
@@ -142,7 +144,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
         // Possibly fail the assertion based on issuer.
         String issuer = assertion.getIssuer().getValue();
         if (!issuer.equals(expectedIssuer)) {
-            throw new LoginException("Unexpected SAML Assertion Issuer: " + issuer);
+            throw new LoginException("Unexpected SAML Assertion Issuer: " + issuer + " Expected: " + expectedIssuer);
         }
 
         // Possibly fail the assertion based on audience restriction
@@ -155,8 +157,18 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
 
         // Possibly fail the assertion based on time.
         try {
-            if (AssertionUtil.hasExpired(assertion)) {
-                throw new LoginException("SAML Assertion not valid (most likely it has expired).");
+            ConditionsType conditionsType = assertion.getConditions();
+            if (conditionsType != null) {
+                XMLGregorianCalendar now = XMLTimeUtil.getIssueInstant();
+                XMLGregorianCalendar notBefore = conditionsType.getNotBefore();
+                XMLGregorianCalendar notOnOrAfter = conditionsType.getNotOnOrAfter();
+                if (!XMLTimeUtil.isValid(now, notBefore, notOnOrAfter)) {
+                    String msg = "SAML Assertion has expired: " +
+                            "Now=" + now.toXMLFormat() + " ::notBefore=" + notBefore.toXMLFormat() + " ::notOnOrAfter=" + notOnOrAfter;
+                    throw new LoginException(msg);
+                }
+            } else {
+                throw new LoginException("SAML Assertion not valid (no Conditions supplied).");
             }
         } catch (ConfigurationException e) {
             // should never happen - see AssertionUtil.hasExpired code for why
