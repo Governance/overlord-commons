@@ -74,7 +74,7 @@ import org.picketlink.identity.federation.saml.v2.assertion.SubjectType;
 public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
 
     /** Configured in standalone.xml in the login module */
-    private String expectedIssuer;
+    private Set<String> allowedIssuers = new HashSet<String>();
 
     private Principal identity;
     private Set<String> roles = new HashSet<String>();
@@ -92,7 +92,14 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
             Map<String, ?> options) {
         super.initialize(subject, callbackHandler, sharedState, options);
-        expectedIssuer = (String) options.get("expectedIssuer");
+        String val = (String) options.get("allowedIssuers");
+        if (val != null) {
+            String [] split = val.split(",");
+            for (String issuer : split) {
+                if (issuer != null && issuer.trim().length() > 0)
+                    allowedIssuers.add(issuer);
+            }
+        }
     }
 
     /**
@@ -143,8 +150,8 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     private void validateAssertion(AssertionType assertion, HttpServletRequest request) throws LoginException {
         // Possibly fail the assertion based on issuer.
         String issuer = assertion.getIssuer().getValue();
-        if (!issuer.equals(expectedIssuer)) {
-            throw new LoginException("Unexpected SAML Assertion Issuer: " + issuer + " Expected: " + expectedIssuer);
+        if (!allowedIssuers.contains(issuer)) {
+            throw new LoginException("Dis-allowed SAML Assertion Issuer: " + issuer + " Allowed: " + allowedIssuers);
         }
 
         // Possibly fail the assertion based on audience restriction
