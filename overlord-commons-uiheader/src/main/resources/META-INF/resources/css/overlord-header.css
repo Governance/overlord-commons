@@ -24,6 +24,103 @@
   color: #777;
   text-shadow: 0 1px 0 white;
 }
+#overlord-header .overlord-navbar .overlord-navbar-tabs {
+  float: left;
+  height: 72px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab {
+  float: left;
+  height: 72px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .component {
+  height: 72px;
+  float: left;
+  background-position: top left;
+  background-repeat: no-repeat;
+}
+/* Center tabs, not selected  */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .left {
+  background-image: url("overlord-header-images/tabs/Middle_Left_Normal.png");
+  width: 19px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .middle {
+  background-image: url("overlord-header-images/tabs/Middle_Middle_Normal.png");
+  background-repeat: repeat-x;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .right {
+  background-image: url("overlord-header-images/tabs/Middle_Right_Normal.png");
+  width: 19px;
+}
+/* First tab, not selected */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .left {
+  background-image: url("overlord-header-images/tabs/LeftCap_Left_Normal.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .middle {
+  background-image: url("overlord-header-images/tabs/LeftCap_Middle_Normal.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .right {
+  background-image: url("overlord-header-images/tabs/LeftCap_Right_Normal.png");
+}
+/* Last tab, not selected */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .left {
+  background-image: url("overlord-header-images/tabs/RightCap_Left_Normal.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .middle {
+  background-image: url("overlord-header-images/tabs/RightCap_Middle_Normal.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .right {
+  background-image: url("overlord-header-images/tabs/RightCap_Right_Normal.png");
+}
+/* Center tabs, selected  */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .left {
+  background-image: url("overlord-header-images/tabs/Middle_Left_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .middle {
+  background-image: url("overlord-header-images/tabs/Middle_Middle_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .right {
+  background-image: url("overlord-header-images/tabs/Middle_Right_Selected.png");
+}
+/* First tab, selected */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .left {
+  background-image: url("overlord-header-images/tabs/LeftCap_Left_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .middle {
+  background-image: url("overlord-header-images/tabs/LeftCap_Middle_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .right {
+  background-image: url("overlord-header-images/tabs/LeftCap_Right_Selected.png");
+}
+/* Last tab, selected */
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .left {
+  background-image: url("overlord-header-images/tabs/RightCap_Left_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .middle {
+  background-image: url("overlord-header-images/tabs/RightCap_Middle_Selected.png");
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .right {
+  background-image: url("overlord-header-images/tabs/RightCap_Right_Selected.png");
+}
+
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab a {
+  color: #dde;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0px 1px #666;
+  margin-top: 46px;
+  float: left;
+  display: block;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab a:hover {
+  color: #eec
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active a {
+  color: #444;
+  text-shadow: 0px 1px #fff;
+}
+#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active a:hover {
+  text-decoration: none;
+}
 #overlord-header .overlord-nav-shadowman {
   background-image: url("overlord-header-images/navbar-shadowman.png");
   width: 56px;
@@ -92,6 +189,12 @@
   text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.2);
   background-color: rgb(0, 136, 204);
 }
+
+
+/* ----------------------------------------
+ * Responsive stylings begin here.
+ * ----------------------------------------
+ */
 
 /* Desktop */
 @media ( min-width : 768px) {

@@ -2,28 +2,29 @@ var OVERLORD_HEADER_DATA_DEFAULTS = {
   "username" : "uname",
   "logoutLink" : "?GLO=true",
   "tabs" : [
-	  { "label":"S-RAMP", "href":"/s-ramp-ui", "active":true },
-	  { "label":"DTGov", "href":"/dtgov", "active":false },
-	  { "label":"RTGov", "href":"/rtgov", "active":false }
+      { "label":"DTGov", "href":"/dtgov", "active":false },
+      { "label":"RTGov", "href":"/rtgov", "active":false },
+      { "label":"S-RAMP", "href":"/s-ramp-ui", "active":false },
+      { "label":"Gadget Server", "href":"/gadget-server", "active":true }
   ]
 };
 
 var OVERLORD_HEADER_TEMPLATE = '\
 <div class="overlord-navbar">\
   <div class="overlord-navbar-inner">\
-    <div class="">\
-      <a class="brand">JBoss - Overlord</a>\
-      <div class="overlord-desktop-only">\
-        <div class="overlord-nav-shadowman"></div>\
-        <div class="overlord-nav-user">\
-          <span class="overlord-nav-username overlord-header-username"></span>\
-          <span> &raquo; </span>\
-          <a href="#" class="overlord-nav-logout">logout</a>\
-        </div>\
+    <a class="brand">JBoss - Overlord</a>\
+    <div class="overlord-desktop-only">\
+      <div class="overlord-navbar-tabs">\
       </div>\
-      <div class="overlord-mobile-only overlord-nav-mobile">\
-        <a class="">Menu</a>\
+      <div class="overlord-nav-shadowman"></div>\
+      <div class="overlord-nav-user">\
+        <span class="overlord-nav-username overlord-header-username"></span>\
+        <span> &raquo; </span>\
+        <a href="#" class="overlord-nav-logout">logout</a>\
       </div>\
+    </div>\
+    <div class="overlord-mobile-only overlord-nav-mobile">\
+      <a class="">Menu</a>\
     </div>\
   </div>\
 </div>\
@@ -35,25 +36,76 @@ var OVERLORD_HEADER_TEMPLATE = '\
   </ul>\
 </div>\
 ';
+
+/**
+ * Creates the markup needed for a link in the mobile section of the
+ * header.
+ * @param tab
+ * @returns {String}
+ */
+function ovl_createMobileLinkHtml(tab) {
+    var tabClass = '';
+    if (tab.active) {
+        tabClass = 'active';
+    }
+    return '<li class="'+tabClass+'"><a href="'+tab.href+'">'+tab.label+'</a></li>';
+}
+
+/**
+ * Creates the markup needed for a tab in the desktop only navigation
+ * section of the header.
+ * @param tab
+ * @param index
+ * @param numTabs
+ */
+function ovl_createNavigationTab(tab, index, numTabs) {
+    var tabClasses = 'overlord-navbar-tab';
+    if (index == 0) {
+        tabClasses += " overlord-navbar-tab-first";
+    }
+    if (index == (numTabs-1)) {
+        tabClasses += " overlord-navbar-tab-last";
+    }
+    if (tab.active) {
+        tabClasses += " active";
+    }
+    return '<div class="'+tabClasses+'">\
+         <div class="left component"></div>\
+         <div class="middle component">\
+           <a href="'+tab.href+'">'+tab.label+'</a>\
+         </div>\
+         <div class="right component"></div>\
+       </div>';
+}
+
+/**
+ * Register a function that will render the header when the page loads.  This
+ * function expects to find a div with id='overlord-header', which it will use
+ * as the container for the header.  If such a div is not present, the header
+ * will not be created.
+ */
 $(document).ready(function() {
-	var data = OVERLORD_HEADER_DATA_DEFAULTS;
-	try {
-		data = OVERLORD_HEADER_DATA;
-	} catch (e) {
-		// drop
-	}
+    var data = OVERLORD_HEADER_DATA_DEFAULTS;
+    try {
+        data = OVERLORD_HEADER_DATA;
+    } catch (e) {
+        // drop
+    }
     $('#overlord-header').html(OVERLORD_HEADER_TEMPLATE);
     $('#overlord-header .overlord-header-username').text(data.username);
     $('#overlord-header a.overlord-nav-logout').attr("href", data.logoutLink);
-    var tabs = data.tabs;
-    for (var i = data.tabs.length-1; i >= 0; i--) {
-    	var tab = data.tabs[i];
-    	var tabClass = "";
-    	if (tab.active) {
-    		tabClass = "active";
-    	}
-    	var linkHtml = '<li class="'+tabClass+'"><a href="'+tab.href+'">'+tab.label+'</a></li>';
-    	$('#overlord-header .overlord-mobile-nav .overlord-nav-list .overlord-mobile-navigation').after(linkHtml);
+    if (data.tabs) {
+        var tabs = data.tabs;
+        for (var i=0; i < data.tabs.length; i++) {
+            var tab = data.tabs[i];
+            var tabHtml = ovl_createNavigationTab(tab, i, data.tabs.length);
+            $('#overlord-header .overlord-navbar .overlord-navbar-tabs').append(tabHtml);
+        }
+        for (var i = data.tabs.length-1; i >= 0; i--) {
+            var tab = data.tabs[i];
+            var linkHtml = ovl_createMobileLinkHtml(tab);
+            $('#overlord-header .overlord-mobile-nav .overlord-nav-list .overlord-mobile-navigation').after(linkHtml);
+        }
     }
     $('#overlord-header .overlord-nav-mobile').click(function() {
         $('#overlord-header .overlord-mobile-nav').slideToggle();
