@@ -1,0 +1,144 @@
+#overlord-header .overlord-navbar {
+  background-image: url("overlord-header-images/navbar-bg.png");
+  background-repeat: repeat-x;
+  background-color: #007ca3;
+}
+#overlord-header .overlord-navbar .overlord-navbar-inner {
+  min-height: 72px;
+  background-image: url("overlord-header-images/navbar-logo.png");
+  background-repeat: no-repeat;
+  background-position: top left;
+  background-color: transparent;
+  border: none;
+}
+#overlord-header .overlord-navbar .brand {
+  text-indent: -5000px;
+  width: 215px;
+  height: 52px;
+  display: block;
+  float: left;
+  padding: 10px 20px 10px;
+  margin-left: -20px;
+  font-size: 20px;
+  font-weight: 200;
+  color: #777;
+  text-shadow: 0 1px 0 white;
+}
+#overlord-header .overlord-nav-shadowman {
+  background-image: url("overlord-header-images/navbar-shadowman.png");
+  width: 56px;
+  height: 72px;
+  float: right;
+}
+#overlord-header .overlord-nav-user {
+  margin-top: 20px;
+  color: white;
+  float: right;
+  text-shadow: 1px 1px #0079ab;
+}
+#overlord-header .overlord-nav-user a {
+  color: #a5e3fd;
+}
+#overlord-header .overlord-nav-mobile {
+  color: white;
+  margin-top: 20px;
+  margin-right: 25px;
+  background-image: url("overlord-header-images/navbar-menu-mobile.png");
+  height: 30px;
+  width: 30px;
+  text-indent: -3000px;
+  float: right;
+  cursor: pointer;
+}
+
+#overlord-header .overlord-mobile-nav {
+  display: none;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list {
+  padding: 0px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin: 0px 0px 10px 25px;
+  margin-bottom: 5px;
+  margin-left: 0px;
+  list-style: none outside none;
+  padding-bottom: 10px;
+  background-color: #d9d9d9;
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list .overlord-nav-header {
+  display: block;
+  margin-right: -15px;
+  margin-left: -15px;
+  padding: 3px 15px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 20px;
+  color: rgb(153, 153, 153);
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list li a {
+  padding: 3px 15px;
+  margin-right: -15px;
+  margin-left: -15px;
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  display: block;
+  color: rgb(0, 136, 204);
+  text-decoration: none;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list li.active a {
+  color: rgb(255, 255, 255);
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.2);
+  background-color: rgb(0, 136, 204);
+}
+
+/* Desktop */
+@media ( min-width : 768px) {
+  .overlord-mobile-only {
+    display: none !important;
+  }
+  .overlord-no-desktop {
+    display: none !important;
+  }
+
+  /* Header should be fixed for desktops */
+  body {
+    padding-top: 80px;
+    padding-bottom: 10px;
+  }
+  #overlord-header .overlord-navbar {
+    top: 0px;
+    position: fixed;
+    right: 0px;
+    left: 0px;
+    z-index: 1030;
+    margin-bottom: 0px;
+  }
+  #overlord-header .overlord-navbar .overlord-navbar-inner {
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+    padding-right: 0px;
+    padding-left: 0px;
+    border-radius: 0px 0px 0px 0px;
+  }
+  
+}
+
+/* Mobile */
+@media ( max-width : 767px) {
+  .overlord-desktop-only {
+    display: none !important;
+  }
+  .overlord-no-mobile {
+    display: none !important;
+  }
+  
+  #overlord-header .overlord-navbar {
+    margin-bottom: 0px;
+  }
+
+  body {
+    padding: 0px;
+  }
+
+}
