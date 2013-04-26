@@ -58,7 +58,25 @@ public class OverlordHeaderJSTest {
             "";
     private static final Object EXPECTED_CONTENT =
             "var OVERLORD_HEADER_DATA = {\r\n" +
-            "  \"username\" : \"ewittman\"\r\n" +
+            "  \"username\" : \"ewittman\",\r\n" +
+            "  \"logoutLink\" : \"?GLO=true\",\r\n" +
+            "  \"tabs\" : [ {\r\n" +
+            "    \"href\" : \"/dt-gov\",\r\n" +
+            "    \"label\" : \"DTGov\",\r\n" +
+            "    \"active\" : false\r\n" +
+            "  }, {\r\n" +
+            "    \"href\" : \"/rt-gov\",\r\n" +
+            "    \"label\" : \"RTGov\",\r\n" +
+            "    \"active\" : false\r\n" +
+            "  }, {\r\n" +
+            "    \"href\" : \"/gadget-server\",\r\n" +
+            "    \"label\" : \"Gadget Server\",\r\n" +
+            "    \"active\" : false\r\n" +
+            "  }, {\r\n" +
+            "    \"href\" : \"/s-ramp-ui\",\r\n" +
+            "    \"label\" : \"S-RAMP\",\r\n" +
+            "    \"active\" : true\r\n" +
+            "  } ]\r\n" +
             "};";
 
 }

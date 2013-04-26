@@ -16,7 +16,9 @@
 package org.overlord.commons.ui.header;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,6 +65,17 @@ public class OverlordHeaderDataJS extends HttpServlet {
             g.useDefaultPrettyPrinter();
             g.writeStartObject();
             g.writeStringField("username", getRemoteUser(request));
+            g.writeStringField("logoutLink", getLogoutLink(request));
+            g.writeArrayFieldStart("tabs");
+            List<TabInfo> tabs = getTabs(request);
+            for (TabInfo tabInfo : tabs) {
+                g.writeStartObject();
+                g.writeStringField("href", tabInfo.href);
+                g.writeStringField("label", tabInfo.label);
+                g.writeBooleanField("active", tabInfo.active);
+                g.writeEndObject();
+            }
+            g.writeEndArray();
             g.writeEndObject();
             g.flush();
             g.close();
@@ -81,6 +94,29 @@ public class OverlordHeaderDataJS extends HttpServlet {
     }
 
     /**
+     * Gets the configured logout link.
+     * @param request
+     */
+    private String getLogoutLink(HttpServletRequest request) {
+        // TODO get the logout link from a config file
+        return "?GLO=true";
+    }
+
+    /**
+     * Gets the tabs configured to appear in the UI.
+     * @param request
+     */
+    private List<TabInfo> getTabs(HttpServletRequest request) {
+        // TODO get tab information from a config file
+        List<TabInfo> tabs = new ArrayList<TabInfo>();
+        tabs.add(new TabInfo("/dt-gov", "DTGov", false));
+        tabs.add(new TabInfo("/rt-gov", "RTGov", false));
+        tabs.add(new TabInfo("/gadget-server", "Gadget Server", false));
+        tabs.add(new TabInfo("/s-ramp-ui", "S-RAMP", true));
+        return tabs;
+    }
+
+    /**
      * Make sure to tell the browser not to cache it.
      *
      * @param response
@@ -92,6 +128,21 @@ public class OverlordHeaderDataJS extends HttpServlet {
         response.setDateHeader("Expires", now.getTime() - 86400000L);
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+    }
+
+    /**
+     * A single tab in the UI.
+     * @author eric.wittmann@redhat.com
+     */
+    private static final class TabInfo {
+        public String href;
+        public String label;
+        public boolean active;
+        public TabInfo(String href, String label, boolean active) {
+            this.href = href;
+            this.label = label;
+            this.active = active;
+        }
     }
 
 }

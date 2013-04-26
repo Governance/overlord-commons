@@ -44,11 +44,13 @@ var OVERLORD_HEADER_TEMPLATE = '\
  * @returns {String}
  */
 function ovl_createMobileLinkHtml(tab) {
-    var tabClass = '';
+    var markup = $.parseHTML('<li><a></a></li>');
     if (tab.active) {
-        tabClass = 'active';
+        $(markup).addClass('active');
     }
-    return '<li class="'+tabClass+'"><a href="'+tab.href+'">'+tab.label+'</a></li>';
+    $(markup).find('a').attr('href', tab.href);
+    $(markup).find('a').text(tab.label);
+    return markup;
 }
 
 /**
@@ -59,23 +61,25 @@ function ovl_createMobileLinkHtml(tab) {
  * @param numTabs
  */
 function ovl_createNavigationTab(tab, index, numTabs) {
-    var tabClasses = 'overlord-navbar-tab';
+    var markup = $.parseHTML('<div class="overlord-navbar-tab">\
+            <div class="left component"></div>\
+            <div class="middle component">\
+              <a></a>\
+            </div>\
+            <div class="right component"></div>\
+          </div>');
     if (index == 0) {
-        tabClasses += " overlord-navbar-tab-first";
+        $(markup).addClass('overlord-navbar-tab-first');
     }
     if (index == (numTabs-1)) {
-        tabClasses += " overlord-navbar-tab-last";
+        $(markup).addClass('overlord-navbar-tab-last');
     }
     if (tab.active) {
-        tabClasses += " active";
+        $(markup).addClass('active');
     }
-    return '<div class="'+tabClasses+'">\
-         <div class="left component"></div>\
-         <div class="middle component">\
-           <a href="'+tab.href+'">'+tab.label+'</a>\
-         </div>\
-         <div class="right component"></div>\
-       </div>';
+    $(markup).find('a').attr('href', tab.href);
+    $(markup).find('a').text(tab.label);
+    return markup;
 }
 
 /**
@@ -96,10 +100,12 @@ $(document).ready(function() {
     $('#overlord-header a.overlord-nav-logout').attr("href", data.logoutLink);
     if (data.tabs) {
         var tabs = data.tabs;
-        for (var i=0; i < data.tabs.length; i++) {
-            var tab = data.tabs[i];
-            var tabHtml = ovl_createNavigationTab(tab, i, data.tabs.length);
-            $('#overlord-header .overlord-navbar .overlord-navbar-tabs').append(tabHtml);
+        if (tabs.length > 1) {
+            for (var i=0; i < data.tabs.length; i++) {
+                var tab = data.tabs[i];
+                var tabHtml = ovl_createNavigationTab(tab, i, data.tabs.length);
+                $('#overlord-header .overlord-navbar .overlord-navbar-tabs').append(tabHtml);
+            }
         }
         for (var i = data.tabs.length-1; i >= 0; i--) {
             var tab = data.tabs[i];
