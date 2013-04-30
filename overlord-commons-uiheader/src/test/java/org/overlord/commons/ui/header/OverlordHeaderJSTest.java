@@ -15,9 +15,11 @@
  */
 package org.overlord.commons.ui.header;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.util.Properties;
 
@@ -56,8 +58,8 @@ public class OverlordHeaderJSTest {
             String headers = response.getOutputHeadersAsString();
             String content = response.getOutputAsString();
 
-            Assert.assertEquals(EXPECTED_HEADERS, headers);
-            Assert.assertEquals(EXPECTED_CONTENT, content);
+            Assert.assertEquals(normalize(EXPECTED_HEADERS), normalize(headers));
+            Assert.assertEquals(normalize(EXPECTED_CONTENT), normalize(content));
         } finally {
             System.setProperty("org.overlord.apps.config-dir", "");
         }
@@ -97,6 +99,21 @@ public class OverlordHeaderJSTest {
         return dir;
     }
 
+    /**
+     * Normalize line endings.
+     * @param headers
+     * @throws IOException
+     */
+    private String normalize(String multiLineValue) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new StringReader(multiLineValue));
+        String line = null;
+        while ( (line = reader.readLine()) != null) {
+            builder.append(line.trim()).append("\r\n");
+        }
+        return builder.toString();
+    }
+
     private static final String EXPECTED_HEADERS =
             "Cache-control: no-cache, no-store, must-revalidate\r\n" +
             "Content-Type: text/javascript\r\n" +
@@ -104,7 +121,7 @@ public class OverlordHeaderJSTest {
             "Expires: <DATE VALUE>\r\n" +
             "Pragma: no-cache\r\n" +
             "";
-    private static final Object EXPECTED_CONTENT =
+    private static final String EXPECTED_CONTENT =
             "var OVERLORD_HEADER_DATA = {\r\n" +
             "  \"username\" : \"ewittman\",\r\n" +
             "  \"logoutLink\" : \"?GLO=true\",\r\n" +
