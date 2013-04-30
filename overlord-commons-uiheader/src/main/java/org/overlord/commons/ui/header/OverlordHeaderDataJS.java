@@ -156,7 +156,6 @@ public class OverlordHeaderDataJS extends HttpServlet {
         if (configDir == null)
             return;
 
-        @SuppressWarnings("unchecked")
         Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false);
         for (File configFile : configFiles) {
             if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties"))
