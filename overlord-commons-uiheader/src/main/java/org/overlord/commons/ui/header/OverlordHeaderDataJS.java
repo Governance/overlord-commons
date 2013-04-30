@@ -78,8 +78,8 @@ public class OverlordHeaderDataJS extends HttpServlet {
             g.writeEndArray();
             g.writeEndObject();
             g.flush();
-            g.close();
             response.getOutputStream().write(";".getBytes("UTF-8"));
+            g.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
