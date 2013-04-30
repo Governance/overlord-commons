@@ -15,9 +15,13 @@
  */
 package org.overlord.commons.ui.header;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Properties;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.junit.Assert;
@@ -39,14 +43,58 @@ public class OverlordHeaderJSTest {
     public void testDoGetHttpServletRequestHttpServletResponse() throws URISyntaxException, ServletException, IOException {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        OverlordHeaderDataJS servlet = new OverlordHeaderDataJS();
-        servlet.doGet(request, response);
+        ServletConfig config = new MockServletConfig("app-1");
 
-        String headers = response.getOutputHeadersAsString();
-        String content = response.getOutputAsString();
+        File tempConfigDir = createAndPrepConfigDir();
+        System.setProperty("org.overlord.apps.config-dir", tempConfigDir.getCanonicalPath());
 
-        Assert.assertEquals(EXPECTED_HEADERS, headers);
-        Assert.assertEquals(EXPECTED_CONTENT, content);
+        try {
+            OverlordHeaderDataJS servlet = new OverlordHeaderDataJS();
+            servlet.init(config);
+            servlet.doGet(request, response);
+
+            String headers = response.getOutputHeadersAsString();
+            String content = response.getOutputAsString();
+
+            Assert.assertEquals(EXPECTED_HEADERS, headers);
+            Assert.assertEquals(EXPECTED_CONTENT, content);
+        } finally {
+            System.setProperty("org.overlord.apps.config-dir", "");
+        }
+    }
+
+    /**
+     * @throws IOException
+     */
+    private File createAndPrepConfigDir() throws IOException {
+        File dir = File.createTempFile("_ovlunit", "configDir");
+        if (dir.isFile()) {
+            dir.delete();
+        }
+        dir.mkdirs();
+
+        File configFile1 = new File(dir, "app1-overlordapp.properties");
+        Properties props = new Properties();
+        props.setProperty("overlordapp.app-id", "app-1");
+        props.setProperty("overlordapp.href", "/app-1/index.html");
+        props.setProperty("overlordapp.label", "Application One");
+        props.store(new FileWriter(configFile1), "Overlord App 1");
+
+        File configFile2 = new File(dir, "app2-overlordapp.properties");
+        props = new Properties();
+        props.setProperty("overlordapp.app-id", "app-2");
+        props.setProperty("overlordapp.href", "/app-2/index.html");
+        props.setProperty("overlordapp.label", "Application Two");
+        props.store(new FileWriter(configFile2), "Overlord App 2");
+
+        File configFile3 = new File(dir, "app3-overlordapp.properties");
+        props = new Properties();
+        props.setProperty("overlordapp.app-id", "app-3");
+        props.setProperty("overlordapp.href", "/app-3/index.html");
+        props.setProperty("overlordapp.label", "Application Three");
+        props.store(new FileWriter(configFile3), "Overlord App 3");
+
+        return dir;
     }
 
     private static final String EXPECTED_HEADERS =
@@ -61,21 +109,20 @@ public class OverlordHeaderJSTest {
             "  \"username\" : \"ewittman\",\r\n" +
             "  \"logoutLink\" : \"?GLO=true\",\r\n" +
             "  \"tabs\" : [ {\r\n" +
-            "    \"href\" : \"/dt-gov\",\r\n" +
-            "    \"label\" : \"DTGov\",\r\n" +
-            "    \"active\" : false\r\n" +
-            "  }, {\r\n" +
-            "    \"href\" : \"/rt-gov\",\r\n" +
-            "    \"label\" : \"RTGov\",\r\n" +
-            "    \"active\" : false\r\n" +
-            "  }, {\r\n" +
-            "    \"href\" : \"/gadget-server\",\r\n" +
-            "    \"label\" : \"Gadget Server\",\r\n" +
-            "    \"active\" : false\r\n" +
-            "  }, {\r\n" +
-            "    \"href\" : \"/s-ramp-ui\",\r\n" +
-            "    \"label\" : \"S-RAMP\",\r\n" +
+            "    \"app-id\" : \"app-1\",\r\n" +
+            "    \"href\" : \"/app-1/index.html\",\r\n" +
+            "    \"label\" : \"Application One\",\r\n" +
             "    \"active\" : true\r\n" +
+            "  }, {\r\n" +
+            "    \"app-id\" : \"app-2\",\r\n" +
+            "    \"href\" : \"/app-2/index.html\",\r\n" +
+            "    \"label\" : \"Application Two\",\r\n" +
+            "    \"active\" : false\r\n" +
+            "  }, {\r\n" +
+            "    \"app-id\" : \"app-3\",\r\n" +
+            "    \"href\" : \"/app-3/index.html\",\r\n" +
+            "    \"label\" : \"Application Three\",\r\n" +
+            "    \"active\" : false\r\n" +
             "  } ]\r\n" +
             "};";
 

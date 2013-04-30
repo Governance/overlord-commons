@@ -15,16 +15,24 @@
  */
 package org.overlord.commons.ui.header;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
@@ -38,10 +46,29 @@ public class OverlordHeaderDataJS extends HttpServlet {
 
     private static final long serialVersionUID = -4982770016769892713L;
 
+    private String appId;
+    private String logoutUrl;
+
     /**
      * Constructor.
      */
     public OverlordHeaderDataJS() {
+    }
+
+    /**
+     * @see javax.servlet.GenericServlet#init()
+     */
+    @Override
+    public void init() throws ServletException {
+        ServletConfig config = getServletConfig();
+        appId = config.getInitParameter("app-id");
+        if (appId == null || appId.trim().length() == 0) {
+            throw new ServletException("Application identifier (app-id) parameter missing from Overlord Header Data JS servlet.");
+        }
+        logoutUrl = config.getInitParameter("logout-url");
+        if (logoutUrl == null || logoutUrl.trim().length() == 0) {
+            logoutUrl = "?GLO=true";
+        }
     }
 
     /**
@@ -59,6 +86,8 @@ public class OverlordHeaderDataJS extends HttpServlet {
         response.setContentType("text/javascript");
 
         try {
+            List<TabInfo> tabs = getTabs(request);
+
             response.getOutputStream().write("var OVERLORD_HEADER_DATA = ".getBytes("UTF-8"));
             JsonFactory f = new JsonFactory();
             JsonGenerator g = f.createJsonGenerator(response.getOutputStream(), JsonEncoding.UTF8);
@@ -67,9 +96,9 @@ public class OverlordHeaderDataJS extends HttpServlet {
             g.writeStringField("username", getRemoteUser(request));
             g.writeStringField("logoutLink", getLogoutLink(request));
             g.writeArrayFieldStart("tabs");
-            List<TabInfo> tabs = getTabs(request);
             for (TabInfo tabInfo : tabs) {
                 g.writeStartObject();
+                g.writeStringField("app-id", tabInfo.appId);
                 g.writeStringField("href", tabInfo.href);
                 g.writeStringField("label", tabInfo.label);
                 g.writeBooleanField("active", tabInfo.active);
@@ -81,7 +110,7 @@ public class OverlordHeaderDataJS extends HttpServlet {
             response.getOutputStream().write(";".getBytes("UTF-8"));
             g.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
     }
 
@@ -98,22 +127,93 @@ public class OverlordHeaderDataJS extends HttpServlet {
      * @param request
      */
     private String getLogoutLink(HttpServletRequest request) {
-        // TODO get the logout link from a config file
-        return "?GLO=true";
+        return logoutUrl;
     }
 
     /**
      * Gets the tabs configured to appear in the UI.
      * @param request
      */
-    private List<TabInfo> getTabs(HttpServletRequest request) {
-        // TODO get tab information from a config file
-        List<TabInfo> tabs = new ArrayList<TabInfo>();
-        tabs.add(new TabInfo("/dt-gov", "DTGov", false));
-        tabs.add(new TabInfo("/rt-gov", "RTGov", false));
-        tabs.add(new TabInfo("/gadget-server", "Gadget Server", false));
-        tabs.add(new TabInfo("/s-ramp-ui", "S-RAMP", true));
+    private List<TabInfo> getTabs(HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        @SuppressWarnings("unchecked")
+        List<TabInfo> tabs = (List<TabInfo>) session.getAttribute("overlord-tabs");
+        if (tabs == null) {
+            tabs = new ArrayList<TabInfo>();
+            getConfiguredTabs(tabs);
+            session.setAttribute("overlord-tabs", tabs);
+        }
         return tabs;
+    }
+
+    /**
+     * Reads any overlord header config files to determine which overlord applications
+     * are currently deployed/configured.
+     * @param tabs
+     */
+    private void getConfiguredTabs(List<TabInfo> tabs) throws Exception {
+        File configDir = getConfigDir();
+        if (configDir == null)
+            return;
+
+        @SuppressWarnings("unchecked")
+        Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false);
+        for (File configFile : configFiles) {
+            if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties"))
+                continue;
+            FileReader reader = new FileReader(configFile);
+            try {
+                Properties configProps = new Properties();
+                configProps.load(new FileReader(configFile));
+                String appId = configProps.getProperty("overlordapp.app-id");
+                String href = configProps.getProperty("overlordapp.href");
+                // TODO need i18n support here - need different versions of the config files for each lang?
+                String label = configProps.getProperty("overlordapp.label");
+                tabs.add(new TabInfo(appId, href, label, appId.equals(this.appId)));
+            } finally {
+                IOUtils.closeQuietly(reader);
+            }
+        }
+    }
+
+    /**
+     * Returns the directory to check for overlord-app config files.
+     */
+    private File getConfigDir() {
+        File configDir = null;
+
+        // First, check for a configured system property
+        String configDirProp = System.getProperty("org.overlord.apps.config-dir");
+        if (configDirProp != null) {
+            configDir = new File(configDirProp);
+            if (configDir.isDirectory()) {
+                return configDir;
+            }
+        }
+
+        // Next, check for JBoss
+        String jbossConfigUrl = System.getProperty("jboss.server.config.url");
+        if (jbossConfigUrl != null) {
+            File jbossConfigDir = new File(jbossConfigUrl);
+            if (jbossConfigDir.isDirectory()) {
+                configDir = new File(jbossConfigDir, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
+        String jbossDataDir = System.getProperty("jboss.server.data.dir");
+        if (jbossDataDir != null) {
+            File jbossDataDirFile = new File(jbossDataDir);
+            if (jbossDataDirFile.isDirectory()) {
+                configDir = new File(jbossDataDirFile, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -135,10 +235,12 @@ public class OverlordHeaderDataJS extends HttpServlet {
      * @author eric.wittmann@redhat.com
      */
     private static final class TabInfo {
-        public String href;
-        public String label;
-        public boolean active;
-        public TabInfo(String href, String label, boolean active) {
+        public final String appId;
+        public final String href;
+        public final String label;
+        public final boolean active;
+        public TabInfo(String appId, String href, String label, boolean active) {
+            this.appId = appId;
             this.href = href;
             this.label = label;
             this.active = active;

@@ -449,7 +449,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public HttpSession getSession() {
-        return null;
+        return new MockHttpSession();
     }
 
     /**
