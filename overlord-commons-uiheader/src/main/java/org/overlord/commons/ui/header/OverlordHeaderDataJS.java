@@ -20,9 +20,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.TreeSet;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -156,6 +158,12 @@ public class OverlordHeaderDataJS extends HttpServlet {
         if (configDir == null)
             return;
 
+        TreeSet<TabInfo> sortedTabs = new TreeSet<TabInfo>(new Comparator<TabInfo>() {
+            @Override
+            public int compare(TabInfo o1, TabInfo o2) {
+                return o1.appId.compareTo(o2.appId);
+            }
+        });
         Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false);
         for (File configFile : configFiles) {
             if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties"))
@@ -168,11 +176,13 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 String href = configProps.getProperty("overlordapp.href");
                 // TODO need i18n support here - need different versions of the config files for each lang?
                 String label = configProps.getProperty("overlordapp.label");
-                tabs.add(new TabInfo(appId, href, label, appId.equals(this.appId)));
+                sortedTabs.add(new TabInfo(appId, href, label, appId.equals(this.appId)));
             } finally {
                 IOUtils.closeQuietly(reader);
             }
         }
+
+        tabs.addAll(sortedTabs);
     }
 
     /**
