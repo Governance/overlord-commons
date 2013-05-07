@@ -4,8 +4,8 @@ var OVERLORD_HEADER_DATA_DEFAULTS = {
   "tabs" : [
       { "label":"DTGov", "href":"/dtgov", "active":false },
       { "label":"RTGov", "href":"/rtgov", "active":false },
-      { "label":"S-RAMP", "href":"/s-ramp-ui", "active":false },
-      { "label":"Gadget Server", "href":"/gadget-server", "active":true }
+      { "label":"S-RAMP", "href":"/s-ramp-ui", "active":true },
+      { "label":"Gadget Server", "href":"/gadget-server", "active":false }
   ]
 };
 
@@ -44,7 +44,7 @@ var OVERLORD_HEADER_TEMPLATE = '\
  * @returns {String}
  */
 function ovl_createMobileLinkHtml(tab) {
-    var markup = $.parseHTML('<li><a></a></li>');
+    var markup = $('<li><a></a></li>');
     if (tab.active) {
         $(markup).addClass('active');
     }
@@ -61,7 +61,7 @@ function ovl_createMobileLinkHtml(tab) {
  * @param numTabs
  */
 function ovl_createNavigationTab(tab, index, numTabs) {
-    var markup = $.parseHTML('<div class="overlord-navbar-tab">\
+    var markup = $('<div class="overlord-navbar-tab">\
             <div class="left component"></div>\
             <div class="middle component">\
               <a></a>\
