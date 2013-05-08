@@ -80,6 +80,8 @@ public class OverlordHeaderJSTest {
         props.setProperty("overlordapp.app-id", "app-1");
         props.setProperty("overlordapp.href", "/app-1/index.html");
         props.setProperty("overlordapp.label", "Application One");
+        props.setProperty("overlordapp.primary-brand", "Unit Test");
+        props.setProperty("overlordapp.secondary-brand", "App One");
         props.store(new FileWriter(configFile1), "Overlord App 1");
 
         File configFile2 = new File(dir, "app2-overlordapp.properties");
@@ -87,6 +89,8 @@ public class OverlordHeaderJSTest {
         props.setProperty("overlordapp.app-id", "app-2");
         props.setProperty("overlordapp.href", "/app-2/index.html");
         props.setProperty("overlordapp.label", "Application Two");
+        props.setProperty("overlordapp.primary-brand", "Unit Test");
+        props.setProperty("overlordapp.secondary-brand", "App Two");
         props.store(new FileWriter(configFile2), "Overlord App 2");
 
         File configFile3 = new File(dir, "app3-overlordapp.properties");
@@ -94,6 +98,8 @@ public class OverlordHeaderJSTest {
         props.setProperty("overlordapp.app-id", "app-3");
         props.setProperty("overlordapp.href", "/app-3/index.html");
         props.setProperty("overlordapp.label", "Application Three");
+        props.setProperty("overlordapp.primary-brand", "Unit Test");
+        props.setProperty("overlordapp.secondary-brand", "App Three");
         props.store(new FileWriter(configFile3), "Overlord App 3");
 
         return dir;
@@ -125,6 +131,8 @@ public class OverlordHeaderJSTest {
             "var OVERLORD_HEADER_DATA = {\r\n" +
             "  \"username\" : \"ewittman\",\r\n" +
             "  \"logoutLink\" : \"?GLO=true\",\r\n" +
+            "  \"primaryBrand\" : \"Unit Test\",\r\n" +
+            "  \"secondaryBrand\" : \"App One\",\r\n" +
             "  \"tabs\" : [ {\r\n" +
             "    \"app-id\" : \"app-1\",\r\n" +
             "    \"href\" : \"/app-1/index.html\",\r\n" +
