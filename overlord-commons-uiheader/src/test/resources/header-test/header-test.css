@@ -1,0 +1,25 @@
+/* ----------------------------------------
+ * Responsive stylings begin here.
+ * ----------------------------------------
+ */
+
+/* Desktop */
+@media ( min-width : 768px) {
+  #page-content {
+    margin-top: 10px;
+  }
+}
+
+/* Mobile */
+@media ( max-width : 767px) {
+
+  body {
+    padding: 0px;
+  }
+  
+  #page-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+}

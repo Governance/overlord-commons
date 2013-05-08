@@ -1,155 +1,131 @@
+#overlord-header {
+}
 #overlord-header .overlord-navbar {
-  background-image: url("overlord-header-images/navbar-bg.png");
-  background-repeat: repeat-x;
-  background-color: #007ca3;
+  border-top: 2px solid #cc0001;
 }
-#overlord-header .overlord-navbar .overlord-navbar-inner {
-  min-height: 72px;
-  background-image: url("overlord-header-images/navbar-logo.png");
-  background-repeat: no-repeat;
-  background-position: top left;
-  background-color: transparent;
-  border: none;
+#overlord-header .overlord-navbar .overlord-navbar-brand {
+  border-top: 1px solid #b10d0e;
+  background-color: #383f47;
+  width: 100%;
+  height: 27px;
 }
-#overlord-header .overlord-navbar .brand {
-  text-indent: -5000px;
-  width: 215px;
-  height: 52px;
+#overlord-header .overlord-navbar .overlord-navbar-brand a.brand, #overlord-header .overlord-navbar .overlord-navbar-brand a.subbrand {
+  text-transform: capitalize;
+  font-size: 15px;
+  color: white;
   display: block;
   float: left;
-  padding: 10px 20px 10px;
-  margin-left: -20px;
-  font-size: 20px;
-  font-weight: 200;
-  color: #777;
-  text-shadow: 0 1px 0 white;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs {
-  float: left;
-  height: 72px;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab {
-  float: left;
-  height: 72px;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .component {
-  height: 72px;
-  float: left;
-  background-position: top left;
-  background-repeat: no-repeat;
-}
-/* Center tabs, not selected  */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .left {
-  background-image: url("overlord-header-images/tabs/Middle_Left_Normal.png");
-  width: 19px;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .middle {
-  background-image: url("overlord-header-images/tabs/Middle_Middle_Normal.png");
-  background-repeat: repeat-x;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab .right {
-  background-image: url("overlord-header-images/tabs/Middle_Right_Normal.png");
-  width: 19px;
-}
-/* First tab, not selected */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .left {
-  background-image: url("overlord-header-images/tabs/LeftCap_Left_Normal.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .middle {
-  background-image: url("overlord-header-images/tabs/LeftCap_Middle_Normal.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first .right {
-  background-image: url("overlord-header-images/tabs/LeftCap_Right_Normal.png");
-}
-/* Last tab, not selected */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .left {
-  background-image: url("overlord-header-images/tabs/RightCap_Left_Normal.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .middle {
-  background-image: url("overlord-header-images/tabs/RightCap_Middle_Normal.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last .right {
-  background-image: url("overlord-header-images/tabs/RightCap_Right_Normal.png");
-}
-/* Center tabs, selected  */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .left {
-  background-image: url("overlord-header-images/tabs/Middle_Left_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .middle {
-  background-image: url("overlord-header-images/tabs/Middle_Middle_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active .right {
-  background-image: url("overlord-header-images/tabs/Middle_Right_Selected.png");
-}
-/* First tab, selected */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .left {
-  background-image: url("overlord-header-images/tabs/LeftCap_Left_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .middle {
-  background-image: url("overlord-header-images/tabs/LeftCap_Middle_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-first.active .right {
-  background-image: url("overlord-header-images/tabs/LeftCap_Right_Selected.png");
-}
-/* Last tab, selected */
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .left {
-  background-image: url("overlord-header-images/tabs/RightCap_Left_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .middle {
-  background-image: url("overlord-header-images/tabs/RightCap_Middle_Selected.png");
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab-last.active .right {
-  background-image: url("overlord-header-images/tabs/RightCap_Right_Selected.png");
-}
-
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab a {
-  color: #dde;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 0px 1px #666;
-  margin-top: 46px;
-  float: left;
-  display: block;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab a:hover {
-  color: #eec
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active a {
-  color: #444;
-  text-shadow: 0px 1px #fff;
-}
-#overlord-header .overlord-navbar .overlord-navbar-tabs .overlord-navbar-tab.active a:hover {
+  padding-top: 3px;
+  cursor: default;
   text-decoration: none;
 }
-#overlord-header .overlord-nav-shadowman {
-  background-image: url("overlord-header-images/navbar-shadowman.png");
-  width: 56px;
-  height: 72px;
-  float: right;
+#overlord-header .overlord-navbar .overlord-navbar-brand a.brand {
+  font-weight: bold;
+  padding-left: 20px;
 }
-#overlord-header .overlord-nav-user {
-  margin-top: 20px;
+#overlord-header .overlord-navbar .overlord-navbar-brand a.subbrand {
+  padding-left: 8px;
+}
+
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user {
+  float: right;
+  font-size: 15px;
+  border-left: 1px solid #58595d;
+  height: 24px;
+  padding-top: 3px;
+  padding-left: 28px;
+  padding-right: 8px;
+  background-image: url('overlord-header-images/user_icon.png');
+  background-position: 8px 5px;
+  background-repeat: no-repeat;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user a {
   color: white;
-  float: right;
-  text-shadow: 1px 1px #0079ab;
+  text-decoration: none;
 }
-#overlord-header .overlord-nav-user a {
-  color: #a5e3fd;
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user a:hover {
+  color: #ffd;
 }
-#overlord-header .overlord-nav-mobile {
+
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu {
+  display: none;
+  border-left: 1px solid #58595d;
+  border-top: 1px solid #58595d;
+  border-bottom: 1px solid #58595d;
+  position: absolute;
+  background-color: #3a3f45;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu ul {
+  list-style: none outside none;
+  padding: 0px;
+  margin: 0px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu ul li {
+  padding-left: 15px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-top: 3px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu ul li:hover {
+  background-color: #717479;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu ul li a {
   color: white;
-  margin-top: 20px;
-  margin-right: 25px;
-  background-image: url("overlord-header-images/navbar-menu-mobile.png");
-  height: 30px;
-  width: 30px;
-  text-indent: -3000px;
+}
+
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-mobile {
   float: right;
+  color: white;
+  font-size: 15px;
+  border-left: 1px solid #58595d;
+  height: 24px;
+  padding-top: 3px;
+  padding-left: 5px;
+  padding-right: 8px;
+  text-indent: -5000px;
   cursor: pointer;
+  width: 25px;
+  height: 24px;
+  background-image: url('overlord-header-images/mobile-menu.png');
+  background-position: 8px 4px;
+  background-repeat: no-repeat;
+}
+
+#overlord-header .overlord-navbar .overlord-navbar-nav {
+  height: 43px;
+  background-image: url('overlord-header-images/tab-normal-bg.png');
+  background-position: top left;
+  background-repeat: repeat-x;
+}
+
+#overlord-header .overlord-navbar .overlord-navbar-nav .overlord-navbar-tabs .overlord-navbar-tab {
+  float: left;
+  height: 43px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 12px;
+  color: #ddd;
+}
+#overlord-header .overlord-navbar .overlord-navbar-nav .overlord-navbar-tabs .overlord-navbar-tab.active {
+  background-image: url('overlord-header-images/tab-active-bg.png');
+  background-position: top left;
+  background-repeat: repeat-x;
+  color: white;
 }
 
 #overlord-header .overlord-mobile-nav {
   display: none;
+}
+
+#overlord-header .overlord-mobile-nav {
+  display: none;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list {
+  border-bottom: 2px solid #58595d;
 }
 #overlord-header .overlord-mobile-nav .overlord-nav-list {
   padding: 0px;
@@ -160,8 +136,7 @@
   margin-left: 0px;
   list-style: none outside none;
   padding-bottom: 10px;
-  background-color: #d9d9d9;
-  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
+  background-color: #464b4f;
 }
 #overlord-header .overlord-mobile-nav .overlord-nav-list .overlord-nav-header {
   display: block;
@@ -172,24 +147,27 @@
   font-weight: bold;
   line-height: 20px;
   color: rgb(153, 153, 153);
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 1px 0px rgba(40,40,40, 0.5);
   text-transform: uppercase;
 }
 #overlord-header .overlord-mobile-nav .overlord-nav-list li a {
   padding: 3px 15px;
   margin-right: -15px;
   margin-left: -15px;
-  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5);
+  text-shadow: 0px 1px 1px rgba(80, 80, 80, 0.5);
   display: block;
-  color: rgb(0, 136, 204);
+  color: #ddd;
   text-decoration: none;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list li a:hover {
+  color: #fff;
+  background-color: #51575c;
 }
 #overlord-header .overlord-mobile-nav .overlord-nav-list li.active a {
   color: rgb(255, 255, 255);
-  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.2);
-  background-color: rgb(0, 136, 204);
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+  background-color: #707378;
 }
-
 
 /* ----------------------------------------
  * Responsive stylings begin here.
@@ -205,26 +183,21 @@
     display: none !important;
   }
 
-  /* Header should be fixed for desktops */
-  body {
-    padding-top: 80px;
-    padding-bottom: 10px;
+  #overlord-header {
+    height: 73px;
   }
+
   #overlord-header .overlord-navbar {
     top: 0px;
-    position: fixed;
     right: 0px;
+    position: fixed;
     left: 0px;
     z-index: 1030;
     margin-bottom: 0px;
+    height: 71px;
+    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
   }
-  #overlord-header .overlord-navbar .overlord-navbar-inner {
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
-    padding-right: 0px;
-    padding-left: 0px;
-    border-radius: 0px 0px 0px 0px;
-  }
-  
+
 }
 
 /* Mobile */
@@ -235,13 +208,9 @@
   .overlord-no-mobile {
     display: none !important;
   }
-  
-  #overlord-header .overlord-navbar {
-    margin-bottom: 0px;
-  }
 
-  body {
-    padding: 0px;
+  #overlord-header .overlord-navbar {
+    border-bottom: 1px solid #58595d;
   }
 
 }

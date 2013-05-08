@@ -97,6 +97,8 @@ public class OverlordHeaderDataJS extends HttpServlet {
             g.writeStartObject();
             g.writeStringField("username", getRemoteUser(request));
             g.writeStringField("logoutLink", getLogoutLink(request));
+            g.writeStringField("primaryBrand", getPrimaryBrand(tabs));
+            g.writeStringField("secondaryBrand", getSecondaryBrand(tabs));
             g.writeArrayFieldStart("tabs");
             for (TabInfo tabInfo : tabs) {
                 g.writeStartObject();
@@ -130,6 +132,32 @@ public class OverlordHeaderDataJS extends HttpServlet {
      */
     private String getLogoutLink(HttpServletRequest request) {
         return logoutUrl;
+    }
+
+    /**
+     * Gets the primary brand from the currently active tab.
+     * @param tabs
+     */
+    private String getPrimaryBrand(List<TabInfo> tabs) {
+        for (TabInfo tabInfo : tabs) {
+            if (tabInfo.active) {
+                return tabInfo.primaryBrand;
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Gets the secondary brand from the currently active tab.
+     * @param tabs
+     */
+    private String getSecondaryBrand(List<TabInfo> tabs) {
+        for (TabInfo tabInfo : tabs) {
+            if (tabInfo.active) {
+                return tabInfo.secondaryBrand;
+            }
+        }
+        return "";
     }
 
     /**
@@ -175,8 +203,10 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 String appId = configProps.getProperty("overlordapp.app-id");
                 String href = configProps.getProperty("overlordapp.href");
                 // TODO need i18n support here - need different versions of the config files for each lang?
+                String primaryBrand = configProps.getProperty("overlordapp.primary-brand");
+                String secondaryBrand = configProps.getProperty("overlordapp.secondary-brand");
                 String label = configProps.getProperty("overlordapp.label");
-                sortedTabs.add(new TabInfo(appId, href, label, appId.equals(this.appId)));
+                sortedTabs.add(new TabInfo(appId, primaryBrand, secondaryBrand, href, label, appId.equals(this.appId)));
             } finally {
                 IOUtils.closeQuietly(reader);
             }
@@ -245,11 +275,15 @@ public class OverlordHeaderDataJS extends HttpServlet {
      */
     private static final class TabInfo {
         public final String appId;
+        public final String primaryBrand;
+        public final String secondaryBrand;
         public final String href;
         public final String label;
         public final boolean active;
-        public TabInfo(String appId, String href, String label, boolean active) {
+        public TabInfo(String appId, String primaryBrand, String secondaryBrand, String href, String label, boolean active) {
             this.appId = appId;
+            this.primaryBrand = primaryBrand;
+            this.secondaryBrand = secondaryBrand;
             this.href = href;
             this.label = label;
             this.active = active;
