@@ -1,5 +1,7 @@
 var OVERLORD_HEADER_DATA_DEFAULTS = {
-  "username" : "uname",
+  "primaryBrand" : "JBoss Overlord",
+  "secondaryBrand" : "S-RAMP Repository",
+  "username" : "jdoe",
   "logoutLink" : "?GLO=true",
   "tabs" : [
       { "label":"DTGov", "href":"/dtgov", "active":false },
@@ -10,32 +12,39 @@ var OVERLORD_HEADER_DATA_DEFAULTS = {
 };
 
 var OVERLORD_HEADER_TEMPLATE = '\
-<div class="overlord-navbar">\
-  <div class="overlord-navbar-inner">\
-    <a class="brand">JBoss - Overlord</a>\
-    <div class="overlord-desktop-only">\
-      <div class="overlord-navbar-tabs">\
+  <div class="overlord-navbar">\
+    <div class="overlord-navbar-brand">\
+      <a class="brand"></a>\
+      <a class="subbrand overlord-desktop-only"></a>\
+      <div class="overlord-nav-user overlord-desktop-only">\
+        <a href="#">\
+          <span class="overlord-nav-username overlord-header-username"></span>\
+          <span>&#8744;</span>\
+        </a>\
       </div>\
-      <div class="overlord-nav-shadowman"></div>\
-      <div class="overlord-nav-user">\
-        <span class="overlord-nav-username overlord-header-username"></span>\
-        <span> &raquo; </span>\
-        <a href="#" class="overlord-nav-logout">logout</a>\
+      <div class="overlord-nav-user-menu">\
+        <ul>\
+          <li><a class="overlord-nav-logout">Logout</a></li>\
+        </ul>\
+      </div>\
+      <div class="overlord-nav-mobile overlord-mobile-only">\
+        Menu\
       </div>\
     </div>\
-    <div class="overlord-mobile-only overlord-nav-mobile">\
-      <a class="">Menu</a>\
+    <div class="overlord-navbar-nav overlord-desktop-only">\
+        <div class="overlord-navbar-tabs">\
+        </div>\
     </div>\
   </div>\
-</div>\
-<div class="overlord-mobile-nav">\
-  <ul class="overlord-nav-list">\
-    <li class="overlord-nav-header overlord-mobile-navigation">Navigation</li>\
-    <li class="overlord-nav-header overlord-header-username"></li>\
-    <li><a class="overlord-nav-logout" href="#">Logout</a></li>\
-  </ul>\
-</div>\
-';
+  <div class="overlord-mobile-nav">\
+    <ul class="overlord-nav-list overlord-mobile-only">\
+      <li class="overlord-nav-header overlord-mobile-navigation">Navigation</li>\
+      <li class="overlord-nav-header overlord-header-username"></li>\
+      <li>\
+        <a class="overlord-nav-logout">Logout</a>\
+      </li>\
+    </ul>\
+  </div>';
 
 /**
  * Creates the markup needed for a link in the mobile section of the
@@ -60,25 +69,13 @@ function ovl_createMobileLinkHtml(tab) {
  * @param index
  * @param numTabs
  */
-function ovl_createNavigationTab(tab, index, numTabs) {
-    var markup = $('<div class="overlord-navbar-tab">\
-            <div class="left component"></div>\
-            <div class="middle component">\
-              <a></a>\
-            </div>\
-            <div class="right component"></div>\
-          </div>');
-    if (index == 0) {
-        $(markup).addClass('overlord-navbar-tab-first');
-    }
-    if (index == (numTabs-1)) {
-        $(markup).addClass('overlord-navbar-tab-last');
-    }
+function ovl_createNavigationTab(tab) {
+    var markup = $('<a class="overlord-navbar-tab"></a>');
     if (tab.active) {
         $(markup).addClass('active');
     }
-    $(markup).find('a').attr('href', tab.href);
-    $(markup).find('a').text(tab.label);
+    $(markup).attr('href', tab.href);
+    $(markup).text(tab.label);
     return markup;
 }
 
@@ -96,6 +93,8 @@ $(document).ready(function() {
         // drop
     }
     $('#overlord-header').html(OVERLORD_HEADER_TEMPLATE);
+    $('#overlord-header a.brand').text(data.primaryBrand);
+    $('#overlord-header a.subbrand').text(data.secondaryBrand);
     $('#overlord-header .overlord-header-username').text(data.username);
     $('#overlord-header a.overlord-nav-logout').attr("href", data.logoutLink);
     if (data.tabs) {
@@ -103,7 +102,7 @@ $(document).ready(function() {
         if (tabs.length > 1) {
             for (var i=0; i < data.tabs.length; i++) {
                 var tab = data.tabs[i];
-                var tabHtml = ovl_createNavigationTab(tab, i, data.tabs.length);
+                var tabHtml = ovl_createNavigationTab(tab);
                 $('#overlord-header .overlord-navbar .overlord-navbar-tabs').append(tabHtml);
             }
         }
@@ -114,7 +113,22 @@ $(document).ready(function() {
         }
     }
     $('#overlord-header .overlord-nav-mobile').click(function() {
-        $('#overlord-header .overlord-mobile-nav').slideToggle();
+        $('#overlord-header .overlord-mobile-nav').slideToggle('fast');
+    });
+    $('#overlord-header .overlord-nav-user').click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var h = $(this).position().top + $(this).outerHeight();
+        var w = $(this).outerWidth() - 1;
+        $('#overlord-header .overlord-nav-user-menu').css({
+            'right': 0,
+            'top': h,
+            'min-width': w
+        });
+        $('#overlord-header .overlord-nav-user-menu').slideToggle('fast');
+    });
+    $('body').click(function() {
+        $('#overlord-header .overlord-nav-user-menu').hide();
     });
 });
 
