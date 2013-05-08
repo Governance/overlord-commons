@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.overlord</groupId>
     <artifactId>overlord-commons</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   <artifactId>overlord-commons-auth</artifactId>
   <name>Overlord Common Authentication/Authorization</name>
