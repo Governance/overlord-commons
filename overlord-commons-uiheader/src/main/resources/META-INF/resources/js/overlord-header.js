@@ -19,7 +19,6 @@ var OVERLORD_HEADER_TEMPLATE = '\
       <div class="overlord-nav-user overlord-desktop-only">\
         <a href="#">\
           <span class="overlord-nav-username overlord-header-username"></span>\
-          <span>&#8744;</span>\
         </a>\
       </div>\
       <div class="overlord-nav-user-menu">\

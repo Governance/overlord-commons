@@ -36,7 +36,7 @@
   padding-left: 28px;
   padding-right: 8px;
   background-image: url('overlord-header-images/user_icon.png');
-  background-position: 8px 5px;
+  background-position: 5px 4px;
   background-repeat: no-repeat;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user a {
@@ -44,8 +44,17 @@
   text-decoration: none;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user a:hover {
-  color: #ffd;
+  color: #f98c8c;
 }
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-username {
+  padding-right: 20px;
+  background-image: url('overlord-header-images/dropdown_icon.png');
+  background-position: center right;
+  background-repeat: no-repeat;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-username:hover {
+  background-image: url('overlord-header-images/dropdown_icon-hover.png');
+  }
 
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu {
   display: none;
