@@ -95,6 +95,8 @@
   <module>overlord-commons-auth</module>
   <module>overlord-commons-installer</module>
   <module>overlord-commons-uiheader</module>
+  <module>overlord-commons-gwt</module>
+  <module>overlord-commons-dev</module>
   </modules>
 
   <build>
