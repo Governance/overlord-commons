@@ -1,5 +1,7 @@
 #overlord-header {
-}
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  }
 #overlord-header .overlord-navbar {
   border-top: 2px solid #cc0001;
 }
