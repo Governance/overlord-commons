@@ -98,7 +98,7 @@ public class MultiDefaultServlet extends DefaultServlet {
             declaredField.setAccessible(true);
             declaredField.set(this, resourceBase);
             declaredField.setAccessible(false);
-        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
