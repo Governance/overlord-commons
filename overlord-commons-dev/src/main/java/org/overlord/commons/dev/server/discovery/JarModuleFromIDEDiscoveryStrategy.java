@@ -23,7 +23,7 @@ import org.overlord.commons.dev.server.DevServerModule;
  * Finds a JAR module in the IDE.
  * @author eric.wittmann@redhat.com
  */
-public class JarModuleFromIDEDiscoveryStrategy implements IModuleDiscoveryStrategy {
+public class JarModuleFromIDEDiscoveryStrategy extends AbstractModuleDiscoveryStrategy {
 
     private final Class<?> someClass;
     private final String pathInProject;
@@ -57,12 +57,16 @@ public class JarModuleFromIDEDiscoveryStrategy implements IModuleDiscoveryStrate
             return null;
         }
 
+        debug("Path: " + path);
+
         File file = new File(path);
         // The class file is available on the file system!
         if (file.exists()) {
             if (path.contains("/target/classes/")) {
                 String pathToProj = path.substring(0, path.indexOf("/target/classes/"));
+                debug("Path to project: " + pathToProj);
                 File modulePath = new File(pathToProj, this.pathInProject);
+                debug("Module Path: " + modulePath);
                 if (!modulePath.exists()) {
                     return null;
                 }

@@ -23,7 +23,7 @@ import org.overlord.commons.dev.server.DevServerModule;
  * Discovers a web app module when it's in the IDE.
  * @author eric.wittmann@redhat.com
  */
-public class WebAppModuleFromIDEDiscoveryStrategy implements IModuleDiscoveryStrategy {
+public class WebAppModuleFromIDEDiscoveryStrategy extends AbstractModuleDiscoveryStrategy {
 
     private final Class<?> someClass;
 
@@ -54,12 +54,16 @@ public class WebAppModuleFromIDEDiscoveryStrategy implements IModuleDiscoveryStr
         if (path == null) {
             return null;
         }
+
+        debug("Path: " + path);
+
         File file = new File(path);
 
         // The class file is available on the file system!  Just what we'd hoped.
         if (file.exists()) {
             if (path.contains("/WEB-INF/classes/")) {
                 String pathToWebApp = path.substring(0, path.indexOf("/WEB-INF/classes/"));
+                debug("Path to web app: " + pathToWebApp);
 
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(true);
