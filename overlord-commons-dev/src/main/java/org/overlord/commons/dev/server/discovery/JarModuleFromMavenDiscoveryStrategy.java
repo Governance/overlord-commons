@@ -25,7 +25,7 @@ import org.overlord.commons.dev.server.DevServerModule;
  *
  * @author eric.wittmann@redhat.com
  */
-public class JarModuleFromMavenDiscoveryStrategy implements IModuleDiscoveryStrategy {
+public class JarModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscoveryStrategy {
 
     private final Class<?> someClass;
     private final String pathInJar;
@@ -59,12 +59,15 @@ public class JarModuleFromMavenDiscoveryStrategy implements IModuleDiscoveryStra
         if (path == null) {
             return null;
         }
+        debug("Path: " + path);
         File file = new File(path);
         if (!file.exists() && path.contains(".jar") && path.startsWith("file:")) {
             String pathToJar = path.substring(5, path.indexOf(".jar")) + ".jar";
+            debug("Path to JAR: " + pathToJar);
             File jar = new File(pathToJar);
             if (jar.isFile()) {
                 File workDir = new File(context.getTargetDir(), jar.getName());
+                debug("Work Dir: " + workDir);
 
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(false);
