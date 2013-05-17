@@ -89,22 +89,30 @@ public class WebAppModuleFromIDEGAVStrategy extends AbstractModuleDiscoveryStrat
 
         try {
             String pathToWebApp = null;
-            if (useIdeSourcePath) {
-                pathToWebApp = moduleUrl.replace("/target/classes", "/src/main/webapp");
-            } else {
-                pathToWebApp = moduleUrl.replace("/target/classes", "/target/" + artifactId);
+            String replacementPath = "/target/" + artifactId;
+            if (useIdeSourcePath)
+                replacementPath = "/src/main/webapp";
+
+            if (moduleUrl.contains("/target/classes")) {
+                pathToWebApp = moduleUrl.replace("/target/classes", replacementPath);
+            } else if (moduleUrl.contains("/target/" + artifactId + "/WEB-INF/classes")) {
+                pathToWebApp = moduleUrl.replace("/target/" + artifactId + "/WEB-INF/classes", replacementPath);
             }
 
-            debug("Path to web app: " + pathToWebApp);
-
-            File webApp = new File(new URL(pathToWebApp).toURI());
-            DevServerModule module = new DevServerModule();
-            module.setInIDE(true);
-            module.setModuleDir(webApp);
-            return module;
+            if (pathToWebApp != null) {
+                debug("Path to web app: " + pathToWebApp);
+                File webApp = new File(new URL(pathToWebApp).toURI());
+                if (webApp.exists()) {
+                    DevServerModule module = new DevServerModule();
+                    module.setInIDE(true);
+                    module.setModuleDir(webApp);
+                    return module;
+                }
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
 }

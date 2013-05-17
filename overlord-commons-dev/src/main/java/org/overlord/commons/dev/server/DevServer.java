@@ -56,7 +56,7 @@ public abstract class DevServer {
         long endTime = System.currentTimeMillis();
         System.out.println("******* Started in " + (endTime - startTime) + "ms");
 
-        postStart();
+        postStart(environment);
 
         server.join();
     }
@@ -88,7 +88,7 @@ public abstract class DevServer {
     /**
      * Do any post startup tasks.
      */
-    protected void postStart() throws Exception {
+    protected void postStart(DevServerEnvironment environment) throws Exception {
     }
 
     /**

@@ -139,7 +139,7 @@ public abstract class DevServerEnvironment {
      */
     private void findTargetDir() {
         String path = getClass().getClassLoader()
-                .getResource(DevServer.class.getName().replace('.', '/') + ".class").getPath();
+                .getResource(getClass().getName().replace('.', '/') + ".class").getPath();
         if (path == null) {
             throw new RuntimeException("Failed to find target directory.");
         }
@@ -217,8 +217,8 @@ public abstract class DevServerEnvironment {
 
         File configFile3 = new File(dir, "gadgets-overlordapp.properties");
         props = new Properties();
-        props.setProperty("overlordapp.app-id", "gadgets");
-        props.setProperty("overlordapp.href", "/gadgets/");
+        props.setProperty("overlordapp.app-id", "gadget-server");
+        props.setProperty("overlordapp.href", "/gadget-web/Application.html");
         props.setProperty("overlordapp.label", "Gadget Server");
         props.setProperty("overlordapp.primary-brand", "JBoss Overlord");
         props.setProperty("overlordapp.secondary-brand", "Gadget Server");
