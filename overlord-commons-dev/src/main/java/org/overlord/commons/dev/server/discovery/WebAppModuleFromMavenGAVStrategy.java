@@ -17,26 +17,34 @@ package org.overlord.commons.dev.server.discovery;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import org.overlord.commons.dev.server.DevServerModule;
 
 /**
- * Discovers the module when presumably running from maven. Basically this strategy tries to find the module
- * by looking for a class on the classpath and assuming that it's in a JAR.
- *
+ * Finds a web app from GAV information.  Must be on the current classpath.  This
+ * strategy is used when the web app doesn't have any actual classes in it.  In
+ * those cases, the -classes.jar of the web app *still* needs to be on the classpath,
+ * but we search for the jar itself rather than a class in the jar.
  * @author eric.wittmann@redhat.com
  */
-public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscoveryStrategy {
+public class WebAppModuleFromMavenGAVStrategy extends AbstractModuleDiscoveryStrategy {
 
-    private final Class<?> someClass;
+    private final String groupId;
+    private final String artifactId;
 
     /**
      * Constructor.
-     *
-     * @param someClass
+     * @param groupId
+     * @param artifactId
      */
-    public WebAppModuleFromMavenDiscoveryStrategy(Class<?> someClass) {
-        this.someClass = someClass;
+    public WebAppModuleFromMavenGAVStrategy(String groupId, String artifactId) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
     }
 
     /**
@@ -44,7 +52,7 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
      */
     @Override
     public String getName() {
-        return "Maven Artifact";
+        return "Maven Artifact (GAV)";
     }
 
     /**
@@ -52,27 +60,42 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
      */
     @Override
     public DevServerModule discover(ModuleDiscoveryContext context) {
-        String path = someClass.getClassLoader()
-                .getResource(someClass.getName().replace('.', '/') + ".class").getPath();
-        if (path == null) {
-            return null;
+        URLClassLoader urlCL = (URLClassLoader) getClass().getClassLoader();
+        TreeSet<URL> sortedURLs = new TreeSet<URL>(new Comparator<URL>() {
+            @Override
+            public int compare(URL o1, URL o2) {
+                return o1.toExternalForm().compareTo(o2.toExternalForm());
+            }
+        });
+        sortedURLs.addAll(Arrays.asList(urlCL.getURLs()));
+
+        String moduleUrl = null;
+
+        // Look for something that looks like a maven path
+        String groupIdAsPath = groupId.replace('.', '/');
+        for (URL url : sortedURLs) {
+            String urlstr = url.toExternalForm();
+            if (urlstr.contains(groupIdAsPath) && urlstr.contains("/"+artifactId+"-")) {
+                moduleUrl = urlstr;
+                break;
+            }
         }
 
-        debug("Path: " + path);
-
-        File file = new File(path);
-        // The class file is available on the file system, so not what we're looking for.
-        if (file.exists()) {
+        if (moduleUrl == null)
             return null;
-        }
 
-        if (path.contains("-classes.jar") && path.startsWith("file:")) {
-            String pathToWar = path.replace("-classes.jar", ".war");
-            debug("Path to WAR: " + pathToWar);
-            File war = new File(pathToWar);
+        debug("Module URL: " + moduleUrl);
+
+        try {
+            String pathToWar = moduleUrl.replace("-classes.jar", ".war");
+            URL warUrl = new URL(pathToWar);
+            File war = new File(warUrl.toURI());
+            debug("WAR: " + war);
+
             if (war.isFile()) {
                 File workDir = new File(context.getTargetDir(), war.getName());
                 debug("Work Dir: " + workDir);
+
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(false);
                 module.setWorkDir(workDir);
@@ -86,8 +109,9 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
                 }
                 return module;
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
         return null;
     }
 
