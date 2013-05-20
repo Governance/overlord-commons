@@ -98,7 +98,7 @@ $(document).ready(function() {
     $('#overlord-header a.overlord-nav-logout').attr("href", data.logoutLink);
     if (data.tabs) {
         var tabs = data.tabs;
-        if (tabs.length > 1) {
+        if (tabs.length > 0) {
             for (var i=0; i < data.tabs.length; i++) {
                 var tab = data.tabs[i];
                 var tabHtml = ovl_createNavigationTab(tab);

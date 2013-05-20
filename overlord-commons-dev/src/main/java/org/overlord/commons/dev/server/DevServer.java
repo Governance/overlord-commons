@@ -34,6 +34,20 @@ public abstract class DevServer {
     }
 
     /**
+     * Enables debug logging.
+     */
+    public void enableDebug() {
+        System.setProperty("discovery-strategy.debug", "true");
+    }
+
+    /**
+     * Disables debug logging.
+     */
+    public void disableDebug() {
+        System.clearProperty("discovery-strategy.debug");
+    }
+
+    /**
      * Start/run the server.
      */
     public void go() throws Exception {
