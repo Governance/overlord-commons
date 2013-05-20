@@ -67,7 +67,7 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
         }
 
         if (path.contains("-classes.jar") && path.startsWith("file:")) {
-            String pathToWar = path.replace("-classes.jar", ".war");
+            String pathToWar = path.substring(5, path.indexOf("-classes.jar")) + ".war";
             debug("Path to WAR: " + pathToWar);
             File war = new File(pathToWar);
             if (war.isFile()) {
