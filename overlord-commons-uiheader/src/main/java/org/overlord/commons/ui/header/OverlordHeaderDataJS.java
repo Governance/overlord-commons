@@ -231,11 +231,21 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
 
         // Next, check for JBoss
+        String jbossConfigDir = System.getProperty("jboss.server.config.dir");
+        if (jbossConfigDir != null) {
+            File dirFile = new File(jbossConfigDir);
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
         String jbossConfigUrl = System.getProperty("jboss.server.config.url");
         if (jbossConfigUrl != null) {
-            File jbossConfigDir = new File(jbossConfigUrl);
-            if (jbossConfigDir.isDirectory()) {
-                configDir = new File(jbossConfigDir, "overlord-apps");
+            File dirFile = new File(jbossConfigUrl);
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
@@ -243,9 +253,9 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
         String jbossDataDir = System.getProperty("jboss.server.data.dir");
         if (jbossDataDir != null) {
-            File jbossDataDirFile = new File(jbossDataDir);
-            if (jbossDataDirFile.isDirectory()) {
-                configDir = new File(jbossDataDirFile, "overlord-apps");
+            File dirFile = new File(jbossDataDir);
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
