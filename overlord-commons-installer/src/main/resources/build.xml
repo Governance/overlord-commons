@@ -3,13 +3,13 @@
 
   <property file="build.properties" />
 
-  <property name="overlord-commons.version" value="1.0.6" />
+  <property name="overlord-commons.version" value="1.0.7" />
   <property name="overlord-commons-idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp/${overlord-commons.version}/overlord-commons-idp-${overlord-commons.version}.war" />
   <property name="overlord-commons-auth.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.jar" />
 
   <property name="basedir" value="." />
   <property name="installdir" value="${basedir}/target" />
-  <property name="eap.dist.dir" value="${installdir}/jboss-eap-6.1" />
+  <property name="dist.dir" value="${installdir}/jboss-eap-6.1" />
 
   <!-- Install Overlord Commons -->
   <target name="install-all" depends="config">
@@ -21,7 +21,7 @@
     <echo message="#                                                     #" />
     <echo message="# When calling, you can pass these properties:        #" />
     <echo message="#    overlord-commons.version:  Overlord Commons ver. #" />
-    <echo message="#    eap.dist.dir:  location of JBoss EAP 6.1         #" />
+    <echo message="#    dist.dir:  location of JBoss EAP 6.1         #" />
     <echo message="#######################################################" />
 
     <antcall target="install-overlord-commons" />
@@ -43,71 +43,71 @@
     <echo>Downloading overlord-commons-idp-${overlord-commons.version}.war</echo>
     <get src="${overlord-commons-idp.download.url}" dest="${installdir}/overlord-commons-idp-${overlord-commons.version}.war" usetimestamp="true" />
     <echo>Deploying the Overlord IDP</echo>
-    <copy file="${installdir}/overlord-commons-idp-${overlord-commons.version}.war" tofile="${eap.dist.dir}/standalone/deployments/overlord-idp.war" overwrite="true" />
+    <copy file="${installdir}/overlord-commons-idp-${overlord-commons.version}.war" tofile="${dist.dir}/standalone/deployments/overlord-idp.war" overwrite="true" />
     <unzip src="${installdir}/overlord-commons-idp-${overlord-commons.version}.war" dest="${installdir}/overlord-commons-idp-resources">
       <patternset>
         <include name="**/*.properties" />
       </patternset>
     </unzip>
-    <copy file="${installdir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-users.properties" tofile="${eap.dist.dir}/standalone/configuration/overlord-idp-users.properties" overwrite="true" />
-    <copy file="${installdir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-roles.properties" tofile="${eap.dist.dir}/standalone/configuration/overlord-idp-roles.properties" overwrite="true" />
+    <copy file="${installdir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-users.properties" tofile="${dist.dir}/standalone/configuration/overlord-idp-users.properties" overwrite="true" />
+    <copy file="${installdir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-roles.properties" tofile="${dist.dir}/standalone/configuration/overlord-idp-roles.properties" overwrite="true" />
     <echo>Configuring standalone.xml with Overlord login-modules.</echo>
-    <mkdir dir="${eap.dist.dir}/standalone/configuration/.overlord_backup" />
-    <copy file="${eap.dist.dir}/standalone/configuration/standalone.xml" todir="${eap.dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
-    <copy file="${eap.dist.dir}/standalone/configuration/standalone-full.xml" todir="${eap.dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
-    <copy file="${eap.dist.dir}/standalone/configuration/standalone-full-ha.xml" todir="${eap.dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
-    <copy file="${eap.dist.dir}/standalone/configuration/standalone-ha.xml" todir="${eap.dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
-    <copy file="${eap.dist.dir}/standalone/configuration/standalone-osgi.xml" todir="${eap.dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
+    <mkdir dir="${dist.dir}/standalone/configuration/.overlord_backup" />
+    <copy file="${dist.dir}/standalone/configuration/standalone.xml" todir="${dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
+    <copy file="${dist.dir}/standalone/configuration/standalone-full.xml" todir="${dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
+    <copy file="${dist.dir}/standalone/configuration/standalone-full-ha.xml" todir="${dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
+    <copy file="${dist.dir}/standalone/configuration/standalone-ha.xml" todir="${dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
+    <copy file="${dist.dir}/standalone/configuration/standalone-osgi.xml" todir="${dist.dir}/standalone/configuration/.overlord_backup" overwrite="true" />
   	<!-- standalone.xml -->
     <xslt 
       style="xslt/addSecurityDomains.xslt"
-      in="${eap.dist.dir}/standalone/configuration/standalone.xml"
+      in="${dist.dir}/standalone/configuration/standalone.xml"
       out="${installdir}/_tmp_standalone.xml" />
-    <copy file="${installdir}/_tmp_standalone.xml" tofile="${eap.dist.dir}/standalone/configuration/standalone.xml" overwrite="true" />
+    <copy file="${installdir}/_tmp_standalone.xml" tofile="${dist.dir}/standalone/configuration/standalone.xml" overwrite="true" />
     <delete file="${installdir}/_tmp_standalone.xml" />
     <!-- standalone-full.xml -->
     <xslt 
       style="xslt/addSecurityDomains.xslt"
-      in="${eap.dist.dir}/standalone/configuration/standalone-full.xml"
+      in="${dist.dir}/standalone/configuration/standalone-full.xml"
       out="${installdir}/_tmp_standalone.xml" />
-    <copy file="${installdir}/_tmp_standalone.xml" tofile="${eap.dist.dir}/standalone/configuration/standalone-full.xml" overwrite="true" />
+    <copy file="${installdir}/_tmp_standalone.xml" tofile="${dist.dir}/standalone/configuration/standalone-full.xml" overwrite="true" />
     <delete file="${installdir}/_tmp_standalone.xml" />
     <!-- standalone-full-ha.xml -->
     <xslt 
       style="xslt/addSecurityDomains.xslt"
-      in="${eap.dist.dir}/standalone/configuration/standalone-full-ha.xml"
+      in="${dist.dir}/standalone/configuration/standalone-full-ha.xml"
       out="${installdir}/_tmp_standalone.xml" />
-    <copy file="${installdir}/_tmp_standalone.xml" tofile="${eap.dist.dir}/standalone/configuration/standalone-full-ha.xml" overwrite="true" />
+    <copy file="${installdir}/_tmp_standalone.xml" tofile="${dist.dir}/standalone/configuration/standalone-full-ha.xml" overwrite="true" />
     <delete file="${installdir}/_tmp_standalone.xml" />
     <!-- standalone-ha.xml -->
     <xslt 
       style="xslt/addSecurityDomains.xslt"
-      in="${eap.dist.dir}/standalone/configuration/standalone-ha.xml"
+      in="${dist.dir}/standalone/configuration/standalone-ha.xml"
       out="${installdir}/_tmp_standalone.xml" />
-    <copy file="${installdir}/_tmp_standalone.xml" tofile="${eap.dist.dir}/standalone/configuration/standalone-ha.xml" overwrite="true" />
+    <copy file="${installdir}/_tmp_standalone.xml" tofile="${dist.dir}/standalone/configuration/standalone-ha.xml" overwrite="true" />
     <delete file="${installdir}/_tmp_standalone.xml" />
     <!-- standalone-osgi.xml -->
     <xslt 
       style="xslt/addSecurityDomains.xslt"
-      in="${eap.dist.dir}/standalone/configuration/standalone-osgi.xml"
+      in="${dist.dir}/standalone/configuration/standalone-osgi.xml"
       out="${installdir}/_tmp_standalone.xml" />
-    <copy file="${installdir}/_tmp_standalone.xml" tofile="${eap.dist.dir}/standalone/configuration/standalone-osgi.xml" overwrite="true" />
+    <copy file="${installdir}/_tmp_standalone.xml" tofile="${dist.dir}/standalone/configuration/standalone-osgi.xml" overwrite="true" />
     <delete file="${installdir}/_tmp_standalone.xml" />
     
     <!-- Create the Overlord Commons Auth module -->
-    <mkdir dir="${eap.dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main" />
-    <copy file="modules/overlord-commons-auth-module.xml" tofile="${eap.dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main/module.xml">
+    <mkdir dir="${dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main" />
+    <copy file="modules/overlord-commons-auth-module.xml" tofile="${dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main/module.xml">
       <filterset>
         <filter token="VERSION" value="${overlord-commons.version}"/>
       </filterset>
     </copy>
-    <get src="${overlord-commons-auth.download.url}" dest="${eap.dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-${overlord-commons.version}.jar" usetimestamp="true" />
+    <get src="${overlord-commons-auth.download.url}" dest="${dist.dir}/modules/system/layers/soa/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-${overlord-commons.version}.jar" usetimestamp="true" />
   </target>
 
 
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">
-      <available file="${eap.dist.dir}/standalone/configuration/overlord-idp-roles.properties" type="file" />
+      <available file="${dist.dir}/standalone/configuration/overlord-idp-roles.properties" type="file" />
     </condition>
   </target>
 
