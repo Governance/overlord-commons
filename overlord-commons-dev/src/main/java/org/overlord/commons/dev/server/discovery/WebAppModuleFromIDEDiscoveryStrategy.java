@@ -69,6 +69,14 @@ public class WebAppModuleFromIDEDiscoveryStrategy extends AbstractModuleDiscover
                 module.setInIDE(true);
                 module.setModuleDir(new File(pathToWebApp));
                 return module;
+            } else if (path.contains("/target/classes/")) {
+                String pathToWebApp = path.substring(0, path.indexOf("/target/classes/")) + "/src/main/webapp";
+                debug("Path to web app: " + pathToWebApp);
+
+                DevServerModule module = new DevServerModule();
+                module.setInIDE(true);
+                module.setModuleDir(new File(pathToWebApp));
+                return module;
             }
         }
 

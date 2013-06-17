@@ -21,7 +21,7 @@
     <echo message="#                                                     #" />
     <echo message="# When calling, you can pass these properties:        #" />
     <echo message="#    overlord-commons.version:  Overlord Commons ver. #" />
-    <echo message="#    dist.dir:  location of JBoss EAP 6.1         #" />
+    <echo message="#    dist.dir:  location of JBoss EAP 6.1             #" />
     <echo message="#######################################################" />
 
     <antcall target="install-overlord-commons" />
