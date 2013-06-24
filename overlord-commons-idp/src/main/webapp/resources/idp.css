@@ -1,11 +1,30 @@
-body {
-  background-color: #eaeaea;
-  padding-top: 40px;
-  padding-bottom: 40px;
+* {
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+html, body {
+  font-size: 13.5px;
+  height: 100%;
+}
+
+small {
+  font-size: 11.5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -1px;
+  font-weight: normal;
+  font-family: "Overpass", sans-serif;
 }
 
 a {
-  cursor: pointer;
+  color: #0099d3;
   text-decoration: none;
 }
 
@@ -13,41 +32,155 @@ a:hover {
   text-decoration: underline;
 }
 
-.btn-focus {
-  color: #2da0db;
-  text-shadow: 0px 1px 0px white;
+
+fieldset {
+  border: none;
 }
 
-.btn-focus:hover {
-  color: #2da0db;
+input[type="text"],
+input[type="password"] {
+  margin: 4px;
+  padding: 3px 6px;
+  min-width: 200px;
+  height: 26px;
+  border: 1px #b6b6b6 solid;
+  border-radius: 2px;
 }
 
-.btn-clear {
-  padding: 5px 0px 5px 0px;
+input[type="text"]:hover,
+input[type="password"]:hover {
+  border-color: #62afdb;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #62afdb;
+  box-shadow: #62afdb 0 0 5px;
+}
+
+input[type="button"] {
+  padding: 4px 14px;
+  border: 1px #21799e solid;
+  border-radius: 2px;
+  background-image: linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -o-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -moz-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -webkit-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -ms-linear-gradient(top, #00A9EC 0%, #009BD3 100%);
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, #00A9EC),
+      color-stop(1,0, #009BD3)
+  );
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+}
+
+input[type="button"]:hover,
+input[type="button"]:focus {
+  background-color: #009BD3;
+  background-image: none;
+  cursor: pointer;
+}
+
+input[type="button"]:active {
+  background-color: #0099d4;
+  background-image: none;
+  cursor: pointer;
+  box-shadow: inset 0 0 5px 3px #0074ae;
+}
+
+input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+#rcue-login-screen {
   width: 100%;
+  min-width: 850px;
+  height: 100%;
+  background-color: #151e2d;
+  background-image: url("images/login-background.jpg");
+  background-position: top left;
+  background-size: auto;
+  background-repeat: no-repeat;
+  color: #fff;
 }
 
-.form-signin {
-  max-width: 300px;
-  padding: 19px 29px 29px;
-  margin: 0 auto 20px;
-  background-color: #fff;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+@media (min-width: 1680px) {
+    #rcue-login-screen {
+      background-size: 100% auto;
+    }
 }
 
-.form-signin .form-signin-heading,.form-signin .checkbox {
-  margin-bottom: 10px;
+#rcue-login-screen form {
+  position: absolute;
+  bottom: 15%;
+  padding-left: 100px;
+  width: 100%;
+  min-width: 850px;
+  border-top: 1px rgba(255, 255, 255, 0.05) solid;
+  border-bottom: 1px rgba(255, 255, 255, 0.05) solid;
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
-.form-signin input[type="text"],.form-signin input[type="password"] {
-  font-size: 16px;
-  height: auto;
-  margin-bottom: 15px;
-  padding: 7px 9px;
+#rcue-login-screen form aside {
+  float: left;
+  margin: 40px;
+}
+
+#rcue-login-screen form aside p {
+  margin-bottom: 8px;
+}
+
+#rcue-login-screen fieldset {
+  float: left;
+  margin: 30px 0;
+  padding: 10px;
+  padding-right: 44px;
+  width: 426px;
+  border-right: 1px rgba(255, 255, 255, 0.15) solid;
+}
+
+#rcue-login-screen fieldset legend {
+  position: absolute;
+  top: -54px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 200;
+  font-size: 22px;
+  font-size: 22px;
+}
+
+#rcue-login-screen fieldset legend strong {
+  margin-right: 4px;
+  font-weight: 700;
+}
+
+#rcue-login-screen fieldset label {
+  display: inline-block;
+  width: 85px;
+}
+
+
+#rcue-login-screen fieldset input[type="text"],
+#rcue-login-screen fieldset input[type="password"] {
+  margin: 4px 0;
+  width: 282px;
+}
+
+#rcue-login-screen fieldset input[type="button"] {
+  float: right;
+  margin-top: 16px;
+}
+
+#rcue-login-screen fieldset small {
+  line-height: 22px;
+  margin-left: 87px;
+  margin-top: 10px;
+  display: block;
+  float: left;
 }

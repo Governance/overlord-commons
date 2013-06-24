@@ -7,9 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link href="resources/bootstrap-2.2.2/css/bootstrap.css" rel="stylesheet"></link>
-    <link href="resources/bootstrap-2.2.2/css/bootstrap-responsive.css" rel="stylesheet"></link>
     <link href="resources/idp.css" rel="stylesheet"></link>
+    <link href="resources/idp-responsive.css" rel="stylesheet"></link>
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -17,20 +16,36 @@
     <![endif]-->
 
     <script src="resources/jquery-1.9.1/jquery.min.js"></script>
-    <script src="resources/bootstrap-2.2.2/js/bootstrap.min.js"></script>
   </head>
 
   <body>
-    <div class="container">
-      <form class="form-signin" id="login_form" name="login_form" method="post"
-            action="j_security_check" enctype="application/x-www-form-urlencoded">
-        <h2 class="form-signin-heading">Overlord - Sign In</h2>
-        <br />
-        <input id="username" name="j_username" type="text" class="input-block-level" placeholder="Username"></input>
-        <input id="password" name="j_password" type="password" class="input-block-level" placeholder="Password"></input>
-        <button id="submit" name="submit" class="btn btn-large btn-focus" type="submit">Sign in</button>
+    <div id="rcue-login-screen">
+      <div class="login-logo"></div>
+      <form class="form-signin" id="login_form" name="login_form" method="post" action="j_security_check" enctype="application/x-www-form-urlencoded">
+        <fieldset>
+          <legend><span class="product-name">JBoss Overlord</span></legend>
+          <p>
+            <label>Username</label>
+            <input id="username" type="text" name="j_username"></input>
+          </p>
+          <p>
+            <label>Password</label>
+            <input type="password" name="j_password"></input>
+          </p>
+          <input type="button" value="Log In"></input>
+        </fieldset>
       </form>
     </div>
+<!--     <div class="container"> -->
+<!--       <form class="form-signin" id="login_form" name="login_form" method="post" -->
+<!--             action="j_security_check" enctype="application/x-www-form-urlencoded"> -->
+<!--         <h2 class="form-signin-heading">Overlord - Sign In</h2> -->
+<!--         <br /> -->
+<!--         <input id="username" name="j_username" type="text" class="input-block-level" placeholder="Username"></input> -->
+<!--         <input id="password" name="j_password" type="password" class="input-block-level" placeholder="Password"></input> -->
+<!--         <button id="submit" name="submit" class="btn btn-large btn-focus" type="submit">Sign in</button> -->
+<!--       </form> -->
+<!--     </div> -->
   </body>
   
   <script>
