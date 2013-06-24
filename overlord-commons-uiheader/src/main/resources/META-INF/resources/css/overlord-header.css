@@ -1,13 +1,16 @@
 #overlord-header {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
-  }
+}
 #overlord-header .overlord-navbar {
-  border-top: 2px solid #cc0001;
+  border-top: 2px solid #f4d7a0;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand {
-  border-top: 1px solid #b10d0e;
-  background-color: #383f47;
+  border-top: 1px solid #e8e788;
+  background-color: #121e34;
+  background-image: url(overlord-header-images/overlord-bg.png);
+  background-position: top left;
+  background-repeat: no-repeat;
   width: 100%;
   height: 27px;
 }
@@ -22,8 +25,11 @@
   text-decoration: none;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand a.brand {
+  background-image: url(overlord-header-images/overlord_icon_16px.png);
+  background-position: 10px 5px;
+  background-repeat: no-repeat;
   font-weight: bold;
-  padding-left: 20px;
+  padding-left: 32px;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand a.subbrand {
   padding-left: 8px;
@@ -56,7 +62,7 @@
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-username:hover {
   background-image: url('overlord-header-images/dropdown_icon-hover.png');
-  }
+}
 
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu {
   display: none;
@@ -64,7 +70,7 @@
   border-top: 1px solid #58595d;
   border-bottom: 1px solid #58595d;
   position: absolute;
-  background-color: #3a3f45;
+  background-color: #121e34;
   padding-top: 15px;
   padding-bottom: 15px;
   box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
@@ -147,7 +153,7 @@
   margin-left: 0px;
   list-style: none outside none;
   padding-bottom: 10px;
-  background-color: #464b4f;
+  background-color: #121e34;
 }
 #overlord-header .overlord-mobile-nav .overlord-nav-list .overlord-nav-header {
   display: block;

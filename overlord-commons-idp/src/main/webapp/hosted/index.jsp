@@ -9,4 +9,6 @@ work:
 <br/>
 <ul>
   <li><a href="/s-ramp-ui">S-RAMP Browser</a></li>
+  <li><a href="/dtgov-ui">Design Time Governance</a></li>
+  <li><a href="/gadget-web">Gadget Server</a></li>
 </ul>
