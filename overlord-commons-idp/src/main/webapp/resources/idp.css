@@ -58,7 +58,7 @@ input[type="password"]:focus {
   box-shadow: #62afdb 0 0 5px;
 }
 
-input[type="button"] {
+input[type="submit"] {
   padding: 4px 14px;
   border: 1px #21799e solid;
   border-radius: 2px;
@@ -80,14 +80,14 @@ input[type="button"] {
   letter-spacing: 0.6px;
 }
 
-input[type="button"]:hover,
-input[type="button"]:focus {
+input[type="submit"]:hover,
+input[type="submit"]:focus {
   background-color: #009BD3;
   background-image: none;
   cursor: pointer;
 }
 
-input[type="button"]:active {
+input[type="submit"]:active {
   background-color: #0099d4;
   background-image: none;
   cursor: pointer;
@@ -172,7 +172,7 @@ input[type="checkbox"] {
   width: 282px;
 }
 
-#rcue-login-screen fieldset input[type="button"] {
+#rcue-login-screen fieldset input[type="submit"] {
   float: right;
   margin-top: 16px;
 }
