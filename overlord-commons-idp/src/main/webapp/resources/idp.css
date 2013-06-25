@@ -142,7 +142,6 @@ input[type="checkbox"] {
   padding: 10px;
   padding-right: 44px;
   width: 426px;
-  border-right: 1px rgba(255, 255, 255, 0.15) solid;
 }
 
 #rcue-login-screen fieldset legend {
@@ -183,4 +182,9 @@ input[type="checkbox"] {
   margin-top: 10px;
   display: block;
   float: left;
+}
+
+p.login-failed {
+  margin-bottom: 20px;
+  color: #FF4532;
 }
