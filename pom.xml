@@ -6,7 +6,6 @@
   <version>1.0.8-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Overlord Commons</name>
   <description>Contains common/shared modules used across multiple Overlord projects.</description>
   <url>http://www.jboss.org/overlord</url>
   <inceptionYear>2013</inceptionYear>
