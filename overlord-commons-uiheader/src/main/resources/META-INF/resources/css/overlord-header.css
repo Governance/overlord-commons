@@ -16,6 +16,8 @@
   height: 27px;
 }
 #overlord-header .overlord-navbar .overlord-navbar-brand a.brand, #overlord-header .overlord-navbar .overlord-navbar-brand a.subbrand {
+  font-size: 15px;
+  font-family: Tahoma,Helvetica,Arial,sans-serif;
   text-transform: capitalize;
   color: white;
   display: block;
