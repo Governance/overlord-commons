@@ -3,7 +3,7 @@
 
   <groupId>org.overlord</groupId>
   <artifactId>overlord-commons</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <description>Contains common/shared modules used across multiple Overlord projects.</description>
