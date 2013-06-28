@@ -6,6 +6,7 @@
     <version>1.0.9-SNAPSHOT</version>
   </parent>
   <artifactId>overlord-commons-dev</artifactId>
+  <name>Overlord Commons: Dev Servers</name>
 
   <dependencies>
     <!-- Jetty -->
