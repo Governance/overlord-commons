@@ -7,6 +7,7 @@
   </parent>
   <artifactId>overlord-commons-installer</artifactId>
   <packaging>jar</packaging>
+  <name>Overlord Commons: Installer</name>
   
   <properties>
     <overlord-commons.version>${project.version}</overlord-commons.version>

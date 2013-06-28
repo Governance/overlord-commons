@@ -6,6 +6,7 @@
     <version>1.0.9-SNAPSHOT</version>
   </parent>
   <artifactId>overlord-commons-auth</artifactId>
+  <name>Overlord Commons: Auth</name>
   <description>Contains authentication and authorization classes shared by the Overlord projects.</description>
 
   <dependencies>
