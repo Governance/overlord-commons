@@ -7,7 +7,6 @@
   </parent>
   <artifactId>overlord-commons-idp</artifactId>
   <packaging>war</packaging>
-  <name>Overlord Identity Provider</name>
   <description>An identity provider using PicketLink SAML.</description>
 
   <build>
