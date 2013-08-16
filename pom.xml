@@ -88,6 +88,10 @@
     <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
     <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
     <maven.deploy.plugin.version>2.5</maven.deploy.plugin.version>
+    
+    <!-- Third party libraries -->
+    <commons.config.version>1.8</commons.config.version>
+    <commons.io.version>2.4</commons.io.version>
   </properties>
 
   <modules>
@@ -97,6 +101,7 @@
   <module>overlord-commons-uiheader</module>
   <module>overlord-commons-gwt</module>
   <module>overlord-commons-dev</module>
+  <module>overlord-commons-config</module>
   </modules>
 
   <build>
