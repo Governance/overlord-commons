@@ -24,7 +24,7 @@
       <security-domain name="overlord-jaxrs" cache-type="default">
         <authentication>
           <login-module code="org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule" flag="sufficient">
-            <module-option name="allowedIssuers" value="/s-ramp-ui,/s-ramp-governance,/dtgov-ui" />
+            <module-option name="allowedIssuers" value="/s-ramp-ui,/s-ramp-governance,/dtgov-ui,/gadget-web" />
           </login-module>
           <login-module code="UsersRoles" flag="sufficient">
             <module-option name="usersProperties" value="${{jboss.server.config.dir}}/overlord-idp-users.properties" />
