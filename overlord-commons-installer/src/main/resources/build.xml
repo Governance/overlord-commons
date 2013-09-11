@@ -36,7 +36,7 @@
   <target name="config">
     <mkdir dir="${overlord-commons.install.dir}" />
   </target>
-
+  
   <!-- Install -->
   <target name="install" depends="all-properties, config">
     <echo message=" " />
@@ -72,6 +72,23 @@
           tofile="${overlord-commons.appserver.config.dir}/overlord-idp-users.properties" overwrite="true" />
     <copy file="${overlord-commons.install.dir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-roles.properties"
           tofile="${overlord-commons.appserver.config.dir}/overlord-idp-roles.properties" overwrite="true" />
+    
+    <!-- Ask the user for the admin password -->
+    <echo message="" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="!    User Input Required    !" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="" />
+    <input message="Please enter a password for the Overlord 'admin' user: "
+           addproperty="overlord-commons.admin.password">
+      <handler type="secure" />
+    </input>
+    <echo message="" />
+    <propertyfile
+        file="${overlord-commons.appserver.config.dir}/overlord-idp-users.properties"
+        comment="Overlord Authentication Config">
+      <entry key="admin" value="${overlord-commons.admin.password}"/>
+    </propertyfile>
     
     <antcall target="install-jboss-eap-6.1" />
     <antcall target="install-jboss-as-7.1.1.Final" />
