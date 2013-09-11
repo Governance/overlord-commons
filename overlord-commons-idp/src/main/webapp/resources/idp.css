@@ -110,10 +110,8 @@ input[type="checkbox"] {
   color: #fff;
 }
 
-@media (min-width: 1680px) {
-    #rcue-login-screen {
-      background-size: 100% auto;
-    }
+#rcue-login-screen span.product-name {
+  font-weight: bold;
 }
 
 #rcue-login-screen form {
