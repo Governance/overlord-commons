@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.overlord</groupId>
@@ -8,7 +9,7 @@
   <artifactId>overlord-commons-installer</artifactId>
   <packaging>jar</packaging>
   <name>Overlord Commons: Installer</name>
-  
+
   <properties>
     <overlord-commons.version>${project.version}</overlord-commons.version>
   </properties>
@@ -63,4 +64,66 @@
     </pluginManagement>
   </build>
 
+  <profiles>
+    <!-- Profile to install to EAP 6.1 -->
+    <profile>
+      <id>eap61</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.overlord</groupId>
+          <artifactId>overlord-commons-auth</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.overlord</groupId>
+          <artifactId>overlord-commons-idp</artifactId>
+          <version>${project.version}</version>
+          <type>war</type>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <dependencies>
+              <dependency>
+                <groupId>ant</groupId>
+                <artifactId>ant-trax</artifactId>
+                <version>1.6.5</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>install-eap61</id>
+                <phase>install</phase>
+                <configuration>
+                  <tasks>
+                    <property name="appserver.id" value="jboss-eap-6.1" />
+
+                    <unzip src="jboss-eap-6.1.0.zip" dest="${project.build.directory}" overwrite="false" />
+                    <property name="overlord-commons.install.dir" value="${project.build.directory}" />
+
+                    <!-- Overlord Commons Installer and Dependencies -->
+                    <property name="overlord-commons.idp.download.url"
+                      value="file:///${maven.dependency.org.overlord.overlord-commons-idp.war.path}" />
+                    <property name="overlord-commons.auth.download.url"
+                      value="file:///${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
+
+                    <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
+                      <target name="install" />
+                    </ant>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
