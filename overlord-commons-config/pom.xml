@@ -21,5 +21,11 @@
       <artifactId>commons-configuration</artifactId>
       <version>${commons.config.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.picketbox</groupId>
+      <artifactId>picketbox</artifactId>
+      <version>${picketbox.version}</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>
