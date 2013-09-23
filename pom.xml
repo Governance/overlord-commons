@@ -90,8 +90,9 @@
     <maven.deploy.plugin.version>2.5</maven.deploy.plugin.version>
     
     <!-- Third party libraries -->
-    <commons.config.version>1.8</commons.config.version>
+    <commons.config.version>1.6</commons.config.version>
     <commons.io.version>2.4</commons.io.version>
+    <picketbox.version>4.0.7.Final</picketbox.version>
   </properties>
 
   <modules>

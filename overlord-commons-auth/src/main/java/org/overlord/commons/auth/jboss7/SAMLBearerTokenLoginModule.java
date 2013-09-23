@@ -15,10 +15,9 @@
  */
 package org.overlord.commons.auth.jboss7;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
+import java.security.KeyPair;
+import java.security.KeyStore;
 import java.security.Principal;
 import java.security.acl.Group;
 import java.util.HashSet;
@@ -34,12 +33,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.auth.spi.AbstractServerLoginModule;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.parsers.saml.SAMLAssertionParser;
+import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
 import org.picketlink.identity.federation.core.saml.v2.util.XMLTimeUtil;
 import org.picketlink.identity.federation.saml.v2.assertion.AssertionType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType;
@@ -50,6 +51,7 @@ import org.picketlink.identity.federation.saml.v2.assertion.ConditionsType;
 import org.picketlink.identity.federation.saml.v2.assertion.NameIDType;
 import org.picketlink.identity.federation.saml.v2.assertion.StatementAbstractType;
 import org.picketlink.identity.federation.saml.v2.assertion.SubjectType;
+import org.w3c.dom.Document;
 
 /**
  * <p>
@@ -75,6 +77,11 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
 
     /** Configured in standalone.xml in the login module */
     private Set<String> allowedIssuers = new HashSet<String>();
+    private String signatureRequired;
+    private String keystorePath;
+    private String keystorePassword;
+    private String keyAlias;
+    private String keyPassword;
 
     private Principal identity;
     private Set<String> roles = new HashSet<String>();
@@ -100,6 +107,11 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                     allowedIssuers.add(issuer);
             }
         }
+        signatureRequired = (String) options.get("signatureRequired");
+        keystorePath = (String) options.get("keystorePath");
+        keystorePassword = (String) options.get("keystorePassword");
+        keyAlias = (String) options.get("keyAlias");
+        keyPassword = (String) options.get("keyPassword");
     }
 
     /**
@@ -107,7 +119,6 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
      */
     @Override
     public boolean login() throws LoginException {
-        InputStream is = null;
         try {
             HttpServletRequest request =
                     (HttpServletRequest) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
@@ -118,12 +129,19 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                 String data = new String(dataBytes, "UTF-8");
                 if (data.startsWith("SAML-BEARER-TOKEN:")) {
                     String assertionData = data.substring(18);
+                    Document samlAssertion = DocumentUtil.getDocument(assertionData);
                     SAMLAssertionParser parser = new SAMLAssertionParser();
-                    is = new ByteArrayInputStream(assertionData.getBytes("UTF-8"));
-                    XMLEventReader xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(is);
+                    DOMSource source = new DOMSource(samlAssertion);
+                    XMLEventReader xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(source);
                     Object parsed = parser.parse(xmlEventReader);
                     AssertionType assertion = (AssertionType) parsed;
                     validateAssertion(assertion, request);
+                    if ("true".equals(signatureRequired)) {
+                        KeyPair keyPair = getKeyPair(assertion);
+                        if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
+                            throw new LoginException("Invalid signature found on SAML assertion!");
+                        }
+                    }
                     consumeAssertion(assertion);
                     loginOk = true;
                     return true;
@@ -135,10 +153,37 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
             e.printStackTrace();
             loginOk = false;
             return false;
-        } finally {
-            if (is != null) try { is.close(); } catch (IOException e) {}
         }
         return super.login();
+    }
+
+    /**
+     * Gets the key pair to use to validate the assertion's signature.  The key pair is retrieved
+     * from the keystore.
+     * @param assertion
+     * @throws LoginException
+     */
+    private KeyPair getKeyPair(AssertionType assertion) throws LoginException {
+        KeyStore keystore = loadKeystore();
+        try {
+            return SAMLBearerTokenUtil.getKeyPair(keystore, keyAlias, keyPassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new LoginException("Failed to get KeyPair when validating SAML assertion signature.  Alias: " + keyAlias);
+        }
+    }
+
+    /**
+     * Loads the keystore.
+     * @throws LoginException
+     */
+    private KeyStore loadKeystore() throws LoginException {
+        try {
+            return SAMLBearerTokenUtil.loadKeystore(keystorePath, keystorePassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new LoginException("Error loading signature keystore: " + e.getMessage());
+        }
     }
 
     /**

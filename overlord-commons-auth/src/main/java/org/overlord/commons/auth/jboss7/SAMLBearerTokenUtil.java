@@ -15,13 +15,24 @@
  */
 package org.overlord.commons.auth.jboss7;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyStore;
 import java.security.Principal;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.util.Set;
 import java.util.UUID;
 
 import org.jboss.security.SecurityContextAssociation;
+import org.picketlink.identity.federation.api.saml.v2.sig.SAML2Signature;
 import org.picketlink.identity.federation.core.saml.v2.factories.SAMLAssertionFactory;
 import org.picketlink.identity.federation.core.saml.v2.util.AssertionUtil;
+import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
 import org.picketlink.identity.federation.saml.v2.assertion.AssertionType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType.ASTChoiceType;
@@ -29,6 +40,7 @@ import org.picketlink.identity.federation.saml.v2.assertion.AttributeType;
 import org.picketlink.identity.federation.saml.v2.assertion.ConditionAbstractType;
 import org.picketlink.identity.federation.saml.v2.assertion.NameIDType;
 import org.picketlink.identity.federation.saml.v2.assertion.SubjectType;
+import org.w3c.dom.Document;
 
 /**
  * Class used to create SAML bearer tokens used when calling REST service
@@ -84,5 +96,67 @@ public class SAMLBearerTokenUtil {
         assertion.addStatement(roleStatement);
     }
 
+    /**
+     * Signs a SAML assertion using the given security {@link KeyPair}.
+     * @param assertion
+     * @param keypair
+     */
+    public static String signSAMLAssertion(String assertion, KeyPair keypair) {
+        try {
+            Document samlDocument = DocumentUtil.getDocument(assertion);
+            SAML2Signature sig = new SAML2Signature();
+            sig.signSAMLDocument(samlDocument, keypair);
+            return DocumentUtil.getDocumentAsString(samlDocument);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * Validates the SAML assertion's signature is valid.
+     */
+    public static boolean isSAMLAssertionSignatureValid(Document samlAssertion, KeyPair keyPair) {
+        return AssertionUtil.isSignatureValid(samlAssertion.getDocumentElement(), keyPair.getPublic());
+    }
+
+    /**
+     * Gets the key pair to use to either sign an assertion or validate an assertion's signature. The key pair
+     * is retrieved from the keystore.
+     */
+    public static KeyPair getKeyPair(KeyStore keystore, String keyAlias, String keyPassword) throws Exception {
+        try {
+            Key key = keystore.getKey(keyAlias, keyPassword.toCharArray());
+            if (key instanceof PrivateKey) {
+                Certificate cert = keystore.getCertificate(keyAlias);
+                PublicKey publicKey = cert.getPublicKey();
+                return new KeyPair(publicKey, (PrivateKey) key);
+            }
+            throw new Exception("Failed to get KeyPair from KeyStore.  Incorrect key type found for alias: " + keyAlias);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Failed to get KeyPair from KeyStore.  Alias: " + keyAlias);
+        }
+    }
+
+    /**
+     * Loads the keystore.
+     * @param keystorePath
+     * @param keystorePassword
+     * @throws Exception
+     */
+    public static KeyStore loadKeystore(String keystorePath, String keystorePassword) throws Exception {
+        File keystoreFile = new File(keystorePath);
+        if (!keystoreFile.isFile()) {
+            throw new Exception("No KeyStore found at path " + keystorePath);
+        }
+        KeyStore keystore = KeyStore.getInstance("jks");
+        InputStream is = null;
+        try {
+            is = new FileInputStream(keystoreFile);
+            keystore.load(is, keystorePassword.toCharArray());
+            return keystore;
+        } finally {
+            if (is != null) { try { is.close(); } catch (Exception e) {} }
+        }
+    }
 }
