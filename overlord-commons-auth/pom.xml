@@ -24,6 +24,13 @@
       <version>2.1.6.Final</version>
       <scope>provided</scope>
     </dependency>
+    <!-- JBoss Security -->
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-security</artifactId>
+      <version>7.2.0.Final</version>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Provided libraries -->
     <dependency>

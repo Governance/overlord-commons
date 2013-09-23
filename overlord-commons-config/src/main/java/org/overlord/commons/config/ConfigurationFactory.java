@@ -23,7 +23,9 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.overlord.commons.config.vault.VaultLookup;
 
 /**
  * Factory used to create instances of {@link Configuration}, used by various
@@ -32,6 +34,8 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
  * @author eric.wittmann@redhat.com
  */
 public class ConfigurationFactory {
+
+    private static boolean globalLookupsRegistered = false;
 
     /**
      * Shared method used to locate and load configuration information from a number of
@@ -45,6 +49,7 @@ public class ConfigurationFactory {
      */
     public static Configuration createConfig(String configFileOverride, String standardConfigFileName,
             Long refreshDelay, String defaultConfigPath, Class<?> defaultConfigLoader) {
+        registerGlobalLookups();
         try {
             CompositeConfiguration config = new CompositeConfiguration();
             config.addConfiguration(new SystemPropertiesConfiguration());
@@ -62,6 +67,17 @@ public class ConfigurationFactory {
             return config;
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Registers global lookups for overlord configuration.  This allows custom
+     * property interpolation to take place.
+     */
+    private synchronized static void registerGlobalLookups() {
+        if (!globalLookupsRegistered) {
+            ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup());
+            globalLookupsRegistered = true;
         }
     }
 
