@@ -67,7 +67,7 @@
   <profiles>
     <!-- Profile to install to EAP 6.1 -->
     <profile>
-      <id>eap61</id>
+      <id>test-install-eap61</id>
       <dependencies>
         <dependency>
           <groupId>org.overlord</groupId>
@@ -112,7 +112,7 @@
                       value="file:///${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
 
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
-                      <target name="install" />
+                      <target name="install-vault" />
                     </ant>
                   </tasks>
                 </configuration>
