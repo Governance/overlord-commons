@@ -37,7 +37,7 @@
     <mkdir dir="${overlord-commons.install.dir}" />
   </target>
   
-  <!-- Install -->
+  <!-- Install Everything -->
   <target name="install" depends="all-properties, config">
     <echo message=" " />
     <echo message="#######################################################" />
@@ -55,12 +55,43 @@
     <echo message="########################################" />
     <echo message=" " />
   </target>
+  
+  <!-- Install auth + vault only -->
+  <target name="install-vault" depends="all-properties, config">
+    <echo message=" " />
+    <echo message="#######################################################" />
+    <echo message="# Running the Overlord Commons installer.  This will  #" />
+    <echo message="# install and configure a Vault for JBoss.            #" />
+    <echo message="#######################################################" />
+    <echo message=" " />
+
+    <property name="overlord-commons.vault-only" value="true" />
+    <antcall target="install-overlord-commons" />
+
+    <echo message=" " />
+    <echo message="########################################" />
+    <echo message="# Finished installing Overlord Commons #" />
+    <echo message="########################################" />
+    <echo message=" " />
+  </target>
 
   <!-- Install Overlord Commons -->
   <target name="install-overlord-commons" depends="overlord-commons.check" unless="overlord-commons.already.installed">
     <echo>Downloading Overlord Commons resources</echo>
     <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
     <get src="${overlord-commons.auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
+    
+    <antcall target="install-overlord-idp" />
+
+    <copy file="updates/add-overlord-user.sh" todir="${overlord-commons.appserver.dir}/bin" />
+    <copy file="updates/add-overlord-user.bat" todir="${overlord-commons.appserver.dir}/bin" />
+    
+    <antcall target="install-jboss-eap-6.1" />
+    <antcall target="install-jboss-as-7.1.1.Final" />
+  </target>
+
+  <!-- Installs the Overlord IDP WAR -->
+  <target name="install-overlord-idp" unless="overlord-commons.vault-only">
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.appserver.deploy.dir}/overlord-idp.war" overwrite="true" />
     <unzip src="${overlord-commons.idp.file}" dest="${overlord-commons.install.dir}/overlord-commons-idp-resources">
@@ -72,24 +103,6 @@
           tofile="${overlord-commons.appserver.config.dir}/overlord-idp-users.properties" overwrite="true" />
     <copy file="${overlord-commons.install.dir}/overlord-commons-idp-resources/WEB-INF/classes/overlord-idp-roles.properties"
           tofile="${overlord-commons.appserver.config.dir}/overlord-idp-roles.properties" overwrite="true" />
-
-    <copy file="updates/add-overlord-user.sh" todir="${overlord-commons.appserver.dir}/bin" />
-    <copy file="updates/add-overlord-user.bat" todir="${overlord-commons.appserver.dir}/bin" />
-
-    <!-- Ask the user for the admin password -->
-    <echo message="" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="!    User Input Required    !" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="" />
-    <input message="Please enter a password for the Overlord 'admin' user: "
-           addproperty="overlord-commons.admin.password">
-      <handler type="secure" />
-    </input>
-    <echo message="" />
-    
-    <antcall target="install-jboss-eap-6.1" />
-    <antcall target="install-jboss-as-7.1.1.Final" />
   </target>
 
   <!-- Install into EAP 6.1 -->
@@ -242,42 +255,12 @@
     <property file="${overlord-commons.tmp.file}" />
     <delete file="${overlord-commons.tmp.file}" />
     <echo message="Vault key for Overlord SAML alias: ${overlord-commons.overlord-alias.password.hash}" />
-    
+
     <!-- Save the password hashes for future installers to use -->
     <propertyfile file="${overlord-commons.appserver.config.dir}/overlord-vault-keys.properties">
       <entry key="overlord-commons.vault.password.hash" value="${overlord-commons.vault.password.hash}" />
       <entry key="overlord-commons.overlord-alias.password.hash" value="${overlord-commons.overlord-alias.password.hash}" />
     </propertyfile>
-
-    <!-- Create Overlord admin user -->
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-          fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
-      <arg value="adduser"/>
-      <arg value="-configdir"/>
-      <arg value="${overlord-commons.appserver.config.dir}"/>
-      <arg value="-vaultdir"/>
-      <arg value="${overlord-commons.appserver.dir}/vault/"/>
-      <arg value="-keystore"/>
-      <arg value="${overlord-commons.appserver.config.dir}/vault.keystore"/>
-      <arg value="-storepass"/>
-      <arg value="${overlord-commons.vault.password}"/>
-      <arg value="-alias"/>
-      <arg value="vault"/>
-      <arg value="-salt"/>
-      <arg value="8675309K"/>
-      <arg value="-count"/>
-      <arg value="50"/>
-      <arg value="-user"/>
-      <arg value="admin"/>
-      <arg value="-password"/>
-      <arg value="${overlord-commons.admin.password}"/>
-      <arg value="-roles"/>
-      <arg value="dev,qa,stage,prod"/>
-    </java>
 
     <echo>Configuring standalone.xml with Overlord login-modules.</echo>
     <mkdir dir="${overlord-commons.appserver.config.dir}/.overlord_backup" />
@@ -325,6 +308,55 @@
     </xslt>
     <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone-ha.xml" overwrite="true" />
     <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
+    
+    <antcall target="install-admin-user" />
+  </target>
+
+  <!-- Installs the overlord admin user -->
+  <target name="install-admin-user" unless="overlord-commons.vault-only">
+
+    <!-- Ask the user for the admin password -->
+    <echo message="" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="!    User Input Required    !" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="" />
+    <input message="Please enter a password for the Overlord 'admin' user: "
+           addproperty="overlord-commons.admin.password">
+      <handler type="secure" />
+    </input>
+    <echo message="" />
+
+    <!-- Create Overlord admin user -->
+    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
+          fork="true" dir="${overlord-commons.appserver.dir}"
+          failonerror="true" maxmemory="128m">
+      <arg value="-mp"/>
+      <arg value="${overlord-commons.appserver.module-path}"/>
+      <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
+      <arg value="adduser"/>
+      <arg value="-configdir"/>
+      <arg value="${overlord-commons.appserver.config.dir}"/>
+      <arg value="-vaultdir"/>
+      <arg value="${overlord-commons.appserver.dir}/vault/"/>
+      <arg value="-keystore"/>
+      <arg value="${overlord-commons.appserver.config.dir}/vault.keystore"/>
+      <arg value="-storepass"/>
+      <arg value="${overlord-commons.vault.password}"/>
+      <arg value="-alias"/>
+      <arg value="vault"/>
+      <arg value="-salt"/>
+      <arg value="8675309K"/>
+      <arg value="-count"/>
+      <arg value="50"/>
+      <arg value="-user"/>
+      <arg value="admin"/>
+      <arg value="-password"/>
+      <arg value="${overlord-commons.admin.password}"/>
+      <arg value="-roles"/>
+      <arg value="dev,qa,stage,prod"/>
+    </java>
+  
   </target>
 
   <!-- Install PicketLink into JBoss AS 7.1.1.Final -->
