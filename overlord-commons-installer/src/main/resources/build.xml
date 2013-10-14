@@ -30,6 +30,9 @@
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
     <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
 
+    <condition property="standalone-osgi-exists">
+      <available file="${overlord-commons.appserver.config.dir}/standalone-osgi.xml" />
+    </condition>
   </target>
 
   <!-- Do some config -->
@@ -127,7 +130,10 @@
     <copy file="modules/overlord-commons-auth-tool-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/module.xml" />
 
     <antcall target="install-jboss-common" />
+    <antcall target="configure-standalone-osgi" />
+  </target>
     
+  <target name="configure-standalone-osgi" if="standalone-osgi-exists">
     <copy file="${overlord-commons.appserver.config.dir}/standalone-osgi.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
     <!-- standalone-osgi.xml -->
     <property name="overlord-commons.securityDomain.xslt" value="xslt/addSecurityDomains-${appserver.id}.xslt" />
