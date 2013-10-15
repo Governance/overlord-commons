@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- XSLT file to add the security domains to the standalone.xml -->
-<xsl:stylesheet xmlns="urn:jboss:domain:1.4" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:as="urn:jboss:domain:1.4"
-  xmlns:sd="urn:jboss:domain:security:1.2" xmlns:xalan="http://xml.apache.org/xalan" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:param name="keystore-password" />
   <xsl:param name="overlord-password" />
 
-  <xsl:output method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
+  <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
 
-  <xsl:template match="as:extensions">
+  <xsl:template match="/*[name()='server']/*[name()='extensions']">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()|text()" />
     </xsl:copy>
@@ -22,7 +21,7 @@
     </vault>
   </xsl:template>
 
-  <xsl:template match="as:profile/sd:subsystem/sd:security-domains">
+  <xsl:template match="*[name()='profile']/*[name()='subsystem']/*[name()='security-domains']">
     <security-domains>
       <security-domain name="overlord-idp" cache-type="default">
         <authentication>
