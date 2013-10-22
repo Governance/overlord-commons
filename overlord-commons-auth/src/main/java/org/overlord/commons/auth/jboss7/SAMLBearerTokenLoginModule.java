@@ -29,6 +29,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
 import javax.security.jacc.PolicyContext;
+import javax.security.jacc.PolicyContextException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLEventReader;
@@ -74,7 +75,7 @@ import org.w3c.dom.Document;
  * @author eric.wittmann@redhat.com
  */
 public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
-
+    
     /** Configured in standalone.xml in the login module */
     private Set<String> allowedIssuers = new HashSet<String>();
     private String signatureRequired;
@@ -120,8 +121,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     @Override
     public boolean login() throws LoginException {
         try {
-            HttpServletRequest request =
-                    (HttpServletRequest) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
+            HttpServletRequest request = getCurrentRequest();
             String authorization = request.getHeader("Authorization");
             if (authorization != null && authorization.startsWith("Basic")) {
                 String b64Data = authorization.substring(6);
@@ -155,6 +155,25 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
             return false;
         }
         return super.login();
+    }
+
+    /**
+     * Gets the current HTTP servlet request.
+     * @throws PolicyContextException
+     */
+    private HttpServletRequest getCurrentRequest() throws LoginException {
+        HttpServletRequest request = HttpRequestThreadLocalValve.TL_request.get();
+        if (request == null) {
+            try {
+                request = (HttpServletRequest) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
+            } catch (Exception e) {
+                request = null;
+            }
+        }
+        if (request == null) {
+            throw new LoginException("Failed to get current HTTP request.");
+        }
+        return request;
     }
 
     /**
