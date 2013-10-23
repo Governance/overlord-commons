@@ -8,67 +8,125 @@
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
 
   <xsl:template match="/*[name()='server']/*[name()='extensions']">
+    <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:copy>
       <xsl:apply-templates select="@*|node()|text()" />
     </xsl:copy>
-    <vault>
-      <vault-option name="KEYSTORE_URL" value="${{jboss.server.config.dir}}/vault.keystore" />
-      <vault-option name="KEYSTORE_PASSWORD" value="MASK-BIxfWy96dzp" />
-      <vault-option name="KEYSTORE_ALIAS" value="vault" />
-      <vault-option name="SALT" value="8675309K" />
-      <vault-option name="ITERATION_COUNT" value="50" />
-      <vault-option name="ENC_FILE_DIR" value="${{jboss.home.dir}}/vault/" />
-    </vault>
+    <xsl:element name="vault" namespace="{$currentNS}">
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">KEYSTORE_URL</xsl:attribute>
+        <xsl:attribute name="value">${jboss.server.config.dir}/vault.keystore</xsl:attribute>
+      </xsl:element>
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">KEYSTORE_PASSWORD</xsl:attribute>
+        <xsl:attribute name="value">MASK-BIxfWy96dzp</xsl:attribute>
+      </xsl:element>
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">KEYSTORE_ALIAS</xsl:attribute>
+        <xsl:attribute name="value">vault</xsl:attribute>
+      </xsl:element>
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">SALT</xsl:attribute>
+        <xsl:attribute name="value">8675309K</xsl:attribute>
+      </xsl:element>
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">ITERATION_COUNT</xsl:attribute>
+        <xsl:attribute name="value">50</xsl:attribute>
+      </xsl:element>
+      <xsl:element name="vault-option" namespace="{$currentNS}">
+        <xsl:attribute name="name">ENC_FILE_DIR</xsl:attribute>
+        <xsl:attribute name="value">${jboss.home.dir}/vault/</xsl:attribute>
+      </xsl:element>
+    </xsl:element>
   </xsl:template>
 
   <xsl:template match="*[name()='profile']/*[name()='subsystem']/*[name()='security-domains']">
-    <security-domains>
-      <security-domain name="overlord-idp" cache-type="default">
-        <authentication>
-          <login-module code="org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule"
-            flag="required">
-            <module-option name="usersProperties" value="${{jboss.server.config.dir}}/overlord-idp-users.properties" />
-            <module-option name="rolesProperties" value="${{jboss.server.config.dir}}/overlord-idp-roles.properties" />
-          </login-module>
-        </authentication>
-      </security-domain>
-      <security-domain name="overlord-sp" cache-type="default">
-        <authentication>
-          <login-module code="org.picketlink.identity.federation.bindings.jboss.auth.SAML2LoginModule"
-            flag="required" />
-        </authentication>
-      </security-domain>
-      <security-domain name="overlord-jaxrs" cache-type="default">
-        <authentication>
-          <login-module code="org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule" flag="sufficient">
-            <module-option name="allowedIssuers" value="/s-ramp-ui,/dtgov,/dtgov-ui,/gadget-web" />
-            <module-option name="signatureRequired" value="true" />
-            <module-option name="keystorePath" value="${{jboss.server.config.dir}}/vault.keystore" />
-            <module-option name="keystorePassword">
+    <xsl:variable name="currentNS" select="namespace-uri(.)" />
+    <xsl:element name="security-domains" namespace="{$currentNS}">
+      <xsl:element name="security-domain" namespace="{$currentNS}">
+        <xsl:attribute name="name">overlord-idp</xsl:attribute>
+        <xsl:attribute name="cache-type">default</xsl:attribute>
+        <xsl:element name="authentication" namespace="{$currentNS}">
+          <xsl:element name="login-module" namespace="{$currentNS}">
+            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule</xsl:attribute>
+            <xsl:attribute name="flag">required</xsl:attribute>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">usersProperties</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-users.properties</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">rolesProperties</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-roles.properties</xsl:attribute>
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <xsl:element name="security-domain" namespace="{$currentNS}">
+        <xsl:attribute name="name">overlord-sp</xsl:attribute>
+        <xsl:attribute name="cache-type">default</xsl:attribute>
+        <xsl:element name="authentication" namespace="{$currentNS}">
+          <xsl:element name="login-module" namespace="{$currentNS}">
+            <xsl:attribute name="code">org.picketlink.identity.federation.bindings.jboss.auth.SAML2LoginModule</xsl:attribute>
+            <xsl:attribute name="flag">required</xsl:attribute>
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <xsl:element name="security-domain" namespace="{$currentNS}">
+        <xsl:attribute name="name">overlord-jaxrs</xsl:attribute>
+        <xsl:attribute name="cache-type">default</xsl:attribute>
+        <xsl:element name="authentication" namespace="{$currentNS}">
+          <xsl:element name="login-module" namespace="{$currentNS}">
+            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule</xsl:attribute>
+            <xsl:attribute name="flag">sufficient</xsl:attribute>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">allowedIssuers</xsl:attribute>
+              <xsl:attribute name="value">/s-ramp-ui,/dtgov,/dtgov-ui,/gadget-web</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">signatureRequired</xsl:attribute>
+              <xsl:attribute name="value">true</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">keystorePath</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/vault.keystore</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">keystorePassword</xsl:attribute>
               <xsl:attribute name="value">
                 <xsl:text>${</xsl:text>
                 <xsl:value-of select="$keystore-password" />
                 <xsl:text>}</xsl:text>
               </xsl:attribute>
-            </module-option>
-            <module-option name="keyAlias" value="overlord" />
-            <module-option name="keyPassword">
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">keyAlias</xsl:attribute>
+              <xsl:attribute name="value">overlord</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">keyPassword</xsl:attribute>
               <xsl:attribute name="value">
                 <xsl:text>${</xsl:text>
                 <xsl:value-of select="$overlord-password" />
                 <xsl:text>}</xsl:text>
               </xsl:attribute>
-            </module-option>
-          </login-module>
-          <login-module code="org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule"
-            flag="sufficient">
-            <module-option name="usersProperties" value="${{jboss.server.config.dir}}/overlord-idp-users.properties" />
-            <module-option name="rolesProperties" value="${{jboss.server.config.dir}}/overlord-idp-roles.properties" />
-          </login-module>
-        </authentication>
-      </security-domain>
+            </xsl:element>
+          </xsl:element>
+          <xsl:element name="login-module" namespace="{$currentNS}">
+            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule</xsl:attribute>
+            <xsl:attribute name="flag">sufficient</xsl:attribute>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">usersProperties</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-users.properties</xsl:attribute>
+            </xsl:element>
+            <xsl:element name="module-option" namespace="{$currentNS}">
+              <xsl:attribute name="name">rolesProperties</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-roles.properties</xsl:attribute>
+            </xsl:element>
+          </xsl:element>
+        </xsl:element>
+      </xsl:element>
       <xsl:apply-templates select="@* | *" />
-    </security-domains>
+    </xsl:element>
   </xsl:template>
 
   <!-- Copy everything else. -->
