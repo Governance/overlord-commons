@@ -112,7 +112,7 @@
                       value="file:///${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
 
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
-                      <target name="install-vault" />
+                      <target name="install" />
                     </ant>
                   </tasks>
                 </configuration>

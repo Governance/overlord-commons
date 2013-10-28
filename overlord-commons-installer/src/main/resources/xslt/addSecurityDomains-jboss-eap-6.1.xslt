@@ -3,7 +3,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:param name="keystore-password" />
-  <xsl:param name="overlord-password" />
+  <xsl:param name="key-password" />
 
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
 
@@ -48,15 +48,11 @@
         <xsl:attribute name="cache-type">default</xsl:attribute>
         <xsl:element name="authentication" namespace="{$currentNS}">
           <xsl:element name="login-module" namespace="{$currentNS}">
-            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule</xsl:attribute>
+            <xsl:attribute name="code">RealmDirect</xsl:attribute>
             <xsl:attribute name="flag">required</xsl:attribute>
             <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">usersProperties</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-users.properties</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">rolesProperties</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-roles.properties</xsl:attribute>
+              <xsl:attribute name="name">password-stacking</xsl:attribute>
+              <xsl:attribute name="value">useFirstPass</xsl:attribute>
             </xsl:element>
           </xsl:element>
         </xsl:element>
@@ -88,7 +84,7 @@
             </xsl:element>
             <xsl:element name="module-option" namespace="{$currentNS}">
               <xsl:attribute name="name">keystorePath</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/vault.keystore</xsl:attribute>
+              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-saml.keystore</xsl:attribute>
             </xsl:element>
             <xsl:element name="module-option" namespace="{$currentNS}">
               <xsl:attribute name="name">keystorePassword</xsl:attribute>
@@ -106,21 +102,17 @@
               <xsl:attribute name="name">keyPassword</xsl:attribute>
               <xsl:attribute name="value">
                 <xsl:text>${</xsl:text>
-                <xsl:value-of select="$overlord-password" />
+                <xsl:value-of select="$key-password" />
                 <xsl:text>}</xsl:text>
               </xsl:attribute>
             </xsl:element>
           </xsl:element>
           <xsl:element name="login-module" namespace="{$currentNS}">
-            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule</xsl:attribute>
-            <xsl:attribute name="flag">sufficient</xsl:attribute>
+            <xsl:attribute name="code">RealmDirect</xsl:attribute>
+            <xsl:attribute name="flag">required</xsl:attribute>
             <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">usersProperties</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-users.properties</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">rolesProperties</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-idp-roles.properties</xsl:attribute>
+              <xsl:attribute name="name">password-stacking</xsl:attribute>
+              <xsl:attribute name="value">useFirstPass</xsl:attribute>
             </xsl:element>
           </xsl:element>
         </xsl:element>
