@@ -4,7 +4,7 @@
   xmlns:sd="urn:jboss:domain:security:1.1" xmlns:xalan="http://xml.apache.org/xalan" version="1.0">
 
   <xsl:param name="keystore-password" />
-  <xsl:param name="overlord-password" />
+  <xsl:param name="key-password" />
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
 
@@ -26,10 +26,8 @@
     <security-domains>
       <security-domain name="overlord-idp" cache-type="default">
         <authentication>
-          <login-module code="org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule"
-            flag="required">
-            <module-option name="usersProperties" value="${{jboss.server.config.dir}}/overlord-idp-users.properties" />
-            <module-option name="rolesProperties" value="${{jboss.server.config.dir}}/overlord-idp-roles.properties" />
+          <login-module code="RealmDirect" flag="required">
+            <module-option name="password-stacking" value="useFirstPass"/>
           </login-module>
         </authentication>
       </security-domain>
@@ -44,7 +42,7 @@
           <login-module code="org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule" flag="sufficient">
             <module-option name="allowedIssuers" value="/s-ramp-ui,/dtgov,/dtgov-ui,/gadget-web" />
             <module-option name="signatureRequired" value="true" />
-            <module-option name="keystorePath" value="${{jboss.server.config.dir}}/vault.keystore" />
+            <module-option name="keystorePath" value="${{jboss.server.config.dir}}/overlord-saml.keystore" />
             <module-option name="keystorePassword">
               <xsl:attribute name="value">
                 <xsl:text>${</xsl:text>
@@ -56,15 +54,13 @@
             <module-option name="keyPassword">
               <xsl:attribute name="value">
                 <xsl:text>${</xsl:text>
-                <xsl:value-of select="$overlord-password" />
+                <xsl:value-of select="$key-password" />
                 <xsl:text>}</xsl:text>
               </xsl:attribute>
             </module-option>
           </login-module>
-          <login-module code="org.overlord.commons.auth.jboss7.VaultedUsersRolesLoginModule"
-            flag="sufficient">
-            <module-option name="usersProperties" value="${{jboss.server.config.dir}}/overlord-idp-users.properties" />
-            <module-option name="rolesProperties" value="${{jboss.server.config.dir}}/overlord-idp-roles.properties" />
+          <login-module code="RealmDirect" flag="required">
+            <module-option name="password-stacking" value="useFirstPass"/>
           </login-module>
         </authentication>
       </security-domain>
