@@ -1,5 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jboss.integration-platform</groupId>
+    <artifactId>jboss-integration-platform-bom</artifactId>
+    <version>6.0.0-SNAPSHOT</version>
+  </parent>
 
   <groupId>org.overlord</groupId>
   <artifactId>overlord-commons</artifactId>
@@ -79,39 +86,46 @@
     <maven.surefire.report.plugin.version>2.4.3</maven.surefire.report.plugin.version>
     <maven.surefire.plugin.version>2.7.1</maven.surefire.plugin.version>
     <maven.assembly.plugin.version>2.2</maven.assembly.plugin.version>
-    <maven.install.plugin.version>2.3.1</maven.install.plugin.version>
-    <maven.javadoc.plugin.version>2.7</maven.javadoc.plugin.version>
-    <maven.jxr.plugin.version>2.1</maven.jxr.plugin.version>
     <maven.jar.plugin.version>2.3.1</maven.jar.plugin.version>
     <maven.war.plugin.version>2.1.1</maven.war.plugin.version>
     <maven.bundle.plugin.version>2.1.0</maven.bundle.plugin.version>
     <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
     <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-    <maven.deploy.plugin.version>2.5</maven.deploy.plugin.version>
-    
+
+    <!-- JBoss Integration BOM version -->
+    <jboss.integration.bom.version>6.0.0-SNAPSHOT</jboss.integration.bom.version>
+
     <!-- Third party libraries -->
-    <commons.config.version>1.6</commons.config.version>
-    <commons.io.version>2.4</commons.io.version>
     <picketbox.version>4.0.7.Final</picketbox.version>
+    <picketlink.version>2.1.6.Final</picketlink.version>
+    <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
+    <servlet-api.version>2.5</servlet-api.version>
   </properties>
 
   <modules>
-  <module>overlord-commons-idp</module>
-  <module>overlord-commons-auth</module>
-  <module>overlord-commons-installer</module>
-  <module>overlord-commons-uiheader</module>
-  <module>overlord-commons-gwt</module>
-  <module>overlord-commons-dev</module>
-  <module>overlord-commons-config</module>
+    <module>overlord-commons-idp</module>
+    <module>overlord-commons-auth</module>
+    <module>overlord-commons-installer</module>
+    <module>overlord-commons-uiheader</module>
+    <module>overlord-commons-gwt</module>
+    <module>overlord-commons-dev</module>
+    <module>overlord-commons-config</module>
   </modules>
 
   <build>
-    <!-- This section defines the default plugin settings inherited by child 
-      projects. -->
+    <!-- This section defines the default plugin settings inherited by child projects. -->
     <pluginManagement>
       <plugins>
-        <!-- Fixes how test resources of a project can be used in projects dependent 
-          on it -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven.source.plugin.version}</version>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
@@ -133,6 +147,11 @@
           <version>${maven.bundle.plugin.version}</version>
           <extensions>true</extensions>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>1.0-alpha-2</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -141,7 +160,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -153,7 +171,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>${maven.source.plugin.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -167,7 +184,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.plugin.version}</version>
         <configuration>
           <includes>
             <include>**/*TestCase.java</include>
@@ -182,13 +198,11 @@
           <argLine>-Xmx256M -XX:MaxPermSize=512m</argLine>
         </configuration>
       </plugin>
-      <!-- Build a test-jar for each project, so that src/test/* resources and 
-        classes can be used in other projects. Also customize how the jar files are 
-        assembled. -->
+      <!-- Build a test-jar for each project, so that src/test/* resources and classes can be used in other projects. 
+        Also customize how the jar files are assembled. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven.jar.plugin.version}</version><!--$NO-MVN-MAN-VER$ -->
         <executions>
           <execution>
             <id>test-jar</id>
@@ -212,6 +226,32 @@
     </plugins>
   </build>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.picketbox</groupId>
+        <artifactId>picketbox</artifactId>
+        <version>${picketbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.picketlink</groupId>
+        <artifactId>picketlink-core</artifactId>
+        <version>${picketlink.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-security</artifactId>
+        <version>${jboss-as-security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>${servlet-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <reporting>
     <plugins>
       <plugin>
@@ -234,7 +274,7 @@
       </releases>
       <snapshots>
         <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
+        <updatePolicy>daily</updatePolicy>
       </snapshots>
     </repository>
   </repositories>
@@ -248,7 +288,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <enabled>true</enabled>
+        <enabled>daily</enabled>
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
