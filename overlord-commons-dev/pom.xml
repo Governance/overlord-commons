@@ -7,40 +7,42 @@
   </parent>
   <artifactId>overlord-commons-dev</artifactId>
   <name>Overlord Commons: Dev Servers</name>
+  
+  <properties>
+    <jetty.version>9.0.2.v20130417</jetty.version>
+  </properties>
 
   <dependencies>
     <!-- Jetty -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>9.0.2.v20130417</version>
+      <version>${jetty.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>9.0.2.v20130417</version>
+      <version>${jetty.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-jsp</artifactId>
-      <version>9.0.2.v20130417</version>
+      <version>${jetty.version}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-jndi</artifactId>
-      <version>9.0.2.v20130417</version>
+      <version>${jetty.version}</version>
     </dependency>
     
     <!-- Useful Libraries -->
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.5</version>
     </dependency>
   </dependencies>
 
