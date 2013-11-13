@@ -7,7 +7,6 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>overlord-commons-installer</artifactId>
-  <packaging>jar</packaging>
   <name>Overlord Commons: Installer</name>
 
   <properties>
