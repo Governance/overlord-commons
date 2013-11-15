@@ -3,45 +3,19 @@
 
   <property file="overlord-commons-installer.properties" />
 
+  <!-- ****************************************************** -->
   <!-- Customize these properties when calling this installer -->
+  <!-- ****************************************************** -->
   <property name="appserver.id" value="jboss-eap-6.1" />
   <property name="overlord-commons.install.dir" location="target" />
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
+  <!-- ****************************************************** -->
 
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="overlord-commons.version" value="" />
 
-  <!-- Configure the properties that will drive the installer -->
-  <target name="all-properties">
-    <echo message="Setting all Overlord Commons properties" />
-
-    <!-- Set some properties based on the value of appserver.id -->
-    <condition property="jboss-eap-6.1">
-      <equals arg1="${appserver.id}" arg2="jboss-eap-6.1" />
-    </condition>
-    <condition property="jboss-as-7.1.1.Final">
-      <equals arg1="${appserver.id}" arg2="jboss-as-7.1.1.Final" />
-    </condition>
-
-    <property name="overlord-commons.appserver.deploy.dir" value="${overlord-commons.appserver.dir}/standalone/deployments" />
-    <property name="overlord-commons.appserver.config.dir" value="${overlord-commons.appserver.dir}/standalone/configuration" />
-    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp/${overlord-commons.version}/overlord-commons-idp-${overlord-commons.version}.war" />
-    <property name="overlord-commons.auth.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.jar" />
-    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
-    <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
-
-    <condition property="standalone-osgi-exists">
-      <available file="${overlord-commons.appserver.config.dir}/standalone-osgi.xml" />
-    </condition>
-  </target>
-
-  <!-- Do some config -->
-  <target name="config">
-    <mkdir dir="${overlord-commons.install.dir}" />
-  </target>
-  
   <!-- Install Everything -->
-  <target name="install" depends="all-properties, config">
+  <target name="install">
     <echo message=" " />
     <echo message="#######################################################" />
     <echo message="# Running the Overlord Commons installer.  This will  #" />
@@ -49,8 +23,9 @@
     <echo message="# its dependencies) into an app server.               #" />
     <echo message="#######################################################" />
     <echo message=" " />
-
-    <antcall target="install-overlord-commons" />
+    
+    <property name="overlord-commons.script.dir" location="scripts" />
+    <ant antfile="${overlord-commons.script.dir}/${appserver.id}.xml" inheritall="true" target="install" />
 
     <echo message=" " />
     <echo message="########################################" />
@@ -58,9 +33,9 @@
     <echo message="########################################" />
     <echo message=" " />
   </target>
-  
+
   <!-- Install auth + vault only -->
-  <target name="install-vault" depends="all-properties, config">
+  <target name="install-vault">
     <echo message=" " />
     <echo message="#######################################################" />
     <echo message="# Running the Overlord Commons installer.  This will  #" />
@@ -68,321 +43,14 @@
     <echo message="#######################################################" />
     <echo message=" " />
 
-    <property name="overlord-commons.vault-only" value="true" />
-    <antcall target="install-overlord-commons" />
+    <property name="overlord-commons.script.dir" location="scripts" />
+    <ant antfile="${overlord-commons.script.dir}/${appserver.id}.xml" inheritall="true" target="install-vault" />
 
     <echo message=" " />
     <echo message="########################################" />
     <echo message="# Finished installing Overlord Commons #" />
     <echo message="########################################" />
     <echo message=" " />
-  </target>
-
-  <!-- Install Overlord Commons -->
-  <target name="install-overlord-commons" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <echo>Downloading Overlord Commons resources</echo>
-    <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
-    <get src="${overlord-commons.auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
-    
-    <antcall target="install-overlord-idp" />
-    
-    <antcall target="install-jboss-eap-6.1" />
-    <antcall target="install-jboss-as-7.1.1.Final" />
-  </target>
-
-  <!-- Installs the Overlord IDP WAR -->
-  <target name="install-overlord-idp" unless="overlord-commons.vault-only">
-    <echo>Deploying the Overlord IDP</echo>
-    <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.appserver.deploy.dir}/overlord-idp.war" overwrite="true" />
-    <unzip src="${overlord-commons.idp.file}" dest="${overlord-commons.install.dir}/overlord-commons-idp-resources">
-      <patternset>
-        <include name="**/*.properties" />
-      </patternset>
-    </unzip>
-  </target>
-
-  <!-- Install into EAP 6.1 -->
-  <target name="install-jboss-eap-6.1" if="jboss-eap-6.1">
-    <echo message=" " />
-    <echo message="########################################" />
-    <echo message="# Installing into JBoss EAP 6.1        #" />
-    <echo message="########################################" />
-    <echo message=" " />
-    
-    <!-- Create the Overlord Commons Auth module -->
-    <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main" />
-    <copy file="modules/overlord-commons-auth-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/module.xml">
-      <filterset>
-        <filter token="VERSION" value="${overlord-commons.version}"/>
-      </filterset>
-    </copy>
-    <copy file="${overlord-commons.auth.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-${overlord-commons.version}.jar" overwrite="false" />
-    <!-- Create the Overlord Commons Auth Tool module -->
-    <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main" />
-    <copy file="modules/overlord-commons-auth-tool-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/module.xml" />
-
-    <antcall target="install-jboss-common" />
-    <antcall target="configure-standalone-osgi" />
-  </target>
-    
-  <target name="configure-standalone-osgi" if="standalone-osgi-exists">
-    <copy file="${overlord-commons.appserver.config.dir}/standalone-osgi.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
-    <!-- standalone-osgi.xml -->
-    <property name="overlord-commons.securityDomain.xslt" value="xslt/addSecurityDomains-${appserver.id}.xslt" />
-    <xslt 
-      style="${overlord-commons.securityDomain.xslt}"
-      in="${overlord-commons.appserver.config.dir}/standalone-osgi.xml"
-      out="${overlord-commons.install.dir}/_tmp_standalone.xml">
-      <param name="keystore-password" expression="${overlord-commons.saml-keystore.password.hash}"/>
-      <param name="key-password" expression="${overlord-commons.overlord-alias.password.hash}"/>
-    </xslt>
-    <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone-osgi.xml" overwrite="true" />
-    <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
-  </target>
-
-  <!-- Install into JBoss AS 7.1.1.Final -->
-  <target name="install-jboss-as-7.1.1.Final" if="jboss-as-7.1.1.Final">
-    <echo message=" " />
-    <echo message="########################################" />
-    <echo message="# Installing into JBoss AS 7.1.1.Final #" />
-    <echo message="########################################" />
-    <echo message=" " />
-
-    <!-- Create the Overlord Commons Auth module -->
-    <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main" />
-    <copy file="modules/overlord-commons-auth-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/module.xml">
-      <filterset>
-        <filter token="VERSION" value="${overlord-commons.version}"/>
-      </filterset>
-    </copy>
-    <copy file="${overlord-commons.auth.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-${overlord-commons.version}.jar" overwrite="false" />
-    
-    <property name="overlord-commons.picketlink.version" value="2.1.6.Final" />
-    <property name="overlord-commons.picketlink.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/picketlink/picketlink-installer/${overlord-commons.picketlink.version}/picketlink-installer-${overlord-commons.picketlink.version}.zip" />
-
-    <antcall target="install-picketlink-jboss-as-7.1.1.Final" />
-    <antcall target="install-jboss-common" />
-  </target>
-
-  <!-- Common logic for JBoss AS and JBoss EAP -->
-  <target name="install-jboss-common">
-    <property name="overlord-commons.securityDomain.xslt" value="xslt/addSecurityDomains-${appserver.id}.xslt" />
-    <property name="overlord-commons.vault.password" value="vault22" />
-    <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
-    <property name="overlord-commons.overlord-alias.password" value="overlord99" />
-    <property name="overlord-commons.tmp.file" location="${overlord-commons.install.dir}/_tmp_vault.properties" />
-
-    <!-- Create the password vault keystore -->
-    <genkey keystore="${overlord-commons.appserver.config.dir}/vault.keystore" storepass="${overlord-commons.vault.password}" 
-            keyalg="RSA" keysize="1024" alias="vault" storetype="jks"
-            dname="CN=Picketbox vault, OU=picketbox, O=Jboss, L=Westford, ST=Mass, C=US"/>
-
-    <!-- Create the SAML signature keystore -->
-    <genkey keystore="${overlord-commons.appserver.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
-            keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
-            dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
-
-    <!-- Store SAML signature keystore password in vault -->
-    <property name="overlord-commons.appserver.module-path" location="${overlord-commons.appserver.dir}/modules" />
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-          fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
-      <arg value="storepassword"/>
-      <arg value="-vaultdir"/>
-      <arg value="${overlord-commons.appserver.dir}/vault/"/>
-      <arg value="-keystore"/>
-      <arg value="${overlord-commons.appserver.config.dir}/vault.keystore"/>
-      <arg value="-storepass"/>
-      <arg value="${overlord-commons.vault.password}"/>
-      <arg value="-alias"/>
-      <arg value="vault"/>
-      <arg value="-salt"/>
-      <arg value="8675309K"/>
-      <arg value="-count"/>
-      <arg value="50"/>
-      <arg value="-name"/>
-      <arg value="saml-keystore.password"/>
-      <arg value="-password"/>
-      <arg value="${overlord-commons.saml-keystore.password}"/>
-      <arg value="-block"/>
-      <arg value="vault"/>
-      <arg value="-propertyfile"/>
-      <arg value="${overlord-commons.tmp.file}"/>
-      <arg value="-property"/>
-      <arg value="overlord-commons.saml-keystore.password.hash"/>
-    </java>
-    <property file="${overlord-commons.tmp.file}" />
-    <delete file="${overlord-commons.tmp.file}" />
-    <echo message="Vault key for saml signature keystore password: ${overlord-commons.saml-keystore.password.hash}" />
-
-    <!-- Store overlord saml keypair alias password in vault -->
-    <property name="overlord-commons.appserver.module-path" location="${overlord-commons.appserver.dir}/modules" />
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-          fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
-      <arg value="storepassword"/>
-      <arg value="-vaultdir"/>
-      <arg value="${overlord-commons.appserver.dir}/vault/"/>
-      <arg value="-keystore"/>
-      <arg value="${overlord-commons.appserver.config.dir}/vault.keystore"/>
-      <arg value="-storepass"/>
-      <arg value="${overlord-commons.vault.password}"/>
-      <arg value="-alias"/>
-      <arg value="vault"/>
-      <arg value="-salt"/>
-      <arg value="8675309K"/>
-      <arg value="-count"/>
-      <arg value="50"/>
-      <arg value="-name"/>
-      <arg value="overlord-alias.password"/>
-      <arg value="-password"/>
-      <arg value="${overlord-commons.overlord-alias.password}"/>
-      <arg value="-block"/>
-      <arg value="overlord"/>
-      <arg value="-propertyfile"/>
-      <arg value="${overlord-commons.tmp.file}"/>
-      <arg value="-property"/>
-      <arg value="overlord-commons.overlord-alias.password.hash"/>
-    </java>
-    <property file="${overlord-commons.tmp.file}" />
-    <delete file="${overlord-commons.tmp.file}" />
-    <echo message="Vault key for Overlord SAML alias password: ${overlord-commons.overlord-alias.password.hash}" />
-
-    <!-- Save the password hashes for future installers to use -->
-    <propertyfile file="${overlord-commons.appserver.config.dir}/overlord-vault-keys.properties">
-      <entry key="overlord-commons.saml-keystore.password.hash" value="${overlord-commons.saml-keystore.password.hash}" />
-      <entry key="overlord-commons.overlord-alias.password.hash" value="${overlord-commons.overlord-alias.password.hash}" />
-    </propertyfile>
-
-    <echo>Configuring standalone.xml with Overlord login-modules.</echo>
-    <mkdir dir="${overlord-commons.appserver.config.dir}/.overlord_backup" />
-    <copy file="${overlord-commons.appserver.config.dir}/standalone.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
-    <copy file="${overlord-commons.appserver.config.dir}/standalone-full.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
-    <copy file="${overlord-commons.appserver.config.dir}/standalone-full-ha.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
-    <copy file="${overlord-commons.appserver.config.dir}/standalone-ha.xml" todir="${overlord-commons.appserver.config.dir}/.overlord_backup" overwrite="true" />
-    <!-- standalone.xml -->
-    <xslt 
-      style="${overlord-commons.securityDomain.xslt}"
-      in="${overlord-commons.appserver.config.dir}/standalone.xml"
-      out="${overlord-commons.install.dir}/_tmp_standalone.xml">
-        <param name="keystore-password" expression="${overlord-commons.saml-keystore.password.hash}"/>
-        <param name="key-password" expression="${overlord-commons.overlord-alias.password.hash}"/>
-    </xslt>
-    <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone.xml" overwrite="true" />
-    <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
-    <!-- standalone-full.xml -->
-    <xslt 
-      style="${overlord-commons.securityDomain.xslt}"
-      in="${overlord-commons.appserver.config.dir}/standalone-full.xml"
-      out="${overlord-commons.install.dir}/_tmp_standalone.xml">
-        <param name="keystore-password" expression="${overlord-commons.saml-keystore.password.hash}"/>
-        <param name="key-password" expression="${overlord-commons.overlord-alias.password.hash}"/>
-    </xslt>
-    <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone-full.xml" overwrite="true" />
-    <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
-    <!-- standalone-full-ha.xml -->
-    <xslt 
-      style="${overlord-commons.securityDomain.xslt}"
-      in="${overlord-commons.appserver.config.dir}/standalone-full-ha.xml"
-      out="${overlord-commons.install.dir}/_tmp_standalone.xml">
-        <param name="keystore-password" expression="${overlord-commons.saml-keystore.password.hash}"/>
-        <param name="key-password" expression="${overlord-commons.overlord-alias.password.hash}"/>
-    </xslt>
-    <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone-full-ha.xml" overwrite="true" />
-    <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
-    <!-- standalone-ha.xml -->
-    <xslt 
-      style="${overlord-commons.securityDomain.xslt}"
-      in="${overlord-commons.appserver.config.dir}/standalone-ha.xml"
-      out="${overlord-commons.install.dir}/_tmp_standalone.xml">
-        <param name="keystore-password" expression="${overlord-commons.saml-keystore.password.hash}"/>
-        <param name="key-password" expression="${overlord-commons.overlord-alias.password.hash}"/>
-    </xslt>
-    <copy file="${overlord-commons.install.dir}/_tmp_standalone.xml" tofile="${overlord-commons.appserver.config.dir}/standalone-ha.xml" overwrite="true" />
-    <delete file="${overlord-commons.install.dir}/_tmp_standalone.xml" />
-    
-    <antcall target="install-admin-user" />
-  </target>
-
-  <!-- Installs the overlord admin user -->
-  <target name="install-admin-user" unless="overlord-commons.vault-only">
-
-    <!-- Ask the user for the admin password -->
-    <echo message="" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="!    User Input Required    !" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="" />
-    <input message="Please enter a password for the Overlord 'admin' user: "
-           addproperty="overlord-commons.admin.password">
-      <handler type="secure" />
-    </input>
-    <echo message="" />
-
-    <!-- Create Overlord admin user -->
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-          fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.jboss.as.domain-add-user"/>
-      <arg value="-a"/>
-      <arg value="-s"/>
-      <arg value="-u"/>
-      <arg value="admin"/>
-      <arg value="-p"/>
-      <arg value="${overlord-commons.admin.password}"/>
-      <arg value="-r"/>
-      <arg value="ApplicationRealm"/>
-      <arg value="-ro"/>
-      <arg value="overlorduser,admin.sramp,dev,qa,stage,prod"/>
-    </java>
-  
-  </target>
-
-  <!-- Install PicketLink into JBoss AS 7.1.1.Final -->
-  <target name="install-picketlink-jboss-as-7.1.1.Final" depends="picketlink.check.jboss.as.7.1.1.Final" unless="picketlink.already.installed.jboss.as.7.1.1.Final">
-    <echo>Downloading PicketLink ${overlord-commons.picketlink.version}</echo>
-    <get src="${overlord-commons.picketlink.download.url}" 
-         dest="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}.zip" usetimestamp="true" />
-    <echo>Unzipping PicketLink ${overlord-commons.picketlink.version}</echo>
-    <unzip src="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}.zip" 
-           dest="${overlord-commons.install.dir}" overwrite="false" />
-    <echo>Installing PicketLink Modules in JBoss AS 7.1.1.Final</echo>
-    <property name="jboss.as.dist.dir" value="${overlord-commons.appserver.dir}" />
-    <property file="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}/installer.properties" />
-    <ant antfile="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}/build.xml" 
-         dir="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}" 
-         target="backup-as7-files" />
-    <ant antfile="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}/build.xml" 
-         dir="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}" 
-         target="install-picketlink" />
-    <ant antfile="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}/build.xml" 
-         dir="${overlord-commons.install.dir}/picketlink-installer-${overlord-commons.picketlink.version}" 
-         target="install-picketlink-subsystem" />
-  </target>
-  
-  <!-- Check if already installed -->
-  <target name="overlord-commons.check">
-    <condition property="overlord-commons.already.installed">
-      <available file="${overlord-commons.appserver.config.dir}/overlord-vault-keys.properties" type="file" />
-    </condition>
-  </target>
-
-  <!-- Check if Picket Link is already installed in JBoss AS 7.1.1.Final -->
-  <target name="picketlink.check.jboss.as.7.1.1.Final">
-    <condition property="picketlink.already.installed.jboss.as.7.1.1.Final">
-      <available file="${overlord-commons.appserver.dir}/modules/org/picketlink/main/picketlink-core-2.1.6.Final.jar" type="file" />
-    </condition>
   </target>
 
 </project>
