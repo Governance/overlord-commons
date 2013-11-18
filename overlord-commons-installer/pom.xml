@@ -63,9 +63,9 @@
   </build>
 
   <profiles>
-    <!-- ***************************** -->
-    <!-- Profile to install to EAP 6.1 -->
-    <!-- ***************************** -->
+    <!-- ***************************************** -->
+    <!-- Profile to *test* installing into EAP 6.1 -->
+    <!-- ***************************************** -->
     <profile>
       <id>test-install-eap61</id>
       <dependencies>
@@ -106,10 +106,10 @@
                     <property name="overlord-commons.install.dir" value="${project.build.directory}" />
 
                     <!-- Overlord Commons Installer and Dependencies -->
-                    <property name="overlord-commons.idp.download.url"
-                      value="file:///${maven.dependency.org.overlord.overlord-commons-idp-eap61.war.path}" />
-                    <property name="overlord-commons.auth.download.url"
-                      value="file:///${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
+                    <property name="overlord-commons.idp.file"
+                      value="${maven.dependency.org.overlord.overlord-commons-idp-eap61.war.path}" />
+                    <property name="overlord-commons.auth.file"
+                      value="${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
 
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
                       <target name="install" />
@@ -126,15 +126,20 @@
       </build>
     </profile>
 
-    <!-- ****************************** -->
-    <!-- Profile to install to Tomcat 7 -->
-    <!-- ****************************** -->
+    <!-- ****************************************** -->
+    <!-- Profile to *test* installing into Tomcat 7 -->
+    <!-- ****************************************** -->
     <profile>
       <id>test-install-tomcat7</id>
       <dependencies>
         <dependency>
           <groupId>org.overlord</groupId>
           <artifactId>overlord-commons-auth</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.overlord</groupId>
+          <artifactId>overlord-commons-auth-tomcat7</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -169,10 +174,12 @@
                     <property name="overlord-commons.appserver.dir" location="${project.build.directory}/apache-tomcat-7.0.47" />
 
                     <!-- Overlord Commons Installer and Dependencies -->
-                    <property name="overlord-commons.idp.download.url"
-                      value="file:///${maven.dependency.org.overlord.overlord-commons-idp-tomcat7.war.path}" />
-                    <property name="overlord-commons.auth.download.url"
-                      value="file:///${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
+                    <property name="overlord-commons.idp.file"
+                      value="${maven.dependency.org.overlord.overlord-commons-idp-tomcat7.war.path}" />
+                    <property name="overlord-commons.auth.file"
+                      value="${maven.dependency.org.overlord.overlord-commons-auth.jar.path}" />
+                    <property name="overlord-commons.auth-tomcat7.file"
+                      value="${maven.dependency.org.overlord.overlord-commons-auth-tomcat7.jar.path}" />
 
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
                       <target name="install" />

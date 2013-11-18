@@ -7,9 +7,9 @@
 
     <property name="overlord-commons.jboss.deploy.dir" value="${overlord-commons.appserver.dir}/standalone/deployments" />
     <property name="overlord-commons.jboss.config.dir" value="${overlord-commons.appserver.dir}/standalone/configuration" />
-    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp/${overlord-commons.version}/overlord-commons-idp-${overlord-commons.version}.war" />
+    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap61/${overlord-commons.version}/overlord-commons-idp-eap61-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.jar" />
-    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
+    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap61.war" />
     <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
 
     <condition property="standalone-osgi-exists">
@@ -36,11 +36,16 @@
   <!-- Install Overlord Commons -->
   <target name="install-overlord-commons" depends="overlord-commons.check" unless="overlord-commons.already.installed">
     <echo>Downloading Overlord Commons resources</echo>
-    <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
-    <get src="${overlord-commons.auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
+    <condition property="overlord-commons.idp.file.exists">
+      <available file="${overlord-commons.idp.file}" />
+    </condition>
+    <antcall target="download-idp" />
+    <condition property="overlord-commons.auth.file.exists">
+      <available file="${overlord-commons.auth.file}" />
+    </condition>
+    <antcall target="download-auth" />
     
     <antcall target="install-overlord-idp" />
-    
     <antcall target="install-jboss-eap-6.1" />
   </target>
 
@@ -270,9 +275,22 @@
       <arg value="-ro"/>
       <arg value="overlorduser,admin.sramp,dev,qa,stage,prod"/>
     </java>
-  
   </target>
 
+  <!-- Download the IDP WAR -->
+  <target name="download-idp" unless="overlord-commons.idp.file.exists">
+    <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
+    <get src="${overlord-commons.lib.overlord-commons-auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
+    <get src="${overlord-commons.lib.overlord-commons-auth-tomcat7.download.url}" dest="${overlord-commons.auth-tomcat7.file}" usetimestamp="true" />
+  </target>
+  
+  <!-- Download the auth jar -->
+  <target name="download-auth" unless="overlord-commons.auth.file.exists">
+    <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
+    <get src="${overlord-commons.lib.overlord-commons-auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
+    <get src="${overlord-commons.lib.overlord-commons-auth-tomcat7.download.url}" dest="${overlord-commons.auth-tomcat7.file}" usetimestamp="true" />
+  </target>
+  
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">

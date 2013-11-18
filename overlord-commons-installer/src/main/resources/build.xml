@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components" default="install">
 
-  <property file="overlord-commons-installer.properties" />
+  <property name="overlord-commons.build.properties" location="overlord-commons-installer.properties" />
+  <property file="${overlord-commons.build.properties}" />
 
+  
   <!-- ****************************************************** -->
   <!-- Customize these properties when calling this installer -->
   <!-- ****************************************************** -->
@@ -11,6 +13,7 @@
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
   <!-- ****************************************************** -->
 
+  
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="overlord-commons.version" value="" />
 
@@ -24,8 +27,8 @@
     <echo message="#######################################################" />
     <echo message=" " />
     
-    <property name="overlord-commons.script.dir" location="scripts" />
-    <ant antfile="${overlord-commons.script.dir}/${appserver.id}.xml" inheritall="true" target="install" />
+    <property name="overlord-commons.script.dir" location="${basedir}/scripts" />
+    <ant antfile="${overlord-commons.script.dir}/${appserver.id}.xml" inheritall="true" target="install" /> 
 
     <echo message=" " />
     <echo message="########################################" />
