@@ -43,7 +43,6 @@ public class ArchiveUtils {
 		ZipFile zipFile = null;
 		try {
 			zipFile = new ZipFile(archiveFile);
-			@SuppressWarnings("unchecked")
             Enumeration<ZipArchiveEntry> zipEntries = zipFile.getEntries();
 			while (zipEntries.hasMoreElements()) {
 				ZipArchiveEntry entry = zipEntries.nextElement();

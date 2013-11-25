@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcat-users>
+<!--
+  NOTE:  By default, no user is included in the "manager-gui" role required
+  to operate the "/manager/html" web application.  If you wish to use this app,
+  you must define such a user - the username and password are arbitrary.
+-->
+  <role rolename="tomcat"/>
+  <role rolename="overlorduser"/>
+  <role rolename="admin.sramp" />
+  <user username="admin" password="@ADMINPASSWORD@" roles="tomcat,overlorduser,admin.sramp"/>
+</tomcat-users>

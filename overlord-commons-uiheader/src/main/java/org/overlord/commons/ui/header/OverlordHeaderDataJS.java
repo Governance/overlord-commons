@@ -18,6 +18,7 @@ package org.overlord.commons.ui.header;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -261,6 +262,19 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 }
             }
         }
+        
+        // Now try tomcat
+        String catalinaHomeDir = System.getProperty("catalina.home");
+        if (catalinaHomeDir != null) {
+            File dirFile = new File(catalinaHomeDir, "conf");
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
+        
 
         return null;
     }
@@ -283,7 +297,9 @@ public class OverlordHeaderDataJS extends HttpServlet {
      * A single tab in the UI.
      * @author eric.wittmann@redhat.com
      */
-    private static final class TabInfo {
+    private static final class TabInfo implements Serializable {
+        private static final long serialVersionUID = 7628110060136125387L;
+        
         public final String appId;
         public final String primaryBrand;
         public final String secondaryBrand;

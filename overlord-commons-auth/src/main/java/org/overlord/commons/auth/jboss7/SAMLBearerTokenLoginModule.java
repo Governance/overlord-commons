@@ -15,7 +15,6 @@
  */
 package org.overlord.commons.auth.jboss7;
 
-import java.net.URI;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.Principal;
@@ -31,7 +30,6 @@ import javax.security.auth.login.LoginException;
 import javax.security.jacc.PolicyContext;
 import javax.security.jacc.PolicyContextException;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -39,16 +37,12 @@ import javax.xml.transform.dom.DOMSource;
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.auth.spi.AbstractServerLoginModule;
-import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
+import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
 import org.picketlink.identity.federation.core.parsers.saml.SAMLAssertionParser;
 import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
-import org.picketlink.identity.federation.core.saml.v2.util.XMLTimeUtil;
 import org.picketlink.identity.federation.saml.v2.assertion.AssertionType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType;
 import org.picketlink.identity.federation.saml.v2.assertion.AttributeStatementType.ASTChoiceType;
-import org.picketlink.identity.federation.saml.v2.assertion.AudienceRestrictionType;
-import org.picketlink.identity.federation.saml.v2.assertion.ConditionAbstractType;
-import org.picketlink.identity.federation.saml.v2.assertion.ConditionsType;
 import org.picketlink.identity.federation.saml.v2.assertion.NameIDType;
 import org.picketlink.identity.federation.saml.v2.assertion.StatementAbstractType;
 import org.picketlink.identity.federation.saml.v2.assertion.SubjectType;
@@ -135,7 +129,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                     XMLEventReader xmlEventReader = XMLInputFactory.newInstance().createXMLEventReader(source);
                     Object parsed = parser.parse(xmlEventReader);
                     AssertionType assertion = (AssertionType) parsed;
-                    validateAssertion(assertion, request);
+                    SAMLBearerTokenUtil.validateAssertion(assertion, request, allowedIssuers);
                     if ("true".equals(signatureRequired)) {
                         KeyPair keyPair = getKeyPair(assertion);
                         if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
@@ -203,71 +197,6 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
             e.printStackTrace();
             throw new LoginException("Error loading signature keystore: " + e.getMessage());
         }
-    }
-
-    /**
-     * Validates that the assertion is acceptable based on configurable criteria.
-     * @param assertion
-     * @param request
-     * @throws LoginException
-     */
-    private void validateAssertion(AssertionType assertion, HttpServletRequest request) throws LoginException {
-        // Possibly fail the assertion based on issuer.
-        String issuer = assertion.getIssuer().getValue();
-        if (!allowedIssuers.contains(issuer)) {
-            throw new LoginException("Dis-allowed SAML Assertion Issuer: " + issuer + " Allowed: " + allowedIssuers);
-        }
-
-        // Possibly fail the assertion based on audience restriction
-        String currentAudience = request.getContextPath();
-        Set<String> audienceRestrictions = getAudienceRestrictions(assertion);
-        if (!audienceRestrictions.contains(currentAudience)) {
-            throw new LoginException("SAML Assertion Audience Restrictions not valid for this context ("
-                    + currentAudience + ")");
-        }
-
-        // Possibly fail the assertion based on time.
-        try {
-            ConditionsType conditionsType = assertion.getConditions();
-            if (conditionsType != null) {
-                XMLGregorianCalendar now = XMLTimeUtil.getIssueInstant();
-                XMLGregorianCalendar notBefore = conditionsType.getNotBefore();
-                XMLGregorianCalendar notOnOrAfter = conditionsType.getNotOnOrAfter();
-                if (!XMLTimeUtil.isValid(now, notBefore, notOnOrAfter)) {
-                    String msg = "SAML Assertion has expired: " +
-                            "Now=" + now.toXMLFormat() + " ::notBefore=" + notBefore.toXMLFormat() + " ::notOnOrAfter=" + notOnOrAfter;
-                    throw new LoginException(msg);
-                }
-            } else {
-                throw new LoginException("SAML Assertion not valid (no Conditions supplied).");
-            }
-        } catch (ConfigurationException e) {
-            // should never happen - see AssertionUtil.hasExpired code for why
-            throw new LoginException(e.getMessage());
-        }
-    }
-
-    /**
-     * Gets the audience restriction condition.
-     * @param assertion
-     */
-    private Set<String> getAudienceRestrictions(AssertionType assertion) {
-        Set<String> rval = new HashSet<String>();
-        if (assertion == null || assertion.getConditions() == null || assertion.getConditions().getConditions() == null)
-            return rval;
-
-        List<ConditionAbstractType> conditions = assertion.getConditions().getConditions();
-        for (ConditionAbstractType conditionAbstractType : conditions) {
-            if (conditionAbstractType instanceof AudienceRestrictionType) {
-                AudienceRestrictionType art = (AudienceRestrictionType) conditionAbstractType;
-                List<URI> audiences = art.getAudience();
-                for (URI uri : audiences) {
-                    rval.add(uri.toString());
-                }
-            }
-        }
-
-        return rval;
     }
 
     /**

@@ -132,6 +132,17 @@ public class ConfigurationFactory {
                             return cfile.toURI().toURL();
                     }
                 }
+                
+                // Then check for Tomcat
+                String tomcatDir = System.getProperty("catalina.home");
+                if (tomcatDir != null) {
+                    File dirFile = new File(tomcatDir, "conf");
+                    if (dirFile.isDirectory()) {
+                        File cfile = new File(dirFile, standardConfigFileName);
+                        if (cfile.isFile())
+                            return cfile.toURI().toURL();
+                    }
+                }
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);

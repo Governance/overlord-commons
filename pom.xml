@@ -88,9 +88,10 @@
     <maven.assembly.plugin.version>2.2</maven.assembly.plugin.version>
     <maven.jar.plugin.version>2.3.1</maven.jar.plugin.version>
     <maven.war.plugin.version>2.1.1</maven.war.plugin.version>
-    <maven.bundle.plugin.version>2.1.0</maven.bundle.plugin.version>
+    <maven.bundle.plugin.version>2.2.0</maven.bundle.plugin.version>
     <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
     <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
+    <build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 
     <!-- Third party libraries -->
     <picketbox.version>4.0.7.Final</picketbox.version>
@@ -100,13 +101,16 @@
   </properties>
 
   <modules>
-    <module>overlord-commons-idp</module>
     <module>overlord-commons-auth</module>
+    <module>overlord-commons-auth-tomcat7</module>
+    <module>overlord-commons-config</module>
+    <module>overlord-commons-dev</module>
+    <module>overlord-commons-gwt</module>
+    <module>overlord-commons-idp</module>
+    <module>overlord-commons-idp-eap61</module>
+    <module>overlord-commons-idp-tomcat7</module>
     <module>overlord-commons-installer</module>
     <module>overlord-commons-uiheader</module>
-    <module>overlord-commons-gwt</module>
-    <module>overlord-commons-dev</module>
-    <module>overlord-commons-config</module>
   </modules>
 
   <build>
@@ -143,6 +147,17 @@
           <artifactId>maven-bundle-plugin</artifactId>
           <version>${maven.bundle.plugin.version}</version>
           <extensions>true</extensions>
+          <configuration>
+            <supportedProjectTypes>
+              <supportedProjectType>bundle</supportedProjectType>
+              <supportedProjectType>war</supportedProjectType>
+            </supportedProjectTypes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>${build-helper-maven-plugin.version}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>

@@ -1,16 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.overlord</groupId>
     <artifactId>overlord-commons</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>overlord-commons-auth</artifactId>
-  <name>Overlord Commons: Auth</name>
-  <description>Contains authentication and authorization classes shared by the Overlord projects.</description>
-
+  <artifactId>overlord-commons-auth-tomcat7</artifactId>
+  <name>Overlord Commons: Auth (Tomcat 7)</name>
+  <description>Contains authentication and authorization classes shared by the Overlord projects (for TC7).</description>
+  
   <dependencies>
+    <!-- Project Dependencies -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-auth</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <!-- PicketBox -->
     <dependency>
       <groupId>org.picketbox</groupId>
@@ -23,28 +28,22 @@
       <artifactId>picketlink-core</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- JBoss Security -->
-    <dependency>
-      <groupId>org.jboss.as</groupId>
-      <artifactId>jboss-as-security</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <!-- Tomcat -->
     <dependency>
       <groupId>org.apache.tomcat</groupId>
-      <artifactId>catalina</artifactId>
-      <scope>provided</scope>
+      <artifactId>tomcat-catalina</artifactId>
+      <version>7.0.47</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-coyote</artifactId>
+      <version>7.0.47</version>
     </dependency>
 
     <!-- Provided libraries -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.security.jacc</groupId>
-      <artifactId>javax.security.jacc-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
