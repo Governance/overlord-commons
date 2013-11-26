@@ -7,6 +7,7 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>overlord-commons-config</artifactId>
+  <packaging>bundle</packaging>
   <name>Overlord Commons: Config</name>
   <description>Contains configuration classes used by the various overlord projects.</description>
 
@@ -25,4 +26,31 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+            <Bundle-Name>${project.name}</Bundle-Name>
+            <Bundle-Version>${project.version}</Bundle-Version>
+            <Export-Package>
+              org.overlord.commons.config
+            </Export-Package>
+            <Import-Package>
+              org.apache.commons.configuration,
+              org.apache.commons.configuration.interpol,
+              org.apache.commons.configuration.reloading,
+              org.apache.commons.lang.text,
+              !org.jboss.security.vault
+            </Import-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
