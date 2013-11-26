@@ -143,6 +143,17 @@ public class ConfigurationFactory {
                             return cfile.toURI().toURL();
                     }
                 }
+                
+                // Now check for karaf
+                String karafDir = System.getProperty("karaf.home");
+                if (karafDir != null) {
+                    File dirFile = new File(karafDir, "etc");
+                    if (dirFile.isDirectory()) {
+                        File cfile = new File(dirFile, standardConfigFileName);
+                        if (cfile.isFile())
+                            return cfile.toURI().toURL();
+                    }
+                }
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
