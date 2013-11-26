@@ -110,8 +110,8 @@
     <module>overlord-commons-idp-eap61</module>
     <module>overlord-commons-idp-tomcat7</module>
     <module>overlord-commons-installer</module>
-    <module>overlord-commons-uiheader</module>
     <module>overlord-commons-maven-plugin</module>
+    <module>overlord-commons-uiheader</module>
   </modules>
 
   <build>
