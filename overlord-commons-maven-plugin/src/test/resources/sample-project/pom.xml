@@ -46,6 +46,7 @@
             </goals>
             <configuration>
               <outputFile>${project.build.outputDirectory}/features.xml</outputFile>
+              <attach>true</attach>
               <repositories>
                 <repository>mvn:org.drools/drools-karaf-features/1.0.0/xml/features</repository>
               </repositories>
