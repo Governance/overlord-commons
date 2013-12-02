@@ -25,6 +25,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.model.Model;
@@ -38,9 +39,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.repository.RepositorySystem;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
+import org.apache.maven.shared.artifact.filter.ScopeArtifactFilter;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
@@ -57,6 +60,9 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
     @Parameter(property = "generate-features-xml.outputFile", defaultValue = "${project.build.outputDirectory}/features.xml")
     private String outputFile;
 
+    @Parameter(property = "generate-features-xml.attach", defaultValue = "false")
+    private String attach;
+
     @Parameter(property = "generate-features-xml.features")
     private List<Feature> features;
 
@@ -71,6 +77,9 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
 
     @Component
     protected RepositorySystem repositorySystem;
+    
+    @Component
+    private MavenProjectHelper projectHelper;
 
     /**
      * Constructor.
@@ -94,9 +103,21 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             File file = new File(outputFile);
             file.getParentFile().mkdirs();
             featuresXml.writeTo(file);
+            
+            if ("true".equals(attach)) {
+                attachToBuild(file);
+            }
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Attaches the features.xml file to the build.
+     * @param file the generated features.xml file
+     */
+    private void attachToBuild(File file) {
+        projectHelper.attachArtifact(this.project, "xml", "features", file);
     }
 
     /**
@@ -111,7 +132,8 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
         }
 
         // Collect all dependencies (bundle candidates)
-        DependencyNode dependencyGraph = dependencyGraphBuilder.buildDependencyGraph(project, null);
+        ScopeArtifactFilter filter = new ScopeArtifactFilter(DefaultArtifact.SCOPE_RUNTIME);
+        DependencyNode dependencyGraph = dependencyGraphBuilder.buildDependencyGraph(project, filter);
         CollectingDependencyNodeVisitor collectingVizzy = new CollectingDependencyNodeVisitor();
         dependencyGraph.accept(collectingVizzy);
         List<DependencyNode> nodes = collectingVizzy.getNodes();
@@ -125,7 +147,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             List<Feature> onFeatures = feature.getDependsOnFeatures();
             if (onFeatures != null && !onFeatures.isEmpty()) {
                 for (Feature onFeature : onFeatures) {
-                    getLog().debug(
+                    getLog().info(
                             "   Depends on feature: " + onFeature.getName() + "/" + onFeature.getVersion());
                     featuresXml.addFeatureDependency(feature.getName(), feature.getVersion(),
                             onFeature.getName(), onFeature.getVersion());
@@ -143,13 +165,16 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
                 Artifact artifact = dependencyNode.getArtifact();
                 // If no includes, assume everything
                 boolean includeBundle = feature.getIncludes() == null || feature.getIncludes().isEmpty();
+                if (includeBundle) {
+                    getLog().debug("   Artifact " + artifact + " matches default [all] filter (including).");
+                }
                 if (includesFilter.include(artifact)) {
-                    getLog().debug("Artifact " + artifact + " matched include filter (including).");
+                    getLog().debug("   Artifact " + artifact + " matched include filter (including).");
                     includeBundle = true;
                 }
                 // Excludes must be explicit.
                 if (!excludesFilter.include(artifact)) {
-                    getLog().debug("Artifact " + artifact + " matched exclude filter (excluding).");
+                    getLog().debug("   Artifact " + artifact + " matched exclude filter (excluding).");
                     includeBundle = false;
                 }
 
@@ -189,7 +214,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append("/");
             builder.append(artifact.getArtifactId());
             builder.append("/");
-            builder.append(artifact.getVersion());
+            builder.append(artifact.getBaseVersion());
             if (!"jar".equalsIgnoreCase(artifact.getType())) {
                 builder.append("/");
                 builder.append(artifact.getType());
@@ -201,7 +226,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append("/");
             builder.append(artifact.getArtifactId());
             builder.append("/");
-            builder.append(artifact.getVersion());
+            builder.append(artifact.getBaseVersion());
             if (!"jar".equalsIgnoreCase(artifact.getType())) {
                 builder.append("/");
                 builder.append(artifact.getType());
@@ -213,13 +238,29 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append(".");
             builder.append(artifact.getGroupId());
             builder.append("&Bundle-Version=");
-            builder.append(artifact.getVersion());
+            builder.append(sanitizeVersionForOsgi(artifact.getBaseVersion()));
             if (project.getName() != null && project.getName().trim().length() > 0) {
                 builder.append("&Bundle-Name=");
                 builder.append(project.getName());
             }
         }
         return builder.toString();
+    }
+
+    /**
+     * OSGi doesn't allow non-numeric components in version strings. So for
+     * example a common maven version is 2.0.0-SNAPSHOT. This needs to be
+     * converted to 2.0.0 so that OSGi will parse it without an exception. I
+     * don't have a great way to do this generically, so we'll just need to
+     * update this method with additional fixes as we find problematic version
+     * strings.
+     * @param version
+     */
+    private Object sanitizeVersionForOsgi(String version) {
+        if (version.contains("-")) {
+            version = version.substring(0, version.indexOf('-'));
+        }
+        return version.replaceAll("([0-9])[a-zA-Z]+", "$1");
     }
 
     /**
