@@ -183,6 +183,15 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
                             formatArtifactAsBundle(artifact));
                 }
             }
+            
+            // Add additional explicit bundles specified in the config
+            List<String> bundles = feature.getBundles();
+            if (bundles != null && !bundles.isEmpty()) {
+                for (String bundle : bundles) {
+                    getLog().debug("   Adding explicit bundle: " + bundle);
+                    featuresXml.addBundle(feature.getName(), feature.getVersion(), bundle);
+                }
+            }
         }
     }
 
@@ -234,9 +243,9 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             
             MavenProject project = resolveProject(artifact);
             builder.append("$Bundle-SymbolicName=");
-            builder.append(artifact.getArtifactId());
-            builder.append(".");
             builder.append(artifact.getGroupId());
+            builder.append(".");
+            builder.append(artifact.getArtifactId());
             builder.append("&Bundle-Version=");
             builder.append(sanitizeVersionForOsgi(artifact.getBaseVersion()));
             if (project.getName() != null && project.getName().trim().length() > 0) {

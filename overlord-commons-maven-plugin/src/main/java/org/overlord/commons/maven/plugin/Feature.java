@@ -32,6 +32,7 @@ public class Feature {
     private List<Feature> dependsOnFeatures;
     private List<String> includes;
     private List<String> excludes;
+    private List<String> bundles;
     
     /**
      * Constructor.
@@ -121,6 +122,20 @@ public class Feature {
      */
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    /**
+     * @return the bundles
+     */
+    public List<String> getBundles() {
+        return bundles;
+    }
+
+    /**
+     * @param bundles the bundles to set
+     */
+    public void setBundles(List<String> bundles) {
+        this.bundles = bundles;
     }
     
 }

@@ -275,6 +275,17 @@ public class OverlordHeaderDataJS extends HttpServlet {
             }
         }
         
+        // Now try karaf/fuse
+        String karafDir = System.getProperty("karaf.home");
+        if (karafDir != null) {
+            File dirFile = new File(karafDir, "etc");
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
 
         return null;
     }
