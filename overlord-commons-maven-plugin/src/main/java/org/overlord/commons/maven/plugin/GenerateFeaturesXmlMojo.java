@@ -266,10 +266,43 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * @param version
      */
     private Object sanitizeVersionForOsgi(String version) {
+        // Remove -SNAPSHOT
         if (version.contains("-")) {
             version = version.substring(0, version.indexOf('-'));
         }
-        return version.replaceAll("([0-9])[a-zA-Z]+", "$1");
+        // Fix things like 1.3.5a (becomes 1.3.5)
+        String ver = version.replaceAll("([0-9])[a-zA-Z]+", "$1");
+        if (!ver.contains(".")) {
+            return ver;
+        }
+        // Handle the case where there are only 2 numberic and one non-numeric component
+        // like 1.7.Alpha.  Converts to 1.7.0.Alpha
+        String[] split = ver.split("\\.");
+        if (split.length == 3) {
+            if (isNumeric(split[0]) && isNumeric(split[1]) && isAlpha(split[2])) {
+                return split[0] + "." + split[1] + ".0." + split[2];
+            }
+        }
+        return ver;
+    }
+
+    /**
+     * @param versionComponent
+     */
+    private boolean isAlpha(String versionComponent) {
+        return versionComponent.length() > 0 && Character.isLetter(versionComponent.charAt(0));
+    }
+
+    /**
+     * @param versionComponent
+     */
+    private boolean isNumeric(String versionComponent) {
+        for (int i = 0; i < versionComponent.length(); i++) {
+            if (!Character.isDigit(versionComponent.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -298,6 +331,10 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
         try {
             jf = new JarFile(artifact.getFile());
             Manifest manifest = jf.getManifest();
+            if (manifest == null) {
+                getLog().info("Artifact " + artifact.toString() + " missing a manifest!  Assuming not a bundle.");
+                return false;
+            }
             Attributes attributes = manifest.getMainAttributes();
             if (attributes != null) {
                 String value = attributes.getValue("Bundle-SymbolicName");
