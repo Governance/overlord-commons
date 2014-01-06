@@ -105,12 +105,15 @@
     <module>overlord-commons-auth-tomcat7</module>
     <module>overlord-commons-config</module>
     <module>overlord-commons-dev</module>
+    <module>overlord-commons-errai-fuse-support</module>
     <module>overlord-commons-gwt</module>
     <module>overlord-commons-idp</module>
     <module>overlord-commons-idp-eap61</module>
     <module>overlord-commons-idp-tomcat7</module>
     <module>overlord-commons-installer</module>
     <module>overlord-commons-maven-plugin</module>
+    <module>overlord-commons-osgi</module>
+    <module>overlord-commons-osgi-weld</module>
     <module>overlord-commons-uiheader</module>
   </modules>
 
