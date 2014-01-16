@@ -68,7 +68,8 @@
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
-              org.overlord.commons.auth.util
+              org.overlord.commons.auth.util,
+              org.overlord.commons.auth.filters
             </Export-Package>
             <Import-Package>
               javax.security.auth,
