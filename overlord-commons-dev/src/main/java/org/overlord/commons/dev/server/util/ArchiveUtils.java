@@ -55,8 +55,10 @@ public class ArchiveUtils {
 				}
 
 				if (entry.isDirectory()) {
-					if (!outFile.mkdir()) {
+					if (!outFile.exists() && !outFile.mkdir()) {
 						throw new IOException("Failed to create directory: " + outFile.getCanonicalPath());
+					} else if (outFile.exists() && !outFile.isDirectory()) {
+						throw new IOException("Failed to create directory (already exists but is a file): " + outFile.getCanonicalPath());
 					}
 				} else {
 					InputStream zipStream = null;

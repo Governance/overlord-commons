@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.config.services;
+package org.overlord.commons.services;
 
 import java.util.Set;
 

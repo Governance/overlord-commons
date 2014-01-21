@@ -37,6 +37,7 @@ import javax.xml.transform.dom.DOMSource;
 import org.apache.commons.codec.binary.Base64;
 import org.jboss.security.SimpleGroup;
 import org.jboss.security.auth.spi.AbstractServerLoginModule;
+import org.overlord.commons.auth.tomcat7.HttpRequestThreadLocalValve;
 import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
 import org.picketlink.identity.federation.core.parsers.saml.SAMLAssertionParser;
 import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;

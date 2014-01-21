@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.commons.auth.tomcat;
+package org.overlord.commons.auth.tomcat7;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.catalina.realm.GenericPrincipal;
+import org.overlord.commons.auth.util.SAMLAssertionFactory;
 import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
 
 /**
@@ -30,18 +32,35 @@ import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
  *
  * @author eric.wittmann@redhat.com
  */
-public class TomcatSAMLBearerTokenUtil {
+public class TomcatSAMLAssertionFactory implements SAMLAssertionFactory {
+    
+    /**
+     * Constructor.
+     */
+    public TomcatSAMLAssertionFactory() {
+    }
+    
+    /**
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#accept()
+     */
+    @Override
+    public boolean accept() {
+        String property = System.getProperty("catalina.home");
+        if (property != null) {
+            File f = new File(property, "bin/catalina.sh");
+            if (f.isFile())
+                return true;
+        }
+        return false;
+    }
 
     /**
-     * Creates a SAML Assertion that can be used as a bearer token when invoking REST
-     * services.  The REST service must be configured to accept SAML Assertion bearer
-     * tokens (in Tomcat this means protecting the REST services with {@link SAMLBearerTokenAuthenticator}).
-     * @param request the inbound servlet request
-     * @param issuerName the issuer name (typically the context of the calling web app)
-     * @param forService the web context of the REST service being invoked
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String)
      */
-    public static String createSAMLAssertion(HttpServletRequest request, String issuerName, String forService) {
+    @Override
+    public String createSAMLAssertion(String issuerName, String forService) {
         try {
+            HttpServletRequest request = HttpRequestThreadLocalValve.TL_request.get();
             Principal principal = request.getUserPrincipal();
             if (principal instanceof GenericPrincipal) {
                 GenericPrincipal gp = (GenericPrincipal) principal;

@@ -13,34 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.overlord.commons.auth.jboss7;
 
+import java.io.File;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jboss.security.SecurityContextAssociation;
+import org.overlord.commons.auth.util.SAMLAssertionFactory;
 import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
 
 /**
- * Class used to create SAML bearer tokens used when calling REST service
- * endpoints protected by SAML.
- *
+ * JBoss 7 implementation of a SAML Assertion factory.
+ * 
  * @author eric.wittmann@redhat.com
  */
-public class Jboss7SAMLBearerTokenUtil {
+public class Jboss7SAMLAssertionFactory implements SAMLAssertionFactory {
 
     /**
-     * Creates a SAML Assertion that can be used as a bearer token when invoking REST
-     * services.  The REST service must be configured to accept SAML Assertion bearer
-     * tokens (in JBoss this means protecting the REST services with {@link SAMLBearerTokenLoginModule}).
-     * @param issuerName the issuer name (typically the context of the calling web app)
-     * @param forService the web context of the REST service being invoked
+     * Constructor.
      */
-    public static String createSAMLAssertion(String issuerName, String forService) {
+    public Jboss7SAMLAssertionFactory() {
+    }
+
+    /**
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#accept()
+     */
+    @Override
+    public boolean accept() {
+        String property = System.getProperty("jboss.server.config.dir");
+        if (property != null) {
+            File f = new File(property, "standalone.xml");
+            if (f.isFile())
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String createSAMLAssertion(String issuerName, String forService) {
         try {
             Principal principal = SecurityContextAssociation.getPrincipal();
-            Set<Principal> userRoles = SecurityContextAssociation.getSecurityContext().getAuthorizationManager().getUserRoles(principal);
+            Set<Principal> userRoles = SecurityContextAssociation.getSecurityContext()
+                    .getAuthorizationManager().getUserRoles(principal);
             Set<String> roles = new HashSet<String>();
             if (userRoles != null) {
                 for (Principal role : userRoles) {

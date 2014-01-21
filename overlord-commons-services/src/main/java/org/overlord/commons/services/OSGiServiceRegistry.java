@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.config.services;
+package org.overlord.commons.services;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public class OSGiServiceRegistry implements ServiceRegistry {
     public static final String OSGI_ENABLED_PROP = "overlord-commons-config.osgi-enabled";
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getSingleService(java.lang.Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -57,7 +57,7 @@ public class OSGiServiceRegistry implements ServiceRegistry {
     }
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getServices(java.lang.Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getServices(java.lang.Class)
      */
     @SuppressWarnings("unchecked")
     @Override
