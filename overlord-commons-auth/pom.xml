@@ -12,28 +12,17 @@
   <description>Contains authentication and authorization classes shared by the Overlord projects.</description>
 
   <dependencies>
-    <!-- PicketBox -->
+    <!-- Project Dependencies -->
     <dependency>
-      <groupId>org.picketbox</groupId>
-      <artifactId>picketbox</artifactId>
-      <scope>provided</scope>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-services</artifactId>
+      <version>${project.version}</version>
     </dependency>
+
     <!-- PicketLink -->
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- JBoss Security -->
-    <dependency>
-      <groupId>org.jboss.as</groupId>
-      <artifactId>jboss-as-security</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- Tomcat -->
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>catalina</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -68,34 +57,27 @@
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
-              org.overlord.commons.auth.util
+              org.overlord.commons.auth.util,
+              org.overlord.commons.auth.filters
             </Export-Package>
             <Import-Package>
               javax.security.auth,
               javax.security.auth.callback,
               javax.security.auth.login,
-              javax.security.jacc,
               javax.servlet,
               javax.servlet.http,
               javax.xml.datatype,
               javax.xml.stream,
               javax.xml.transform,
               javax.xml.transform.dom,
-              !org.apache.catalina,
-              !org.apache.catalina.connector,
-              !org.apache.catalina.realm,
-              !org.apache.catalina.valves,
-              !org.apache.commons.codec.binary,
-              !org.jboss.as.security.vault,
-              !org.jboss.security,
-              !org.jboss.security.auth.spi,
-              !org.jboss.security.vault,
               org.picketlink.identity.federation.api.saml.v2.sig,
               org.picketlink.identity.federation.core.exceptions,
               org.picketlink.identity.federation.core.parsers.saml,
               org.picketlink.identity.federation.core.saml.v2.factories,
               org.picketlink.identity.federation.core.saml.v2.util,
               org.picketlink.identity.federation.saml.v2.assertion,
+              org.apache.commons.codec.binary,
+              org.overlord.commons.services,
               org.w3c.dom
             </Import-Package>
           </instructions>

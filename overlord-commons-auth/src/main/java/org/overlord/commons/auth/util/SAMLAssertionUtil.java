@@ -16,10 +16,9 @@
 
 package org.overlord.commons.auth.util;
 
-import org.overlord.commons.auth.jboss7.Jboss7SAMLBearerTokenUtil;
-import org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule;
-import org.overlord.commons.auth.tomcat.HttpRequestThreadLocalValve;
-import org.overlord.commons.auth.tomcat.TomcatSAMLBearerTokenUtil;
+import java.util.Set;
+
+import org.overlord.commons.services.ServiceRegistryUtil;
 
 /**
  * A single entry point for creating SAML assertions.  This class delegates to the appropriate
@@ -41,33 +40,32 @@ public class SAMLAssertionUtil {
      * @param forService the web context of the REST service being invoked
      */
     public static String createSAMLAssertion(String issuerName, String forService) {
-        if (isJBoss7()) {
-            return Jboss7SAMLBearerTokenUtil.createSAMLAssertion(issuerName, forService);
+        Set<SAMLAssertionFactory> factories = null;
+        
+        // Note: use our classloader when loading the services because the application-specific
+        // overlord-commons-auth-* implementations will likely be packaged up with the generic
+        // overlord-commons-auth (this) module.  The exception being OSGi, which 
+        // doesn't use ServiceLoader anyway.
+        //
+        // For example, when running in JBoss EAP 6.x, all of the overlord-commons-auth* JARs
+        // are bundled up into a single JBoss Module.  In order for the ServiceLoader to work
+        // properly, the context classloader would need to be set to the module's CL (so that
+        // the service files are visible).
+        ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(SAMLAssertionUtil.class.getClassLoader());
+        try {
+            factories = ServiceRegistryUtil.getServices(SAMLAssertionFactory.class);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCL);
         }
-        if (isTomcat()) {
-            return TomcatSAMLBearerTokenUtil.createSAMLAssertion(HttpRequestThreadLocalValve.TL_request.get(), issuerName, forService);
+        
+        // Now that the factories are loaded, go ahead and try to use one of them.
+        for (SAMLAssertionFactory factory : factories) {
+            if (factory.accept()) {
+                return factory.createSAMLAssertion(issuerName, forService);
+            }
         }
         throw new RuntimeException("Unsupported/undetected platform.");
-    }
-
-    /**
-     * Determines if we're running in JBoss.
-     */
-    private static boolean isJBoss7() {
-        String property = System.getProperty("jboss.server.config.dir");
-        if (property != null)
-            return true;
-        return false;
-    }
-
-    /**
-     * Determines if we're running in tomcat.
-     */
-    private static boolean isTomcat() {
-        if (HttpRequestThreadLocalValve.TL_request.get() != null) {
-            return true;
-        }
-        return false;
     }
 
 }

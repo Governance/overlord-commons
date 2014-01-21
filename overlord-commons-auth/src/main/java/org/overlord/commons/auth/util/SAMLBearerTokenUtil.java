@@ -35,7 +35,6 @@ import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule;
 import org.picketlink.identity.federation.api.saml.v2.sig.SAML2Signature;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.saml.v2.factories.SAMLAssertionFactory;
@@ -66,8 +65,8 @@ public class SAMLBearerTokenUtil {
      * services.  The REST service must be configured to accept SAML Assertion bearer
      * tokens.
      * 
-     * In JBoss this means protecting the REST services with {@link SAMLBearerTokenLoginModule}.
-     * In Tomcat7 this means protecting the REST services with {@link SAMLBearerTokenAuthenticator}.
+     * In JBoss this means protecting the REST services with {@link org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule}.
+     * In Tomcat7 this means protecting the REST services with {@link org.overlord.commons.auth.tomcat7.SAMLBearerTokenAuthenticator}.
      * 
      * @param principal the authenticated principal
      * @param roles the authenticated principal's roles

@@ -98,19 +98,27 @@
     <picketlink.version>2.1.6.Final</picketlink.version>
     <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
     <servlet-api.version>2.5</servlet-api.version>
+    <jetty.version>8.1.9.v20130131</jetty.version>
+    <tomcat.version>7.0.47</tomcat.version>
   </properties>
 
   <modules>
     <module>overlord-commons-auth</module>
+    <module>overlord-commons-auth-jboss7</module>
+    <module>overlord-commons-auth-jetty8</module>
     <module>overlord-commons-auth-tomcat7</module>
     <module>overlord-commons-config</module>
     <module>overlord-commons-dev</module>
+    <module>overlord-commons-errai-fuse-support</module>
     <module>overlord-commons-gwt</module>
     <module>overlord-commons-idp</module>
     <module>overlord-commons-idp-eap61</module>
     <module>overlord-commons-idp-tomcat7</module>
     <module>overlord-commons-installer</module>
     <module>overlord-commons-maven-plugin</module>
+    <module>overlord-commons-osgi</module>
+    <module>overlord-commons-osgi-weld</module>
+    <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
   </modules>
 
