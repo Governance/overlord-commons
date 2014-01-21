@@ -104,6 +104,7 @@
 
   <modules>
     <module>overlord-commons-auth</module>
+    <module>overlord-commons-auth-jboss7</module>
     <module>overlord-commons-auth-jetty8</module>
     <module>overlord-commons-auth-tomcat7</module>
     <module>overlord-commons-config</module>
@@ -117,6 +118,7 @@
     <module>overlord-commons-maven-plugin</module>
     <module>overlord-commons-osgi</module>
     <module>overlord-commons-osgi-weld</module>
+    <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
   </modules>
 

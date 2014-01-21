@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.config.services;
+package org.overlord.commons.services;
 
 import java.util.Set;
 
@@ -46,14 +46,14 @@ public class ServiceRegistryUtil {
     }
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getSingleService(Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
         return getRegistry().getSingleService(serviceInterface);
     }
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getSingleService(Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> Set<T> getServices(Class<T> serviceInterface) {
         return getRegistry().getServices(serviceInterface);

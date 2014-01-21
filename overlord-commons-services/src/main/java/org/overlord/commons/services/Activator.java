@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.config;
+package org.overlord.commons.services;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.overlord.commons.config.services.OSGiServiceRegistry;
 
 /**
  * Activator that lets the service registry know we're in an OSGi runtime.

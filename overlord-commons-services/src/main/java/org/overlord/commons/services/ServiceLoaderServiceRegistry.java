@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.config.services;
+package org.overlord.commons.services;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -27,16 +29,25 @@ import java.util.Set;
  * @author eric.wittmann@redhat.com
  */
 public class ServiceLoaderServiceRegistry implements ServiceRegistry {
+    
+    private Map<Class<?>, Set<?>> servicesCache = new HashMap<Class<?>, Set<?>>();
+    private Map<Class<?>, Object> serviceCache = new HashMap<Class<?>, Object>();
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getSingleService(java.lang.Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
+        if (serviceCache.containsKey(serviceInterface))
+            return (T) serviceCache.get(serviceInterface);
+
         T rval = null;
         for (T service : ServiceLoader.load(serviceInterface)) {
             if (rval == null) {
                 rval = service;
+                serviceCache.put(serviceInterface, rval);
+                break;
             } else {
                 throw new IllegalStateException("Multiple implementations found for service: " + serviceInterface);
             }
@@ -45,14 +56,19 @@ public class ServiceLoaderServiceRegistry implements ServiceRegistry {
     }
 
     /**
-     * @see org.overlord.commons.config.services.ServiceRegistry#getServices(java.lang.Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getServices(java.lang.Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Set<T> getServices(Class<T> serviceInterface) {
+        if (servicesCache.containsKey(serviceInterface))
+            return (Set<T>) servicesCache.get(serviceInterface);
+
         Set<T> services = new HashSet<T>();
         for (T service : ServiceLoader.load(serviceInterface)) {
             services.add(service);
         }
+        servicesCache.put(serviceInterface, services);
         return services;
     }
 

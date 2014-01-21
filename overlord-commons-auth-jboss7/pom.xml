@@ -5,9 +5,9 @@
     <artifactId>overlord-commons</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>overlord-commons-auth-tomcat7</artifactId>
-  <name>Overlord Commons: Auth (Tomcat 7)</name>
-  <description>Contains authentication and authorization classes shared by the Overlord projects (for TC7).</description>
+  <artifactId>overlord-commons-auth-jboss7</artifactId>
+  <name>Overlord Commons: Auth (JBoss 7)</name>
+  <description>Contains authentication and authorization classes shared by the Overlord projects (for JBoss 7).</description>
   
   <dependencies>
     <!-- Project Dependencies -->
@@ -16,6 +16,19 @@
       <artifactId>overlord-commons-auth</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-auth-tomcat7</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
+    <!-- PicketBox -->
+    <dependency>
+      <groupId>org.picketbox</groupId>
+      <artifactId>picketbox</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- PicketLink -->
     <dependency>
       <groupId>org.picketlink</groupId>
@@ -23,17 +36,10 @@
       <scope>provided</scope>
     </dependency>
     
-    <!-- Tomcat -->
+    <!-- JBoss Security -->
     <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-catalina</artifactId>
-      <version>${tomcat.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat</groupId>
-      <artifactId>tomcat-coyote</artifactId>
-      <version>${tomcat.version}</version>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-security</artifactId>
       <scope>provided</scope>
     </dependency>
 

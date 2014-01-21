@@ -8,7 +8,7 @@
   <artifactId>overlord-commons-auth-jetty8</artifactId>
   <packaging>bundle</packaging>
   <name>Overlord Commons: Auth (Jetty 8)</name>
-  <description>Contains authentication and authorization classes shared by the Overlord projects (for Jetty8).</description>
+  <description>Contains authentication and authorization classes shared by the Overlord projects (for Jetty 8).</description>
   
   <dependencies>
     <!-- Project Dependencies -->
@@ -18,12 +18,6 @@
       <version>${project.version}</version>
     </dependency>
     
-    <!-- PicketBox -->
-    <dependency>
-      <groupId>org.picketbox</groupId>
-      <artifactId>picketbox</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <!-- PicketLink -->
     <dependency>
       <groupId>org.picketlink</groupId>
@@ -51,6 +45,13 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    
+    <!-- OSGi -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Common libraries -->
     <dependency>
@@ -70,21 +71,27 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
+            <Bundle-Activator>org.overlord.commons.auth.jetty8.Activator</Bundle-Activator>
             <Export-Package>
               org.overlord.commons.auth.jetty8
             </Export-Package>
             <Import-Package>
-              javax.security.auth, 
-              javax.servlet.http, 
-              javax.xml.stream, 
-              org.eclipse.jetty.plus.jaas, 
-              org.eclipse.jetty.security, 
-              org.eclipse.jetty.server, 
-              org.eclipse.jetty.util.log, 
-              org.overlord.commons.auth.util, 
+              javax.security.auth,
+              javax.servlet,
+              javax.servlet.http,
+              javax.xml.stream,
+              org.eclipse.jetty.plus.jaas,
+              org.eclipse.jetty.security,
+              org.eclipse.jetty.server,
+              org.eclipse.jetty.server.handler,
+              org.eclipse.jetty.servlet,
+              org.eclipse.jetty.util.log,
+              org.overlord.commons.auth.util,
+              org.overlord.commons.auth.filters,
               org.picketlink.identity.federation.core.parsers.saml,
               org.picketlink.identity.federation.core.saml.v2.util, 
               org.picketlink.identity.federation.saml.v2.assertion, 
+              org.osgi.framework,
               org.w3c.dom
             </Import-Package>
           </instructions>

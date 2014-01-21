@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.auth.jboss7;
+package org.overlord.commons.auth.tomcat7;
 
 import java.io.IOException;
 

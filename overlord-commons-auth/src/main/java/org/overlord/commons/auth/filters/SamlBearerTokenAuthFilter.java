@@ -144,21 +144,21 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
     /**
      * @return the default keystore password
      */
-    private String defaultKeystorePassword() {
+    protected String defaultKeystorePassword() {
         return null;
     }
 
     /**
      * @return the default key alias
      */
-    private String defaultKeyAlias() {
+    protected String defaultKeyAlias() {
         return null;
     }
 
     /**
      * @return the default key password
      */
-    private String defaultKeyPassword() {
+    protected String defaultKeyPassword() {
         return null;
     }
 
@@ -206,10 +206,24 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         
         SimplePrincipal principal = login(credentials, req, (HttpServletResponse) response);
         if (principal != null) {
-            chain.doFilter(proxyRequest(request, principal), response);
+            doFilterChain(request, response, chain, principal);
         } else {
             sendAuthResponse((HttpServletResponse)response);
         }
+    }
+
+    /**
+     * Further process the filter chain.
+     * @param request
+     * @param response
+     * @param chain
+     * @param principal
+     * @throws IOException
+     * @throws ServletException
+     */
+    protected void doFilterChain(ServletRequest request, ServletResponse response, FilterChain chain,
+            SimplePrincipal principal) throws IOException, ServletException {
+        chain.doFilter(proxyRequest(request, principal), response);
     }
 
     /**
@@ -270,12 +284,12 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * @param response
      * @throws IOException 
      */
-    private SimplePrincipal login(Creds credentials, HttpServletRequest request,
+    protected SimplePrincipal login(Creds credentials, HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         if ("SAML-BEARER-TOKEN".equals(credentials.username)) {
             return doSamlLogin(credentials.password, request);
         } else {
-            return doBasicLogin(credentials.username, credentials.password);
+            return doBasicLogin(credentials.username, credentials.password, request);
         }
     }
 
@@ -286,7 +300,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * @param request
      * @throws IOException 
      */
-    private SimplePrincipal doSamlLogin(String assertionData, HttpServletRequest request) throws IOException {
+    protected SimplePrincipal doSamlLogin(String assertionData, HttpServletRequest request) throws IOException {
         try {
             Document samlAssertion = DocumentUtil.getDocument(assertionData);
             SAMLAssertionParser parser = new SAMLAssertionParser();
@@ -375,9 +389,10 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * method.
      * @param username
      * @param password
+     * @param request 
      * @throws IOException
      */
-    protected abstract SimplePrincipal doBasicLogin(String username, String password) throws IOException;
+    protected abstract SimplePrincipal doBasicLogin(String username, String password, HttpServletRequest request) throws IOException;
 
     /**
      * Sends a response that tells the client that authentication is required.
@@ -400,7 +415,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * Models inbound basic auth credentials (user/password).
      * @author eric.wittmann@redhat.com
      */
-    private static class Creds {
+    protected static class Creds {
         public String username;
         public String password;
         
