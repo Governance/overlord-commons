@@ -41,6 +41,12 @@
       <groupId>org.jboss.as</groupId>
       <artifactId>jboss-as-security</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tools</artifactId>
+          <groupId>com.sun</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Provided libraries -->

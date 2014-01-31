@@ -120,6 +120,7 @@
     <module>overlord-commons-osgi-weld</module>
     <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
+    <module>overlord-commons-i18n</module>
   </modules>
 
   <build>
