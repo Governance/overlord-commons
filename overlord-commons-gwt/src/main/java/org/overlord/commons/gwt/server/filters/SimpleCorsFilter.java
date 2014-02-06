@@ -54,7 +54,6 @@ public class SimpleCorsFilter implements Filter {
             ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
         HttpServletResponse httpResp = (HttpServletResponse) response;
-        System.out.println("Request from origin: " + httpReq.getHeader("Origin"));
         httpResp.setHeader("Access-Control-Allow-Origin", "*");
         chain.doFilter(httpReq, httpResp);
     }
