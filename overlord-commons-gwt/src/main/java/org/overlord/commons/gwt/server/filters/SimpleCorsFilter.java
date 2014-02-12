@@ -54,8 +54,45 @@ public class SimpleCorsFilter implements Filter {
             ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
         HttpServletResponse httpResp = (HttpServletResponse) response;
-        httpResp.setHeader("Access-Control-Allow-Origin", "*");
-        chain.doFilter(httpReq, httpResp);
+        
+        if (isPreflightRequest(httpReq)) {
+            httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin"));
+            httpResp.setHeader("Access-Control-Allow-Credentials", "true");
+            httpResp.setHeader("Access-Control-Max-Age", "1800");
+            httpResp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,HEAD");
+            httpResp.setHeader("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+        } else {
+            if (hasOriginHeader(httpReq)) {
+                httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin"));
+                httpResp.setHeader("Access-Control-Allow-Credentials", "true");
+            }
+            chain.doFilter(httpReq, httpResp);
+        }
+    }
+
+    /**
+     * Determines whether the request is a CORS preflight request.
+     * @param httpReq
+     */
+    protected boolean isPreflightRequest(HttpServletRequest httpReq) {
+        return isOptionsMethod(httpReq) && hasOriginHeader(httpReq);
+    }
+
+    /**
+     * Returns true if it's an OPTIONS http request.
+     * @param httpReq
+     */
+    protected boolean isOptionsMethod(HttpServletRequest httpReq) {
+        return "OPTIONS".equals(httpReq.getMethod());
+    }
+
+    /**
+     * Returns true if the Origin request header is present.
+     * @param httpReq
+     */
+    protected boolean hasOriginHeader(HttpServletRequest httpReq) {
+        String origin = httpReq.getHeader("Origin");
+        return origin != null && origin.trim().length() > 0;
     }
     
     /**
