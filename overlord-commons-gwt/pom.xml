@@ -51,7 +51,17 @@
             </Export-Package>
             <Import-Package>
               javax.servlet,
-              javax.servlet.http
+              javax.servlet.http,
+              !com.google.gwt.animation.client, 
+              !com.google.gwt.core.client, 
+              !com.google.gwt.dom.client, 
+              !com.google.gwt.event.dom.client, 
+              !com.google.gwt.event.logical.shared, 
+              !com.google.gwt.event.shared, 
+              !com.google.gwt.user.client, 
+              !com.google.gwt.user.client.ui, 
+              !com.google.web.bindery.event.shared, 
+              !javax.annotation
             </Import-Package>
           </instructions>
         </configuration>
