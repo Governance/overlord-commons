@@ -61,10 +61,12 @@ public class SimpleCorsFilter implements Filter {
             httpResp.setHeader("Access-Control-Max-Age", "1800");
             httpResp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,HEAD");
             httpResp.setHeader("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+            httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error");
         } else {
             if (hasOriginHeader(httpReq)) {
                 httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin"));
                 httpResp.setHeader("Access-Control-Allow-Credentials", "true");
+                httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error");
             }
             chain.doFilter(httpReq, httpResp);
         }
