@@ -29,6 +29,15 @@ import org.overlord.commons.services.ServiceRegistryUtil;
 public class SAMLAssertionUtil {
 
     /**
+     * Create a SAML assertion that is good for 10s.
+     * @param issuerName
+     * @param forService
+     */
+    public static String createSAMLAssertion(String issuerName, String forService) {
+        return createSAMLAssertion(issuerName, forService, 10000);
+    }
+
+    /**
      * Creates a SAML Assertion that can be used as a bearer token when invoking REST
      * services.  The REST service must be configured to accept SAML Assertion bearer
      * tokens.
@@ -38,8 +47,9 @@ public class SAMLAssertionUtil {
      * 
      * @param issuerName the issuer name (typically the context of the calling web app)
      * @param forService the web context of the REST service being invoked
+     * @param timeValidInMillis how long the saml assertion should be valid for (in milliseconds)
      */
-    public static String createSAMLAssertion(String issuerName, String forService) {
+    public static String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis) {
         Set<SAMLAssertionFactory> factories = null;
         
         // Note: use our classloader when loading the services because the application-specific
@@ -62,7 +72,7 @@ public class SAMLAssertionUtil {
         // Now that the factories are loaded, go ahead and try to use one of them.
         for (SAMLAssertionFactory factory : factories) {
             if (factory.accept()) {
-                return factory.createSAMLAssertion(issuerName, forService);
+                return factory.createSAMLAssertion(issuerName, forService, timeValidInMillis);
             }
         }
         throw new RuntimeException("Unsupported/undetected platform.");

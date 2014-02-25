@@ -74,12 +74,31 @@ public class SAMLBearerTokenUtil {
      * @param forService the web context of the REST service being invoked
      */
     public static String createSAMLAssertion(Principal principal, Set<String> roles, String issuerName, String forService) {
+        return createSAMLAssertion(principal, roles, issuerName, forService, 10000);
+    }
+
+    /**
+     * Creates a SAML Assertion that can be used as a bearer token when invoking REST
+     * services.  The REST service must be configured to accept SAML Assertion bearer
+     * tokens.
+     * 
+     * In JBoss this means protecting the REST services with {@link org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule}.
+     * In Tomcat7 this means protecting the REST services with {@link org.overlord.commons.auth.tomcat7.SAMLBearerTokenAuthenticator}.
+     * 
+     * @param principal
+     * @param roles
+     * @param issuerName
+     * @param forService
+     * @param timeValidInMillis
+     */
+    public static String createSAMLAssertion(Principal principal, Set<String> roles, String issuerName,
+            String forService, int timeValidInMillis) {
         try {
             NameIDType issuer = SAMLAssertionFactory.createNameID(null, null, issuerName);
             SubjectType subject = AssertionUtil.createAssertionSubject(principal.getName());
             AssertionType assertion = AssertionUtil.createAssertion(UUID.randomUUID().toString(), issuer);
             assertion.setSubject(subject);
-            AssertionUtil.createTimedConditions(assertion, 10000);
+            AssertionUtil.createTimedConditions(assertion, timeValidInMillis);
             ConditionAbstractType restriction = SAMLAssertionFactory.createAudienceRestriction(forService);
             assertion.getConditions().addCondition(restriction);
             addRoleStatements(roles, assertion, principal);

@@ -58,10 +58,10 @@ public class Jetty8SAMLAssertionFactory implements SAMLAssertionFactory {
     }
     
     /**
-     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String)
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String, int)
      */
     @Override
-    public String createSAMLAssertion(String issuerName, String forService) {
+    public String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis) {
         try {
             // Try our thread local first.  If we're using our own authentication mechanism,
             // we would have stored it in the ThreadLocal for just this purpose.
@@ -92,7 +92,7 @@ public class Jetty8SAMLAssertionFactory implements SAMLAssertionFactory {
                     // Skip it!
                 }
             }
-            return SAMLBearerTokenUtil.createSAMLAssertion(userPrincipal, roles, issuerName, forService);
+            return SAMLBearerTokenUtil.createSAMLAssertion(userPrincipal, roles, issuerName, forService, timeValidInMillis);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

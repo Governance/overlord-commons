@@ -2,6 +2,13 @@
   font-family: OpenSansRegular,Arial,Helvetica,sans-serif;
   font-size: 13px;
 }
+
+#overlord-header div {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  line-height: normal;
+}
+
 #overlord-header .overlord-navbar {
   border-top: 2px solid #f4d7a0;
 }
@@ -61,6 +68,7 @@
   background-image: url('overlord-header-images/dropdown_icon.png');
   background-position: center right;
   background-repeat: no-repeat;
+  font-size: 13px;
 }
 
 #overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu {
@@ -213,7 +221,6 @@
     height: 71px;
     box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.3);
   }
-
 }
 
 /* Mobile */

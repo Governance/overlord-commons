@@ -53,12 +53,12 @@ public class TomcatSAMLAssertionFactory implements SAMLAssertionFactory {
         }
         return false;
     }
-
+    
     /**
-     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String)
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String, int)
      */
     @Override
-    public String createSAMLAssertion(String issuerName, String forService) {
+    public String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis) {
         try {
             HttpServletRequest request = HttpRequestThreadLocalValve.TL_request.get();
             Principal principal = request.getUserPrincipal();
@@ -69,7 +69,7 @@ public class TomcatSAMLAssertionFactory implements SAMLAssertionFactory {
                 for (String role : gpRoles) {
                     roles.add(role);
                 }
-                return SAMLBearerTokenUtil.createSAMLAssertion(principal, roles, issuerName, forService);
+                return SAMLBearerTokenUtil.createSAMLAssertion(principal, roles, issuerName, forService, timeValidInMillis);
             }
             throw new Exception("Unexpected/unsupported principal type: " + principal.getClass());
         } catch (Exception e) {

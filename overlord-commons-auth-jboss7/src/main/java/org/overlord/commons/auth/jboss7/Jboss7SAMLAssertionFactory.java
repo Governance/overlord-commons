@@ -53,10 +53,10 @@ public class Jboss7SAMLAssertionFactory implements SAMLAssertionFactory {
     }
 
     /**
-     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String)
+     * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String, int)
      */
     @Override
-    public String createSAMLAssertion(String issuerName, String forService) {
+    public String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis) {
         try {
             Principal principal = SecurityContextAssociation.getPrincipal();
             Set<Principal> userRoles = SecurityContextAssociation.getSecurityContext()
@@ -67,7 +67,7 @@ public class Jboss7SAMLAssertionFactory implements SAMLAssertionFactory {
                     roles.add(role.getName());
                 }
             }
-            return SAMLBearerTokenUtil.createSAMLAssertion(principal, roles, issuerName, forService);
+            return SAMLBearerTokenUtil.createSAMLAssertion(principal, roles, issuerName, forService, timeValidInMillis);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

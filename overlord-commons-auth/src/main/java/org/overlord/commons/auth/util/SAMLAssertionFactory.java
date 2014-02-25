@@ -38,6 +38,6 @@ public interface SAMLAssertionFactory {
      * @param issuerName
      * @param forService
      */
-    public String createSAMLAssertion(String issuerName, String forService);
+    public String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis);
 
 }
