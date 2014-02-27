@@ -58,6 +58,8 @@
               !com.google.gwt.event.dom.client, 
               !com.google.gwt.event.logical.shared, 
               !com.google.gwt.event.shared, 
+              !com.google.gwt.i18n.client, 
+			  !com.google.gwt.safehtml.shared,
               !com.google.gwt.user.client, 
               !com.google.gwt.user.client.ui, 
               !com.google.web.bindery.event.shared, 
