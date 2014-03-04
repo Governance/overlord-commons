@@ -9,7 +9,7 @@
   <name>Overlord Commons: Dev Servers</name>
   
   <properties>
-    <jetty.version>9.0.2.v20130417</jetty.version>
+    <jetty.version>8.1.9.v20130131</jetty.version>
   </properties>
 
   <dependencies>
