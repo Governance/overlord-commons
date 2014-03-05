@@ -119,15 +119,14 @@
     <echo message="" />
     
     <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
-    <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users-overlord.xml" overwrite="true" />
-    <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users-overlord.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
-    <copy file="${overlord-commons.tomcat.config.dir}/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
+    <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
+    <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
   </target>
 
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">
-      <available file="${overlord-commons.tomcat.config.dir}/tomcat-users-overlord.xml" type="file" />
+      <available file="${overlord-commons.tomcat.config.dir}/overlord-saml.keystore" type="file" />
     </condition>
   </target>
   
