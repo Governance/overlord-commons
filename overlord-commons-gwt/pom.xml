@@ -31,7 +31,7 @@
       <resource>
         <directory>src/main/java</directory>
         <includes>
-          <include>**/*.java</include>
+          <include>**/client/**</include>
           <include>**/*.gwt.xml</include>
         </includes>
       </resource>
