@@ -8,5 +8,11 @@
   <role rolename="tomcat"/>
   <role rolename="overlorduser"/>
   <role rolename="admin.sramp" />
-  <user username="admin" password="@ADMINPASSWORD@" roles="tomcat,overlorduser,admin.sramp"/>
+  <role rolename="dev"/>
+  <role rolename="qa"/>
+  <role rolename="stage"/>
+  <role rolename="prod"/>
+  <role rolename="ba"/>
+  <role rolename="arch"/>
+  <user username="admin" password="@ADMINPASSWORD@" roles="tomcat,overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
 </tomcat-users>
