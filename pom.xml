@@ -107,6 +107,7 @@
     <module>overlord-commons-auth-jboss7</module>
     <module>overlord-commons-auth-jetty8</module>
     <module>overlord-commons-auth-tomcat7</module>
+    <module>overlord-commons-build</module>
     <module>overlord-commons-config</module>
     <module>overlord-commons-dev</module>
     <module>overlord-commons-errai-fuse-support</module>
