@@ -287,6 +287,18 @@ public class OverlordHeaderDataJS extends HttpServlet {
             }
         }
 
+        // Now try jetty
+        String jettyDir = System.getProperty("jetty.home");
+        if (jettyDir != null) {
+            File dirFile = new File(jettyDir, "etc");
+            if (dirFile.isDirectory()) {
+                configDir = new File(dirFile, "overlord-apps");
+                if (configDir.isDirectory()) {
+                    return configDir;
+                }
+            }
+        }
+
         return null;
     }
 
