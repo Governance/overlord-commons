@@ -43,11 +43,6 @@
 
   <!-- Install Overlord Commons -->
   <target name="install-overlord-commons" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <echo>Downloading Overlord Commons resources</echo>
-    <condition property="overlord-commons.idp.file.exists">
-      <available file="${overlord-commons.idp.file}" />
-    </condition>
-    <antcall target="download-idp" />
     <condition property="overlord-commons.services.file.exists">
       <available file="${overlord-commons.services.file}" />
     </condition>
@@ -71,6 +66,11 @@
 
   <!-- Installs the Overlord IDP WAR -->
   <target name="install-overlord-idp" unless="overlord-commons.vault-only">
+    <echo>Downloading Overlord Commons resources</echo>
+    <condition property="overlord-commons.idp.file.exists">
+      <available file="${overlord-commons.idp.file}" />
+    </condition>
+    <antcall target="download-idp" />
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.jboss.deploy.dir}/overlord-idp.war" overwrite="true" />
   </target>
