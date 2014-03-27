@@ -109,6 +109,27 @@ public class WidgetTable extends Panel {
     }
 
     /**
+     * Remove a single row and all its widgets from the table
+     *
+     * @param rowIndex which row to add to (0 based, excluding thead)
+     */
+    public void deleteRow(int rowIndex){
+    	Element rowElem=rowElements.get(rowIndex);
+    	NodeList<Node> tds= rowElem.getChildNodes();
+    	for(int i=0;i<tds.getLength();i++){
+    		Element td=tds.getItem(i).cast();
+    		for(Widget widget:wrapperMap.keySet()){
+    			if(wrapperMap.get(widget).equals(td)){
+    				remove(widget);
+    				break;
+    			}
+    		}
+    	}
+    	this.tbody.removeChild(rowElem);
+    	rowElements.remove(rowIndex);
+    }
+
+    /**
      * Gets the row element at a given index.
      * @param rowIndex
      */
