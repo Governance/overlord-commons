@@ -55,22 +55,22 @@ public class GWTCacheControlFilter implements Filter {
 
         // Only cache those files that we anticipate.  Err on the side of "no caching".  We can 
         // improve this in the future.
-        if (requestURI.contains(".cache.")) {
+        if (requestURI.contains(".cache.")) { //$NON-NLS-1$
             Date now = new Date();
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setDateHeader("Date", now.getTime());
+            httpResponse.setDateHeader("Date", now.getTime()); //$NON-NLS-1$
             // Expire in one year
-            httpResponse.setDateHeader("Expires", now.getTime() + 31536000000L);
+            httpResponse.setDateHeader("Expires", now.getTime() + 31536000000L); //$NON-NLS-1$
             // Cache for one year
-            httpResponse.setHeader("Cache-control", "public, max-age=31536000");
+            httpResponse.setHeader("Cache-control", "public, max-age=31536000"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             Date now = new Date();
             HttpServletResponse httpResponse = (HttpServletResponse) response;
-            httpResponse.setDateHeader("Date", now.getTime());
+            httpResponse.setDateHeader("Date", now.getTime()); //$NON-NLS-1$
             // one day old
-            httpResponse.setDateHeader("Expires", now.getTime() - 86400000L);
-            httpResponse.setHeader("Pragma", "no-cache");
-            httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+            httpResponse.setDateHeader("Expires", now.getTime() - 86400000L); //$NON-NLS-1$
+            httpResponse.setHeader("Pragma", "no-cache"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResponse.setHeader("Cache-control", "no-cache, no-store, must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
         chain.doFilter(request, response);

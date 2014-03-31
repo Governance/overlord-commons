@@ -50,7 +50,7 @@ public class Jetty8SAMLAssertionFactory implements SAMLAssertionFactory {
     @Override
     public boolean accept() {
         try {
-            Class.forName("org.eclipse.jetty.server.Request");
+            Class.forName("org.eclipse.jetty.server.Request"); //$NON-NLS-1$
             return true;
         } catch (ClassNotFoundException e) {
         }

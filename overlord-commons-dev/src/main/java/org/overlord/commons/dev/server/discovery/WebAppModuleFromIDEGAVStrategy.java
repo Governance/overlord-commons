@@ -55,7 +55,7 @@ public class WebAppModuleFromIDEGAVStrategy extends AbstractModuleDiscoveryStrat
      */
     @Override
     public String getName() {
-        return "IDE";
+        return "IDE"; //$NON-NLS-1$
     }
 
     /**
@@ -76,7 +76,7 @@ public class WebAppModuleFromIDEGAVStrategy extends AbstractModuleDiscoveryStrat
 
         for (URL url : sortedURLs) {
             String urlstr = url.toExternalForm();
-            if (urlstr.contains("/" + artifactId + "/target")) {
+            if (urlstr.contains("/" + artifactId + "/target")) { //$NON-NLS-1$ //$NON-NLS-2$
                 moduleUrl = urlstr;
                 break;
             }
@@ -85,22 +85,22 @@ public class WebAppModuleFromIDEGAVStrategy extends AbstractModuleDiscoveryStrat
         if (moduleUrl == null)
             return null;
 
-        debug("Module URL: " + moduleUrl);
+        debug("Module URL: " + moduleUrl); //$NON-NLS-1$
 
         try {
             String pathToWebApp = null;
-            String replacementPath = "/target/" + artifactId;
+            String replacementPath = "/target/" + artifactId; //$NON-NLS-1$
             if (useIdeSourcePath)
-                replacementPath = "/src/main/webapp";
+                replacementPath = "/src/main/webapp"; //$NON-NLS-1$
 
-            if (moduleUrl.contains("/target/classes")) {
-                pathToWebApp = moduleUrl.replace("/target/classes", replacementPath);
-            } else if (moduleUrl.contains("/target/" + artifactId + "/WEB-INF/classes")) {
-                pathToWebApp = moduleUrl.replace("/target/" + artifactId + "/WEB-INF/classes", replacementPath);
+            if (moduleUrl.contains("/target/classes")) { //$NON-NLS-1$
+                pathToWebApp = moduleUrl.replace("/target/classes", replacementPath); //$NON-NLS-1$
+            } else if (moduleUrl.contains("/target/" + artifactId + "/WEB-INF/classes")) { //$NON-NLS-1$ //$NON-NLS-2$
+                pathToWebApp = moduleUrl.replace("/target/" + artifactId + "/WEB-INF/classes", replacementPath); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             if (pathToWebApp != null) {
-                debug("Path to web app: " + pathToWebApp);
+                debug("Path to web app: " + pathToWebApp); //$NON-NLS-1$
                 File webApp = new File(new URL(pathToWebApp).toURI());
                 if (webApp.exists()) {
                     DevServerModule module = new DevServerModule();

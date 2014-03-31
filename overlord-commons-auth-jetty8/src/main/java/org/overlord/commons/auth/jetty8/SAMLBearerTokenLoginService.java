@@ -75,7 +75,7 @@ public class SAMLBearerTokenLoginService extends JAASLoginService {
     @Override
     public UserIdentity login(String username, Object credentials) {
         String password = credentials.toString();
-        if (password.startsWith("SAML-BEARER-TOKEN:")) {
+        if (password.startsWith("SAML-BEARER-TOKEN:")) { //$NON-NLS-1$
             return doSamlLogin(username, password.substring(18));
         } else {
             return super.login(username, credentials);
@@ -155,7 +155,7 @@ public class SAMLBearerTokenLoginService extends JAASLoginService {
                 AttributeStatementType attrStatement = (AttributeStatementType) statement;
                 List<ASTChoiceType> attributes = attrStatement.getAttributes();
                 for (ASTChoiceType astChoiceType : attributes) {
-                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) {
+                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) { //$NON-NLS-1$
                         List<Object> values = astChoiceType.getAttribute().getAttributeValue();
                         for (Object roleValue : values) {
                             if (roleValue != null) {

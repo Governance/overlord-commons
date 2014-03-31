@@ -80,7 +80,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
     @Override
     public void init(FilterConfig config) throws ServletException {
         // Realm
-        String parameter = config.getInitParameter("realm");
+        String parameter = config.getInitParameter("realm"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             realm = parameter;
         } else {
@@ -88,10 +88,10 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
         
         // Allowed issuers
-        parameter = config.getInitParameter("allowedIssuers");
+        parameter = config.getInitParameter("allowedIssuers"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             allowedIssuers = new HashSet<String>();
-            String [] split = parameter.split(",");
+            String [] split = parameter.split(","); //$NON-NLS-1$
             for (String issuer : split) {
                 allowedIssuers.add(issuer);
             }
@@ -100,7 +100,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
 
         // Signature Required
-        parameter = config.getInitParameter("signatureRequired");
+        parameter = config.getInitParameter("signatureRequired"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             signatureRequired = Boolean.parseBoolean(parameter);
         } else {
@@ -108,7 +108,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
 
         // Keystore Path
-        parameter = config.getInitParameter("keystorePath");
+        parameter = config.getInitParameter("keystorePath"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             keystorePath = parameter;
         } else {
@@ -116,7 +116,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
 
         // Keystore Password
-        parameter = config.getInitParameter("keystorePassword");
+        parameter = config.getInitParameter("keystorePassword"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             keystorePassword = parameter;
         } else {
@@ -124,7 +124,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
 
         // Key alias
-        parameter = config.getInitParameter("keyAlias");
+        parameter = config.getInitParameter("keyAlias"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             keyAlias = parameter;
         } else {
@@ -132,7 +132,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         }
 
         // Key Password
-        parameter = config.getInitParameter("keyPassword");
+        parameter = config.getInitParameter("keyPassword"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
             keyPassword = parameter;
         } else {
@@ -187,7 +187,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * @return the default realm
      */
     protected String defaultRealm() {
-        return "Overlord";
+        return "Overlord"; //$NON-NLS-1$
     }
 
     /**
@@ -197,7 +197,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
-        String authHeader = req.getHeader("Authorization");
+        String authHeader = req.getHeader("Authorization"); //$NON-NLS-1$
         Creds credentials = parseAuthorizationHeader(authHeader);
         if  (credentials == null) {
             sendAuthResponse((HttpServletResponse)response);
@@ -235,11 +235,11 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
         InvocationHandler handler = new InvocationHandler() {
             @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                if (method.getName().equals("getUserPrincipal")) {
+                if (method.getName().equals("getUserPrincipal")) { //$NON-NLS-1$
                     return principal;
-                } else if (method.getName().equals("getRemoteUser")) {
+                } else if (method.getName().equals("getRemoteUser")) { //$NON-NLS-1$
                     return principal.getName();
-                } else if (method.getName().equals("isUserInRole")) {
+                } else if (method.getName().equals("isUserInRole")) { //$NON-NLS-1$
                     String role = (String) args[0];
                     return principal.getRoles().contains(role);
                 }
@@ -257,13 +257,13 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
     private Creds parseAuthorizationHeader(String authHeader) {
         if (authHeader == null)
             return null;
-        if (!authHeader.toUpperCase().startsWith("BASIC "))
+        if (!authHeader.toUpperCase().startsWith("BASIC ")) //$NON-NLS-1$
             return null;
 
         try {
             String userpassEncoded = authHeader.substring(6);
             byte[] decoded = Base64.decodeBase64(userpassEncoded);
-            String data = new String(decoded, "UTF-8");
+            String data = new String(decoded, "UTF-8"); //$NON-NLS-1$
             int sepIdx = data.indexOf(':');
             if (sepIdx > 0) {
                 String username = data.substring(0, sepIdx);
@@ -286,7 +286,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      */
     protected SimplePrincipal login(Creds credentials, HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        if ("SAML-BEARER-TOKEN".equals(credentials.username)) {
+        if ("SAML-BEARER-TOKEN".equals(credentials.username)) { //$NON-NLS-1$
             return doSamlLogin(credentials.password, request);
         } else {
             return doBasicLogin(credentials.username, credentials.password, request);
@@ -369,7 +369,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
                 AttributeStatementType attrStatement = (AttributeStatementType) statement;
                 List<ASTChoiceType> attributes = attrStatement.getAttributes();
                 for (ASTChoiceType astChoiceType : attributes) {
-                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) {
+                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) { //$NON-NLS-1$
                         List<Object> values = astChoiceType.getAttribute().getAttributeValue();
                         for (Object roleValue : values) {
                             if (roleValue != null) {
@@ -400,7 +400,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      * @throws IOException 
      */
     private void sendAuthResponse(HttpServletResponse response) throws IOException {
-        response.setHeader("WWW-Authenticate", String.format("BASIC realm=\"%1$s\"", realm));
+        response.setHeader("WWW-Authenticate", String.format("BASIC realm=\"%1$s\"", realm)); //$NON-NLS-1$ //$NON-NLS-2$
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 

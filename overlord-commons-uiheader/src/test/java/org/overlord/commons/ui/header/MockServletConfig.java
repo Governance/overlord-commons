@@ -57,7 +57,7 @@ public class MockServletConfig implements ServletConfig {
      */
     @Override
     public String getInitParameter(String name) {
-        if ("app-id".equals(name)) {
+        if ("app-id".equals(name)) { //$NON-NLS-1$
             return appId;
         }
         return null;

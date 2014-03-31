@@ -12,12 +12,12 @@ public class JBossServer {
      */
     public static String getBaseUrl() {
     	if (baseUrl==null) {
-	    	String hostname = System.getProperty("jboss.bind.address","localhost");
-	    	Integer portOffset = Integer.valueOf(System.getProperty("jboss.socket.binding.port-offset","0"));
+	    	String hostname = System.getProperty("jboss.bind.address","localhost"); //$NON-NLS-1$ //$NON-NLS-2$
+	    	Integer portOffset = Integer.valueOf(System.getProperty("jboss.socket.binding.port-offset","0")); //$NON-NLS-1$ //$NON-NLS-2$
 	    	String port = String.valueOf(8080 + portOffset);
-	    	String scheme = "http://";
-	    	if (port.endsWith("443")) scheme = "https://";
-	    	baseUrl = scheme + hostname + ":" + port;
+	    	String scheme = "http://"; //$NON-NLS-1$
+	    	if (port.endsWith("443")) scheme = "https://"; //$NON-NLS-1$ //$NON-NLS-2$
+	    	baseUrl = scheme + hostname + ":" + port; //$NON-NLS-1$
     	}
     	return baseUrl;
     }

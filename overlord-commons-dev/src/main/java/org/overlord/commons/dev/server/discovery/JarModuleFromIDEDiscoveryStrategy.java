@@ -43,7 +43,7 @@ public class JarModuleFromIDEDiscoveryStrategy extends AbstractModuleDiscoverySt
      */
     @Override
     public String getName() {
-        return "IDE (jar project)";
+        return "IDE (jar project)"; //$NON-NLS-1$
     }
 
     /**
@@ -52,21 +52,21 @@ public class JarModuleFromIDEDiscoveryStrategy extends AbstractModuleDiscoverySt
     @Override
     public DevServerModule discover(ModuleDiscoveryContext context) {
         String path = someClass.getClassLoader()
-                .getResource(someClass.getName().replace('.', '/') + ".class").getPath();
+                .getResource(someClass.getName().replace('.', '/') + ".class").getPath(); //$NON-NLS-1$
         if (path == null) {
             return null;
         }
 
-        debug("Path: " + path);
+        debug("Path: " + path); //$NON-NLS-1$
 
         File file = new File(path);
         // The class file is available on the file system!
         if (file.exists()) {
-            if (path.contains("/target/classes/")) {
-                String pathToProj = path.substring(0, path.indexOf("/target/classes/"));
-                debug("Path to project: " + pathToProj);
+            if (path.contains("/target/classes/")) { //$NON-NLS-1$
+                String pathToProj = path.substring(0, path.indexOf("/target/classes/")); //$NON-NLS-1$
+                debug("Path to project: " + pathToProj); //$NON-NLS-1$
                 File modulePath = new File(pathToProj, this.pathInProject);
-                debug("Module Path: " + modulePath);
+                debug("Module Path: " + modulePath); //$NON-NLS-1$
                 if (!modulePath.exists()) {
                     return null;
                 }

@@ -62,9 +62,9 @@ public class Jetty8SamlBearerTokenAuthFilter extends SamlBearerTokenAuthFilter {
         roleClasses = null;
         
         // Role classes
-        String parameter = config.getInitParameter("roleClasses");
+        String parameter = config.getInitParameter("roleClasses"); //$NON-NLS-1$
         if (parameter != null && parameter.trim().length() > 0) {
-            roleClasses = parameter.split(",");
+            roleClasses = parameter.split(","); //$NON-NLS-1$
         } else {
             roleClasses = defaultRoleClasses();
         }

@@ -23,8 +23,8 @@ package org.overlord.commons.auth.jetty8;
  */
 public class JettyAuthConstants {
     public static final String [] ROLE_CLASSES = new String [] {
-        "org.eclipse.jetty.security.MappedLoginService$RolePrincipal",
-        "org.eclipse.jetty.plus.jaas.JAASRole",
-        "org.apache.karaf.jaas.boot.principal.RolePrincipal"
+        "org.eclipse.jetty.security.MappedLoginService$RolePrincipal", //$NON-NLS-1$
+        "org.eclipse.jetty.plus.jaas.JAASRole", //$NON-NLS-1$
+        "org.apache.karaf.jaas.boot.principal.RolePrincipal" //$NON-NLS-1$
     };
 }

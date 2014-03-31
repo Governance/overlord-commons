@@ -37,14 +37,14 @@ public abstract class DevServer {
      * Enables debug logging.
      */
     public void enableDebug() {
-        System.setProperty("discovery-strategy.debug", "true");
+        System.setProperty("discovery-strategy.debug", "true"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
      * Disables debug logging.
      */
     public void disableDebug() {
-        System.clearProperty("discovery-strategy.debug");
+        System.clearProperty("discovery-strategy.debug"); //$NON-NLS-1$
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class DevServer {
      */
     public void go() throws Exception {
         long startTime = System.currentTimeMillis();
-        System.out.println("**** Starting Development Server (" + getClass().getSimpleName() + ")");
+        System.out.println("**** Starting Development Server (" + getClass().getSimpleName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
         preConfig();
         DevServerEnvironment environment = createDevEnvironment();
         addModules(environment);
@@ -68,7 +68,7 @@ public abstract class DevServer {
         server.setHandler(handlers);
         server.start();
         long endTime = System.currentTimeMillis();
-        System.out.println("******* Started in " + (endTime - startTime) + "ms");
+        System.out.println("******* Started in " + (endTime - startTime) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 
         postStart(environment);
 

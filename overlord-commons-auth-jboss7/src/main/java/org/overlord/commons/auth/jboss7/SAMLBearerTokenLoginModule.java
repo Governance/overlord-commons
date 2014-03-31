@@ -95,19 +95,19 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
             Map<String, ?> options) {
         super.initialize(subject, callbackHandler, sharedState, options);
-        String val = (String) options.get("allowedIssuers");
+        String val = (String) options.get("allowedIssuers"); //$NON-NLS-1$
         if (val != null) {
-            String [] split = val.split(",");
+            String [] split = val.split(","); //$NON-NLS-1$
             for (String issuer : split) {
                 if (issuer != null && issuer.trim().length() > 0)
                     allowedIssuers.add(issuer);
             }
         }
-        signatureRequired = (String) options.get("signatureRequired");
-        keystorePath = (String) options.get("keystorePath");
-        keystorePassword = (String) options.get("keystorePassword");
-        keyAlias = (String) options.get("keyAlias");
-        keyPassword = (String) options.get("keyPassword");
+        signatureRequired = (String) options.get("signatureRequired"); //$NON-NLS-1$
+        keystorePath = (String) options.get("keystorePath"); //$NON-NLS-1$
+        keystorePassword = (String) options.get("keystorePassword"); //$NON-NLS-1$
+        keyAlias = (String) options.get("keyAlias"); //$NON-NLS-1$
+        keyPassword = (String) options.get("keyPassword"); //$NON-NLS-1$
     }
 
     /**
@@ -117,12 +117,12 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     public boolean login() throws LoginException {
         try {
             HttpServletRequest request = getCurrentRequest();
-            String authorization = request.getHeader("Authorization");
-            if (authorization != null && authorization.startsWith("Basic")) {
+            String authorization = request.getHeader("Authorization"); //$NON-NLS-1$
+            if (authorization != null && authorization.startsWith("Basic")) { //$NON-NLS-1$
                 String b64Data = authorization.substring(6);
                 byte[] dataBytes = Base64.decodeBase64(b64Data);
-                String data = new String(dataBytes, "UTF-8");
-                if (data.startsWith("SAML-BEARER-TOKEN:")) {
+                String data = new String(dataBytes, "UTF-8"); //$NON-NLS-1$
+                if (data.startsWith("SAML-BEARER-TOKEN:")) { //$NON-NLS-1$
                     String assertionData = data.substring(18);
                     Document samlAssertion = DocumentUtil.getDocument(assertionData);
                     SAMLAssertionParser parser = new SAMLAssertionParser();
@@ -131,7 +131,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                     Object parsed = parser.parse(xmlEventReader);
                     AssertionType assertion = (AssertionType) parsed;
                     SAMLBearerTokenUtil.validateAssertion(assertion, request, allowedIssuers);
-                    if ("true".equals(signatureRequired)) {
+                    if ("true".equals(signatureRequired)) { //$NON-NLS-1$
                         KeyPair keyPair = getKeyPair(assertion);
                         if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
                             throw new LoginException("Invalid signature found on SAML assertion!");
@@ -160,13 +160,13 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
         HttpServletRequest request = HttpRequestThreadLocalValve.TL_request.get();
         if (request == null) {
             try {
-                request = (HttpServletRequest) PolicyContext.getContext("javax.servlet.http.HttpServletRequest");
+                request = (HttpServletRequest) PolicyContext.getContext("javax.servlet.http.HttpServletRequest"); //$NON-NLS-1$
             } catch (Exception e) {
                 request = null;
             }
         }
         if (request == null) {
-            throw new LoginException("Failed to get current HTTP request.");
+            throw new LoginException("Failed to get current HTTP request."); //$NON-NLS-1$
         }
         return request;
     }
@@ -196,7 +196,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
             return SAMLBearerTokenUtil.loadKeystore(keystorePath, keystorePassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new LoginException("Error loading signature keystore: " + e.getMessage());
+            throw new LoginException("Error loading signature keystore: " + e.getMessage()); //$NON-NLS-1$
         }
     }
 
@@ -217,7 +217,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                 AttributeStatementType attrStatement = (AttributeStatementType) statement;
                 List<ASTChoiceType> attributes = attrStatement.getAttributes();
                 for (ASTChoiceType astChoiceType : attributes) {
-                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) {
+                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) { //$NON-NLS-1$
                         List<Object> values = astChoiceType.getAttribute().getAttributeValue();
                         for (Object roleValue : values) {
                             if (roleValue != null) {
@@ -244,7 +244,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
     @Override
     protected Group[] getRoleSets() throws LoginException {
         Group[] groups = new Group[1];
-        groups[0] = new SimpleGroup("Roles");
+        groups[0] = new SimpleGroup("Roles"); //$NON-NLS-1$
         try {
             for (String role : roles) {
                 groups[0].addMember(createIdentity(role));

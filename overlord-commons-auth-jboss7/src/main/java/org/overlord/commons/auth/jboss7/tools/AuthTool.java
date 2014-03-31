@@ -74,17 +74,17 @@ public class AuthTool {
      */
     protected static void storePassword(Options options) throws Exception {
         System.out.println("Storing a password in the password vault.");
-        String vaultdir = options.cmdLineOptions.get("vaultdir");
-        String keystore = options.cmdLineOptions.get("keystore");
-        String storepass = options.cmdLineOptions.get("storepass");
-        String alias = options.cmdLineOptions.get("alias");
-        String salt = options.cmdLineOptions.get("salt");
-        String count = options.cmdLineOptions.get("count");
-        String block = options.cmdLineOptions.get("block");
-        String name = options.cmdLineOptions.get("name");
-        String password = options.cmdLineOptions.get("password");
-        String propertyfile = options.cmdLineOptions.get("propertyfile");
-        String property = options.cmdLineOptions.get("property");
+        String vaultdir = options.cmdLineOptions.get("vaultdir"); //$NON-NLS-1$
+        String keystore = options.cmdLineOptions.get("keystore"); //$NON-NLS-1$
+        String storepass = options.cmdLineOptions.get("storepass"); //$NON-NLS-1$
+        String alias = options.cmdLineOptions.get("alias"); //$NON-NLS-1$
+        String salt = options.cmdLineOptions.get("salt"); //$NON-NLS-1$
+        String count = options.cmdLineOptions.get("count"); //$NON-NLS-1$
+        String block = options.cmdLineOptions.get("block"); //$NON-NLS-1$
+        String name = options.cmdLineOptions.get("name"); //$NON-NLS-1$
+        String password = options.cmdLineOptions.get("password"); //$NON-NLS-1$
+        String propertyfile = options.cmdLineOptions.get("propertyfile"); //$NON-NLS-1$
+        String property = options.cmdLineOptions.get("property"); //$NON-NLS-1$
 
         if (vaultdir == null || keystore == null || storepass == null || salt == null
                 || alias == null || count == null || name == null || password == null
@@ -127,21 +127,21 @@ public class AuthTool {
     protected static void addUser(Options options) throws Exception {
         System.out.println("Adding an Overlord user.");
 
-        String configdir = options.cmdLineOptions.get("configdir");
-        String vaultdir = options.cmdLineOptions.get("vaultdir");
-        String keystore = options.cmdLineOptions.get("keystore");
-        String storepass = options.cmdLineOptions.get("storepass");
-        String alias = options.cmdLineOptions.get("alias");
-        String salt = options.cmdLineOptions.get("salt");
-        String count = options.cmdLineOptions.get("count");
-        String user = options.cmdLineOptions.get("user");
-        String password = options.cmdLineOptions.get("password");
-        String roles = options.cmdLineOptions.get("roles");
-        String propertyfile = options.cmdLineOptions.get("propertyfile");
-        String property = options.cmdLineOptions.get("property");
+        String configdir = options.cmdLineOptions.get("configdir"); //$NON-NLS-1$
+        String vaultdir = options.cmdLineOptions.get("vaultdir"); //$NON-NLS-1$
+        String keystore = options.cmdLineOptions.get("keystore"); //$NON-NLS-1$
+        String storepass = options.cmdLineOptions.get("storepass"); //$NON-NLS-1$
+        String alias = options.cmdLineOptions.get("alias"); //$NON-NLS-1$
+        String salt = options.cmdLineOptions.get("salt"); //$NON-NLS-1$
+        String count = options.cmdLineOptions.get("count"); //$NON-NLS-1$
+        String user = options.cmdLineOptions.get("user"); //$NON-NLS-1$
+        String password = options.cmdLineOptions.get("password"); //$NON-NLS-1$
+        String roles = options.cmdLineOptions.get("roles"); //$NON-NLS-1$
+        String propertyfile = options.cmdLineOptions.get("propertyfile"); //$NON-NLS-1$
+        String property = options.cmdLineOptions.get("property"); //$NON-NLS-1$
 
-        String block = "overlord";
-        String name = user + ".password";
+        String block = "overlord"; //$NON-NLS-1$
+        String name = user + ".password"; //$NON-NLS-1$
 
         if (vaultdir == null || keystore == null || storepass == null || salt == null
                 || alias == null || count == null || user == null || password == null) {
@@ -172,16 +172,16 @@ public class AuthTool {
      * @param configdir
      */
     private static void createUser(String user, String roles, String vaultHash, String configdir) throws Exception {
-        File usersFile = new File(configdir, "overlord-idp-users.properties");
-        File rolesFile = new File(configdir, "overlord-idp-roles.properties");
+        File usersFile = new File(configdir, "overlord-idp-users.properties"); //$NON-NLS-1$
+        File rolesFile = new File(configdir, "overlord-idp-roles.properties"); //$NON-NLS-1$
 
         FileWriter writer = null;
         try {
             writer = new FileWriter(usersFile, true);
             writer.write(user);
-            writer.write("=");
+            writer.write("="); //$NON-NLS-1$
             writer.write(vaultHash);
-            writer.write("\n");
+            writer.write("\n"); //$NON-NLS-1$
             writer.flush();
         } finally {
             writer.close();
@@ -190,13 +190,13 @@ public class AuthTool {
         try {
             writer = new FileWriter(rolesFile, true);
             writer.write(user);
-            writer.write("=");
+            writer.write("="); //$NON-NLS-1$
             if (roles == null) {
-                writer.write("overlorduser,admin.sramp");
+                writer.write("overlorduser,admin.sramp"); //$NON-NLS-1$
             } else {
-                writer.write("overlorduser,admin.sramp," + roles);
+                writer.write("overlorduser,admin.sramp," + roles); //$NON-NLS-1$
             }
-            writer.write("\n");
+            writer.write("\n"); //$NON-NLS-1$
             writer.flush();
         } finally {
             writer.close();
@@ -234,10 +234,10 @@ public class AuthTool {
             String et = args[0];
             options.execType = ExecType.valueOf(et);
             for (int i = 1; i < args.length; i++) {
-                if (args[i].startsWith("-")) {
+                if (args[i].startsWith("-")) { //$NON-NLS-1$
                     String key = args[i].substring(1);
                     String value = null;
-                    if ( (i+1) < args.length && !args[i+1].startsWith("-")) {
+                    if ( (i+1) < args.length && !args[i+1].startsWith("-")) { //$NON-NLS-1$
                         value = args[i+1];
                     }
                     options.cmdLineOptions.put(key, value);

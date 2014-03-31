@@ -52,7 +52,7 @@ public class WebAppModuleFromMavenGAVStrategy extends AbstractModuleDiscoveryStr
      */
     @Override
     public String getName() {
-        return "Maven Artifact (GAV)";
+        return "Maven Artifact (GAV)"; //$NON-NLS-1$
     }
 
     /**
@@ -75,7 +75,7 @@ public class WebAppModuleFromMavenGAVStrategy extends AbstractModuleDiscoveryStr
         String groupIdAsPath = groupId.replace('.', '/');
         for (URL url : sortedURLs) {
             String urlstr = url.toExternalForm();
-            if (urlstr.contains(groupIdAsPath) && urlstr.contains("/"+artifactId+"-")) {
+            if (urlstr.contains(groupIdAsPath) && urlstr.contains("/"+artifactId+"-")) { //$NON-NLS-1$ //$NON-NLS-2$
                 moduleUrl = urlstr;
                 break;
             }
@@ -84,17 +84,17 @@ public class WebAppModuleFromMavenGAVStrategy extends AbstractModuleDiscoveryStr
         if (moduleUrl == null)
             return null;
 
-        debug("Module URL: " + moduleUrl);
+        debug("Module URL: " + moduleUrl); //$NON-NLS-1$
 
         try {
-            String pathToWar = moduleUrl.replace("-classes.jar", ".war");
+            String pathToWar = moduleUrl.replace("-classes.jar", ".war"); //$NON-NLS-1$ //$NON-NLS-2$
             URL warUrl = new URL(pathToWar);
             File war = new File(warUrl.toURI());
-            debug("WAR: " + war);
+            debug("WAR: " + war); //$NON-NLS-1$
 
             if (war.isFile()) {
                 File workDir = new File(context.getTargetDir(), war.getName());
-                debug("Work Dir: " + workDir);
+                debug("Work Dir: " + workDir); //$NON-NLS-1$
 
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(false);

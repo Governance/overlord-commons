@@ -46,9 +46,9 @@ public class OverlordHeaderResources implements Filter {
     private final static Map<String, String> FILE_TYPES = new HashMap<String, String>();
     private final static Map<String, Boolean> EXISTS_CHECK = new HashMap<String, Boolean>();
     static {
-        FILE_TYPES.put("png", "image/png");
-        FILE_TYPES.put("css", "text/css");
-        FILE_TYPES.put("js", "text/javascript");
+        FILE_TYPES.put("png", "image/png"); //$NON-NLS-1$ //$NON-NLS-2$
+        FILE_TYPES.put("css", "text/css"); //$NON-NLS-1$ //$NON-NLS-2$
+        FILE_TYPES.put("js", "text/javascript"); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     /**
@@ -71,7 +71,7 @@ public class OverlordHeaderResources implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
-        String path = "/META-INF/resources" + httpReq.getServletPath();
+        String path = "/META-INF/resources" + httpReq.getServletPath(); //$NON-NLS-1$
         Boolean exists = EXISTS_CHECK.get(path);
         if (exists != null && !exists) {
             chain.doFilter(request, response);

@@ -43,9 +43,9 @@ public class Jboss7SAMLAssertionFactory implements SAMLAssertionFactory {
      */
     @Override
     public boolean accept() {
-        String property = System.getProperty("jboss.server.config.dir");
+        String property = System.getProperty("jboss.server.config.dir"); //$NON-NLS-1$
         if (property != null) {
-            File f = new File(property, "standalone.xml");
+            File f = new File(property, "standalone.xml"); //$NON-NLS-1$
             if (f.isFile())
                 return true;
         }

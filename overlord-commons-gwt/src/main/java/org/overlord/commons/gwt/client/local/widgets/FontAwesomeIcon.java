@@ -26,7 +26,7 @@ public class FontAwesomeIcon extends IconLabel {
      * Constructor.
      */
     public FontAwesomeIcon() {
-        getElement().setClassName("fa");
+        getElement().setClassName("fa"); //$NON-NLS-1$
     }
     
     /**
@@ -35,7 +35,7 @@ public class FontAwesomeIcon extends IconLabel {
      */
     public FontAwesomeIcon(String iconName) {
         this();
-        getElement().addClassName("fa-" + iconName);
+        getElement().addClassName("fa-" + iconName); //$NON-NLS-1$
     }
     
     /**
@@ -46,14 +46,14 @@ public class FontAwesomeIcon extends IconLabel {
     public FontAwesomeIcon(String iconName, boolean fixedWidth) {
         this(iconName);
         if (fixedWidth)
-            getElement().addClassName("fa-fw");
+            getElement().addClassName("fa-fw"); //$NON-NLS-1$
     }
     
     /**
      * @param iconName
      */
     public void setIconName(String iconName) {
-        getElement().addClassName("fa-" + iconName);
+        getElement().addClassName("fa-" + iconName); //$NON-NLS-1$
     }
 
     /**
@@ -61,8 +61,8 @@ public class FontAwesomeIcon extends IconLabel {
      */
     public void setFixedWidth(boolean fixedWidth) {
         if (fixedWidth)
-            getElement().addClassName("fa-fw");
+            getElement().addClassName("fa-fw"); //$NON-NLS-1$
         else
-            getElement().removeClassName("fa-fw");
+            getElement().removeClassName("fa-fw"); //$NON-NLS-1$
     }
 }

@@ -38,7 +38,7 @@ public class ServiceRegistryUtil {
      * environment.
      */
     private static ServiceRegistry createRegistry() {
-        if ("true".equals(System.getProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP))) {
+        if ("true".equals(System.getProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP))) { //$NON-NLS-1$
             return new OSGiServiceRegistry();
         } else {
             return new ServiceLoaderServiceRegistry();

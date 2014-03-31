@@ -116,7 +116,7 @@ public class SAMLBearerTokenUtil {
      * @param principal
      */
     private static void addRoleStatements(Set<String> roles, AssertionType assertion, Principal principal) {
-        AttributeType attribute = new AttributeType("Role");
+        AttributeType attribute = new AttributeType("Role"); //$NON-NLS-1$
         ASTChoiceType attributeAST = new ASTChoiceType(attribute);
         AttributeStatementType roleStatement = new AttributeStatementType();
         roleStatement.addAttribute(attributeAST);
@@ -183,7 +183,7 @@ public class SAMLBearerTokenUtil {
         if (!keystoreFile.isFile()) {
             throw new Exception("No KeyStore found at path " + keystorePath);
         }
-        KeyStore keystore = KeyStore.getInstance("jks");
+        KeyStore keystore = KeyStore.getInstance("jks"); //$NON-NLS-1$
         InputStream is = null;
         try {
             is = new FileInputStream(keystoreFile);

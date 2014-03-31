@@ -39,19 +39,19 @@ public abstract class ErraiDevServer extends DevServer {
     protected void addModulesToJetty(DevServerEnvironment environment, ContextHandlerCollection handlers)
             throws Exception {
         if (environment.isModuleInIDE(getErraiModuleId()) && !environment.isUsingClassHiderAgent()) {
-            System.out.println("******************************************************************");
-            System.out.println("WARNING: we detected that you are running from within an IDE");
-            System.out.println("         but are not using the Errai class hiding agent.  As");
-            System.out.println("         a result, you may see a number of Weld related errors ");
-            System.out.println("         during startup.  This is due to client-only classes");
-            System.out.println("         being included on the server classpath.  To address");
-            System.out.println("         this issue, please see:");
-            System.out.println("         ");
-            System.out.println("         https://github.com/jfuerth/client-local-class-hider");
-            System.out.println("         ");
-            System.out.println("         The above is a Java Agent that will hide the client-");
-            System.out.println("         only classes from Weld, thereby suppressing the errors.");
-            System.out.println("******************************************************************");
+            System.out.println("******************************************************************"); //$NON-NLS-1$
+            System.out.println("WARNING: we detected that you are running from within an IDE"); //$NON-NLS-1$
+            System.out.println("         but are not using the Errai class hiding agent.  As"); //$NON-NLS-1$
+            System.out.println("         a result, you may see a number of Weld related errors "); //$NON-NLS-1$
+            System.out.println("         during startup.  This is due to client-only classes"); //$NON-NLS-1$
+            System.out.println("         being included on the server classpath.  To address"); //$NON-NLS-1$
+            System.out.println("         this issue, please see:"); //$NON-NLS-1$
+            System.out.println("         "); //$NON-NLS-1$
+            System.out.println("         https://github.com/jfuerth/client-local-class-hider"); //$NON-NLS-1$
+            System.out.println("         "); //$NON-NLS-1$
+            System.out.println("         The above is a Java Agent that will hide the client-"); //$NON-NLS-1$
+            System.out.println("         only classes from Weld, thereby suppressing the errors."); //$NON-NLS-1$
+            System.out.println("******************************************************************"); //$NON-NLS-1$
             try {Thread.sleep(5000);} catch (InterruptedException e) {}
         }
 

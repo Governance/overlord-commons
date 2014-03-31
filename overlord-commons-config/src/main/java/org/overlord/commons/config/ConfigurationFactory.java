@@ -76,7 +76,7 @@ public class ConfigurationFactory {
      */
     private synchronized static void registerGlobalLookups() {
         if (!globalLookupsRegistered) {
-            ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup());
+            ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup()); //$NON-NLS-1$
             globalLookupsRegistered = true;
         }
     }
@@ -134,9 +134,9 @@ public class ConfigurationFactory {
                 }
                 
                 // Then check for Tomcat
-                String tomcatDir = System.getProperty("catalina.home");
+                String tomcatDir = System.getProperty("catalina.home"); //$NON-NLS-1$
                 if (tomcatDir != null) {
-                    File dirFile = new File(tomcatDir, "conf");
+                    File dirFile = new File(tomcatDir, "conf"); //$NON-NLS-1$
                     if (dirFile.isDirectory()) {
                         File cfile = new File(dirFile, standardConfigFileName);
                         if (cfile.isFile())
@@ -145,9 +145,9 @@ public class ConfigurationFactory {
                 }
 
                 // Now check for karaf
-                String karafDir = System.getProperty("karaf.home");
+                String karafDir = System.getProperty("karaf.home"); //$NON-NLS-1$
                 if (karafDir != null) {
-                    File dirFile = new File(karafDir, "etc");
+                    File dirFile = new File(karafDir, "etc"); //$NON-NLS-1$
                     if (dirFile.isDirectory()) {
                         File cfile = new File(dirFile, standardConfigFileName);
                         if (cfile.isFile())
@@ -156,9 +156,9 @@ public class ConfigurationFactory {
                 }
 
                 // Now check for jetty
-                String jettyDir = System.getProperty("jetty.home");
+                String jettyDir = System.getProperty("jetty.home"); //$NON-NLS-1$
                 if (jettyDir != null) {
-                    File dirFile = new File(jettyDir, "etc");
+                    File dirFile = new File(jettyDir, "etc"); //$NON-NLS-1$
                     if (dirFile.isDirectory()) {
                         File cfile = new File(dirFile, standardConfigFileName);
                         if (cfile.isFile())

@@ -47,7 +47,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
      */
     @Override
     public String getCharacterEncoding() {
-        return "UTF-8";
+        return "UTF-8"; //$NON-NLS-1$
     }
 
     /**
@@ -78,7 +78,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
      */
     @Override
     public void setContentLength(int len) {
-        setIntHeader("Content-Length", len);
+        setIntHeader("Content-Length", len); //$NON-NLS-1$
     }
 
     /**
@@ -86,7 +86,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
      */
     @Override
     public void setContentType(String type) {
-        setHeader("Content-Type", type);
+        setHeader("Content-Type", type); //$NON-NLS-1$
     }
 
     /**
@@ -205,7 +205,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
      */
     @Override
     public void setDateHeader(String name, long date) {
-        setHeader(name, "<DATE VALUE>");
+        setHeader(name, "<DATE VALUE>"); //$NON-NLS-1$
     }
 
     /**
@@ -273,7 +273,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
         Set<String> headerNames = new TreeSet<String>(headers.keySet());
         for (String headerName : headerNames) {
             builder.append(headerName);
-            builder.append(": ");
+            builder.append(": "); //$NON-NLS-1$
             boolean first = true;
             for (Object headerValue : headers.get(headerName)) {
                 String val = headerValue.toString();
@@ -281,10 +281,10 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
                     builder.append(val);
                     first = false;
                 } else {
-                    builder.append(", ").append(val);
+                    builder.append(", ").append(val); //$NON-NLS-1$
                 }
             }
-            builder.append("\r\n");
+            builder.append("\r\n"); //$NON-NLS-1$
         }
         return builder.toString();
     }
@@ -293,7 +293,7 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
      */
     public String getOutputAsString() {
         try {
-            return this.baos.toString("UTF-8");
+            return this.baos.toString("UTF-8"); //$NON-NLS-1$
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }

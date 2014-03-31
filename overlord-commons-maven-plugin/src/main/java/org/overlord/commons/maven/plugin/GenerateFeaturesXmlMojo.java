@@ -92,10 +92,10 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      */
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("-------------------------------------------------");
-        getLog().info("Generating Karaf compatible features.xml file to:");
-        getLog().info("   " + outputFile);
-        getLog().info("-------------------------------------------------");
+        getLog().info("-------------------------------------------------"); //$NON-NLS-1$
+        getLog().info("Generating Karaf compatible features.xml file to:"); //$NON-NLS-1$
+        getLog().info("   " + outputFile); //$NON-NLS-1$
+        getLog().info("-------------------------------------------------"); //$NON-NLS-1$
 
         try {
             FeaturesXml featuresXml = new FeaturesXml();
@@ -104,7 +104,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             file.getParentFile().mkdirs();
             featuresXml.writeTo(file);
             
-            if ("true".equals(attach)) {
+            if ("true".equals(attach)) { //$NON-NLS-1$
                 attachToBuild(file);
             }
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * @param file the generated features.xml file
      */
     private void attachToBuild(File file) {
-        projectHelper.attachArtifact(this.project, "xml", "features", file);
+        projectHelper.attachArtifact(this.project, "xml", "features", file); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -140,7 +140,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
 
         // Iterate all features
         for (Feature feature : features) {
-            getLog().info("Generating feature '" + feature.getName() + "'");
+            getLog().info("Generating feature '" + feature.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
             // Create the feature
             featuresXml.addFeature(feature.getName(), feature.getVersion(), feature.getComment());
             // Add any feature dependencies
@@ -148,7 +148,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             if (onFeatures != null && !onFeatures.isEmpty()) {
                 for (Feature onFeature : onFeatures) {
                     getLog().info(
-                            "   Depends on feature: " + onFeature.getName() + "/" + onFeature.getVersion());
+                            "   Depends on feature: " + onFeature.getName() + "/" + onFeature.getVersion()); //$NON-NLS-1$ //$NON-NLS-2$
                     featuresXml.addFeatureDependency(feature.getName(), feature.getVersion(),
                             onFeature.getName(), onFeature.getVersion());
                 }
@@ -166,15 +166,15 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
                 // If no includes, assume everything
                 boolean includeBundle = feature.getIncludes() == null || feature.getIncludes().isEmpty();
                 if (includeBundle) {
-                    getLog().debug("   Artifact " + artifact + " matches default [all] filter (including).");
+                    getLog().debug("   Artifact " + artifact + " matches default [all] filter (including)."); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 if (includesFilter.include(artifact)) {
-                    getLog().debug("   Artifact " + artifact + " matched include filter (including).");
+                    getLog().debug("   Artifact " + artifact + " matched include filter (including)."); //$NON-NLS-1$ //$NON-NLS-2$
                     includeBundle = true;
                 }
                 // Excludes must be explicit.
                 if (!excludesFilter.include(artifact)) {
-                    getLog().debug("   Artifact " + artifact + " matched exclude filter (excluding).");
+                    getLog().debug("   Artifact " + artifact + " matched exclude filter (excluding)."); //$NON-NLS-1$ //$NON-NLS-2$
                     includeBundle = false;
                 }
 
@@ -188,7 +188,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             List<String> bundles = feature.getBundles();
             if (bundles != null && !bundles.isEmpty()) {
                 for (String bundle : bundles) {
-                    getLog().debug("   Adding explicit bundle: " + bundle);
+                    getLog().debug("   Adding explicit bundle: " + bundle); //$NON-NLS-1$
                     featuresXml.addBundle(feature.getName(), feature.getVersion(), bundle);
                 }
             }
@@ -218,38 +218,38 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
         // and include some useful meta-data.
         if (isBundle(artifact)) {
             // Example:  mvn:commons-configuration/commons-configuration/1.6
-            builder.append("mvn:");
+            builder.append("mvn:"); //$NON-NLS-1$
             builder.append(artifact.getGroupId());
-            builder.append("/");
+            builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getArtifactId());
-            builder.append("/");
+            builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getBaseVersion());
-            if (!"jar".equalsIgnoreCase(artifact.getType())) {
-                builder.append("/");
+            if (!"jar".equalsIgnoreCase(artifact.getType())) { //$NON-NLS-1$
+                builder.append("/"); //$NON-NLS-1$
                 builder.append(artifact.getType());
             }
         } else {
             // Example:  wrap:mvn:log4j/log4j/1.2.14$Bundle-SymbolicName=log4j.log4j&amp;Bundle-Version=1.2.14&amp;Bundle-Name=Log4j
-            builder.append("wrap:mvn:");
+            builder.append("wrap:mvn:"); //$NON-NLS-1$
             builder.append(artifact.getGroupId());
-            builder.append("/");
+            builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getArtifactId());
-            builder.append("/");
+            builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getBaseVersion());
-            if (!"jar".equalsIgnoreCase(artifact.getType())) {
-                builder.append("/");
+            if (!"jar".equalsIgnoreCase(artifact.getType())) { //$NON-NLS-1$
+                builder.append("/"); //$NON-NLS-1$
                 builder.append(artifact.getType());
             }
             
             MavenProject project = resolveProject(artifact);
-            builder.append("$Bundle-SymbolicName=");
+            builder.append("$Bundle-SymbolicName="); //$NON-NLS-1$
             builder.append(artifact.getGroupId());
-            builder.append(".");
+            builder.append("."); //$NON-NLS-1$
             builder.append(artifact.getArtifactId());
-            builder.append("&Bundle-Version=");
+            builder.append("&Bundle-Version="); //$NON-NLS-1$
             builder.append(sanitizeVersionForOsgi(artifact.getBaseVersion()));
             if (project.getName() != null && project.getName().trim().length() > 0) {
-                builder.append("&Bundle-Name=");
+                builder.append("&Bundle-Name="); //$NON-NLS-1$
                 builder.append(project.getName());
             }
         }
@@ -267,20 +267,20 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      */
     private Object sanitizeVersionForOsgi(String version) {
         // Remove -SNAPSHOT
-        if (version.contains("-")) {
+        if (version.contains("-")) { //$NON-NLS-1$
             version = version.substring(0, version.indexOf('-'));
         }
         // Fix things like 1.3.5a (becomes 1.3.5)
-        String ver = version.replaceAll("([0-9])[a-zA-Z]+", "$1");
-        if (!ver.contains(".")) {
+        String ver = version.replaceAll("([0-9])[a-zA-Z]+", "$1"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (!ver.contains(".")) { //$NON-NLS-1$
             return ver;
         }
         // Handle the case where there are only 2 numberic and one non-numeric component
         // like 1.7.Alpha.  Converts to 1.7.0.Alpha
-        String[] split = ver.split("\\.");
+        String[] split = ver.split("\\."); //$NON-NLS-1$
         if (split.length == 3) {
             if (isNumeric(split[0]) && isNumeric(split[1]) && isAlpha(split[2])) {
-                return split[0] + "." + split[1] + ".0." + split[2];
+                return split[0] + "." + split[1] + ".0." + split[2]; //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         return ver;
@@ -318,12 +318,12 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
         ArtifactResolutionResult result = repositorySystem.resolve(request);
         // If not found, then assume it's a reactor dependency and therefore should be a bundle.
         if (result.getArtifacts().isEmpty()) {
-            getLog().info("Artifact " + artifact.toString() + " not found in local repository, assuming reactor dependency.");
+            getLog().info("Artifact " + artifact.toString() + " not found in local repository, assuming reactor dependency."); //$NON-NLS-1$ //$NON-NLS-2$
             return true;
         }
         artifact = result.getArtifacts().iterator().next();
         if (!artifact.getFile().isFile()) {
-            throw new Exception("Resolved artifact is not a file: " + artifact.getFile().getAbsolutePath());
+            throw new Exception("Resolved artifact is not a file: " + artifact.getFile().getAbsolutePath()); //$NON-NLS-1$
         }
         
         // Crack open the dependency JAR, read the manifest, check for osgi attributes.
@@ -332,12 +332,12 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             jf = new JarFile(artifact.getFile());
             Manifest manifest = jf.getManifest();
             if (manifest == null) {
-                getLog().info("Artifact " + artifact.toString() + " missing a manifest!  Assuming not a bundle.");
+                getLog().info("Artifact " + artifact.toString() + " missing a manifest!  Assuming not a bundle."); //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             }
             Attributes attributes = manifest.getMainAttributes();
             if (attributes != null) {
-                String value = attributes.getValue("Bundle-SymbolicName");
+                String value = attributes.getValue("Bundle-SymbolicName"); //$NON-NLS-1$
                 if (value != null && value.trim().length() > 0) {
                     return true;
                 }
@@ -355,7 +355,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * @throws Exception
      */
     private MavenProject resolveProject(Artifact artifact) throws Exception {
-        Artifact pomArtifact = repositorySystem.createArtifact(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "", "pom");
+        Artifact pomArtifact = repositorySystem.createArtifact(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "", "pom"); //$NON-NLS-1$ //$NON-NLS-2$
         ArtifactResolutionRequest request = new ArtifactResolutionRequest();
         request.setArtifact(pomArtifact);
         ArtifactResolutionResult resolved = repositorySystem.resolve(request);

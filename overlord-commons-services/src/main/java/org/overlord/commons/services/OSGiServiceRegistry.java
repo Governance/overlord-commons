@@ -32,7 +32,7 @@ import org.osgi.framework.ServiceReference;
  */
 public class OSGiServiceRegistry implements ServiceRegistry {
     
-    public static final String OSGI_ENABLED_PROP = "overlord-commons-config.osgi-enabled";
+    public static final String OSGI_ENABLED_PROP = "overlord-commons-config.osgi-enabled"; //$NON-NLS-1$
 
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
@@ -48,7 +48,7 @@ public class OSGiServiceRegistry implements ServiceRegistry {
                 if (serviceReferences.length == 1)
                     service = (T) context.getService(serviceReferences[0]);
                 else
-                    throw new IllegalStateException("Multiple implementation registered for service: " + serviceInterface);
+                    throw new IllegalStateException("Multiple implementations registered for service: " + serviceInterface);
             }
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);

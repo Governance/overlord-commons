@@ -59,14 +59,14 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
         httpHeaders.setAcceptableMediaTypes(new ArrayList<MediaType>());
         httpHeaders.setRequestHeaders(new Headers<String>());
 
-        URI absoluteUri = new URI("/path/to/overlord-header.js");
+        URI absoluteUri = new URI("/path/to/overlord-header.js"); //$NON-NLS-1$
         URI absolutePath = UriBuilder.fromUri(absoluteUri).replaceQuery(null).build();
         URI baseUri = EMPTY_URI;
         URI relativeUri = baseUri.relativize(absoluteUri);
 
         List<PathSegment> encodedPathSegments = PathSegmentImpl
                 .parseSegments(relativeUri.getRawPath(), false);
-        uri = new UriInfoImpl(absolutePath, baseUri, "/" + relativeUri.getRawPath(),
+        uri = new UriInfoImpl(absolutePath, baseUri, "/" + relativeUri.getRawPath(), //$NON-NLS-1$
                 absoluteUri.getRawQuery(), encodedPathSegments);
         preprocessedPath = uri.getPath(false);
     }
@@ -93,7 +93,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public String getCharacterEncoding() {
-        return "UTF-8";
+        return "UTF-8"; //$NON-NLS-1$
     }
 
     /**
@@ -156,7 +156,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public String getProtocol() {
-        return "http";
+        return "http"; //$NON-NLS-1$
     }
 
     /**
@@ -172,7 +172,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public String getServerName() {
-        return "localhost";
+        return "localhost"; //$NON-NLS-1$
     }
 
     /**
@@ -340,7 +340,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public String getMethod() {
-        return "GET";
+        return "GET"; //$NON-NLS-1$
     }
 
     /**
@@ -380,7 +380,7 @@ public class MockHttpServletRequest extends MockHttpRequest implements HttpServl
      */
     @Override
     public String getRemoteUser() {
-        return "ewittman";
+        return "ewittman"; //$NON-NLS-1$
     }
 
     /**

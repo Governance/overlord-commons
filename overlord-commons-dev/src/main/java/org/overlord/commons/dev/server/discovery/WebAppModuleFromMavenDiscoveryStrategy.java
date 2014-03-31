@@ -44,7 +44,7 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
      */
     @Override
     public String getName() {
-        return "Maven Artifact";
+        return "Maven Artifact"; //$NON-NLS-1$
     }
 
     /**
@@ -53,12 +53,12 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
     @Override
     public DevServerModule discover(ModuleDiscoveryContext context) {
         String path = someClass.getClassLoader()
-                .getResource(someClass.getName().replace('.', '/') + ".class").getPath();
+                .getResource(someClass.getName().replace('.', '/') + ".class").getPath(); //$NON-NLS-1$
         if (path == null) {
             return null;
         }
 
-        debug("Path: " + path);
+        debug("Path: " + path); //$NON-NLS-1$
 
         File file = new File(path);
         // The class file is available on the file system, so not what we're looking for.
@@ -66,13 +66,13 @@ public class WebAppModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscov
             return null;
         }
 
-        if (path.contains("-classes.jar") && path.startsWith("file:")) {
-            String pathToWar = path.substring(5, path.indexOf("-classes.jar")) + ".war";
-            debug("Path to WAR: " + pathToWar);
+        if (path.contains("-classes.jar") && path.startsWith("file:")) { //$NON-NLS-1$ //$NON-NLS-2$
+            String pathToWar = path.substring(5, path.indexOf("-classes.jar")) + ".war"; //$NON-NLS-1$ //$NON-NLS-2$
+            debug("Path to WAR: " + pathToWar); //$NON-NLS-1$
             File war = new File(pathToWar);
             if (war.isFile()) {
                 File workDir = new File(context.getTargetDir(), war.getName());
-                debug("Work Dir: " + workDir);
+                debug("Work Dir: " + workDir); //$NON-NLS-1$
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(false);
                 module.setWorkDir(workDir);

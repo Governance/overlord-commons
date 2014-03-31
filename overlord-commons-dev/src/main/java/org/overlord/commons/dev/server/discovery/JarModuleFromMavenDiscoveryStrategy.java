@@ -46,7 +46,7 @@ public class JarModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscovery
      */
     @Override
     public String getName() {
-        return "Maven JAR module";
+        return "Maven JAR module"; //$NON-NLS-1$
     }
 
     /**
@@ -55,19 +55,19 @@ public class JarModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscovery
     @Override
     public DevServerModule discover(ModuleDiscoveryContext context) {
         String path = someClass.getClassLoader()
-                .getResource(someClass.getName().replace('.', '/') + ".class").getPath();
+                .getResource(someClass.getName().replace('.', '/') + ".class").getPath(); //$NON-NLS-1$
         if (path == null) {
             return null;
         }
-        debug("Path: " + path);
+        debug("Path: " + path); //$NON-NLS-1$
         File file = new File(path);
-        if (!file.exists() && path.contains(".jar") && path.startsWith("file:")) {
-            String pathToJar = path.substring(5, path.indexOf(".jar")) + ".jar";
-            debug("Path to JAR: " + pathToJar);
+        if (!file.exists() && path.contains(".jar") && path.startsWith("file:")) { //$NON-NLS-1$ //$NON-NLS-2$
+            String pathToJar = path.substring(5, path.indexOf(".jar")) + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
+            debug("Path to JAR: " + pathToJar); //$NON-NLS-1$
             File jar = new File(pathToJar);
             if (jar.isFile()) {
                 File workDir = new File(context.getTargetDir(), jar.getName());
-                debug("Work Dir: " + workDir);
+                debug("Work Dir: " + workDir); //$NON-NLS-1$
 
                 DevServerModule module = new DevServerModule();
                 module.setInIDE(false);
@@ -81,7 +81,7 @@ public class JarModuleFromMavenDiscoveryStrategy extends AbstractModuleDiscovery
                 }
                 File moduleDir = new File(workDir, this.pathInJar);
                 if (!moduleDir.exists()) {
-                    throw new RuntimeException("JAR found (" + jar + "), but path-in-JAR not found: "
+                    throw new RuntimeException("JAR found (" + jar + "), but path-in-JAR not found: " //$NON-NLS-1$ //$NON-NLS-2$
                             + this.pathInJar);
                 }
                 module.setModuleDir(moduleDir);

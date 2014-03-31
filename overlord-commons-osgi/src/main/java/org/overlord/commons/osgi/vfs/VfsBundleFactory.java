@@ -44,7 +44,7 @@ public class VfsBundleFactory implements IVfsBundleFactory {
     @Override
     public synchronized VfsBundle getVfsBundle(URL url) {
         String host = url.getHost();
-        long bundleId = Long.valueOf(host.split("\\.")[0]);
+        long bundleId = Long.valueOf(host.split("\\.")[0]); //$NON-NLS-1$
         Bundle[] bundles = FrameworkUtil.getBundle(getClass()).getBundleContext().getBundles();
         Bundle theBundle = null;
         for (Bundle bundle : bundles) {

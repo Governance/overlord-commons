@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  */
 public class FeaturesXml {
     
-    private static final String FEATURES_XML_NS = "http://karaf.apache.org/xmlns/features/v1.0.0";
+    private static final String FEATURES_XML_NS = "http://karaf.apache.org/xmlns/features/v1.0.0"; //$NON-NLS-1$
     
     private Document document;
     private Element rootElement;
@@ -54,7 +54,7 @@ public class FeaturesXml {
         docFactory.setValidating(false);
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         document = docBuilder.newDocument();
-        rootElement = document.createElementNS(FEATURES_XML_NS, "features");
+        rootElement = document.createElementNS(FEATURES_XML_NS, "features"); //$NON-NLS-1$
         document.appendChild(rootElement);
     }
 
@@ -63,7 +63,7 @@ public class FeaturesXml {
      * @param repo
      */
     public void addRepository(String repo) {
-        Element repoElem = document.createElementNS(FEATURES_XML_NS, "repository");
+        Element repoElem = document.createElementNS(FEATURES_XML_NS, "repository"); //$NON-NLS-1$
         rootElement.appendChild(repoElem);
         repoElem.setTextContent(repo);
     }
@@ -76,14 +76,14 @@ public class FeaturesXml {
      */
     public void addFeature(String name, String version, String comment) {
         if (comment != null) {
-            Comment commentNode = document.createComment(" " + comment + " ");
+            Comment commentNode = document.createComment(" " + comment + " "); //$NON-NLS-1$ //$NON-NLS-2$
             rootElement.appendChild(commentNode);
         }
-        Element featureElem = document.createElementNS(FEATURES_XML_NS, "feature");
+        Element featureElem = document.createElementNS(FEATURES_XML_NS, "feature"); //$NON-NLS-1$
         rootElement.appendChild(featureElem);
-        featureElem.setAttribute("name", name);
-        featureElem.setAttribute("version", version);
-        String featureKey = name + "||" + version;
+        featureElem.setAttribute("name", name); //$NON-NLS-1$
+        featureElem.setAttribute("version", version); //$NON-NLS-1$
+        String featureKey = name + "||" + version; //$NON-NLS-1$
         features.put(featureKey, featureElem);
     }
     
@@ -95,14 +95,14 @@ public class FeaturesXml {
      * @param dependencyVersion
      */
     public void addFeatureDependency(String name, String version, String dependencyName, String dependencyVersion) {
-        String featureKey = name + "||" + version;
+        String featureKey = name + "||" + version; //$NON-NLS-1$
         Element featureElem = features.get(featureKey);
         if (featureElem != null) {
-            Element dependencyElem = document.createElementNS(FEATURES_XML_NS, "feature");
+            Element dependencyElem = document.createElementNS(FEATURES_XML_NS, "feature"); //$NON-NLS-1$
             featureElem.appendChild(dependencyElem);
             dependencyElem.setTextContent(dependencyName);
             if (dependencyVersion != null) {
-                dependencyElem.setAttribute("version", dependencyVersion);
+                dependencyElem.setAttribute("version", dependencyVersion); //$NON-NLS-1$
             }
         }
     }
@@ -114,10 +114,10 @@ public class FeaturesXml {
      * @param bundle
      */
     public void addBundle(String name, String version, String bundle) {
-        String featureKey = name + "||" + version;
+        String featureKey = name + "||" + version; //$NON-NLS-1$
         Element featureElem = features.get(featureKey);
         if (featureElem != null) {
-            Element bundleElem = document.createElementNS(FEATURES_XML_NS, "bundle");
+            Element bundleElem = document.createElementNS(FEATURES_XML_NS, "bundle"); //$NON-NLS-1$
             featureElem.appendChild(bundleElem);
             bundleElem.setTextContent(bundle);
         }
@@ -130,10 +130,10 @@ public class FeaturesXml {
      */
     public void writeTo(File outputFile) throws Exception {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformerFactory.setAttribute("indent-number", 3);
+        transformerFactory.setAttribute("indent-number", 3); //$NON-NLS-1$
         Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3"); //$NON-NLS-1$ //$NON-NLS-2$
         DOMSource source = new DOMSource(document);
         StreamResult result = new StreamResult(outputFile);
         transformer.transform(source, result);

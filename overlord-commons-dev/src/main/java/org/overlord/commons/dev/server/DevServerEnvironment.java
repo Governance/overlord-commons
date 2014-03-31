@@ -95,7 +95,7 @@ public abstract class DevServerEnvironment {
     public DevServerModule getModule(String moduleId) {
         DevServerModule module = this.modules.get(moduleId);
         if (module == null)
-            throw new RuntimeException("Module not found: " + moduleId + " (perhaps it wasn't added via addAndConfigureModules()?)");
+            throw new RuntimeException("Module not found: " + moduleId + " (perhaps it wasn't added via addAndConfigureModules()?)"); //$NON-NLS-1$ //$NON-NLS-2$
         return module;
     }
 
@@ -105,19 +105,19 @@ public abstract class DevServerEnvironment {
      * @param discoveryStrategies
      */
     public void addModule(String moduleId, IModuleDiscoveryStrategy ... discoveryStrategies) {
-        System.out.println("---------------------");
-        System.out.println("Discovering module: " + moduleId);
+        System.out.println("---------------------"); //$NON-NLS-1$
+        System.out.println("Discovering module: " + moduleId); //$NON-NLS-1$
         ModuleDiscoveryContext ctx = new ModuleDiscoveryContext(getTargetDir());
         for (IModuleDiscoveryStrategy strategy : discoveryStrategies) {
             DevServerModule module = strategy.discover(ctx);
             if (module != null) {
                 modules.put(moduleId, module);
-                System.out.println("Module found from " + strategy.getName());
-                System.out.println("---------------------\n");
+                System.out.println("Module found from " + strategy.getName()); //$NON-NLS-1$
+                System.out.println("---------------------\n"); //$NON-NLS-1$
                 return;
             }
         }
-        throw new RuntimeException("Module not found: " + moduleId);
+        throw new RuntimeException("Module not found: " + moduleId); //$NON-NLS-1$
     }
 
     /**
@@ -139,16 +139,16 @@ public abstract class DevServerEnvironment {
      */
     private void findTargetDir() {
         String path = getClass().getClassLoader()
-                .getResource(getClass().getName().replace('.', '/') + ".class").getPath();
+                .getResource(getClass().getName().replace('.', '/') + ".class").getPath(); //$NON-NLS-1$
         if (path == null) {
-            throw new RuntimeException("Failed to find target directory.");
+            throw new RuntimeException("Failed to find target directory."); //$NON-NLS-1$
         }
-        if (path.contains("/target/")) {
-            path = path.substring(0, path.indexOf("/target/")) + "/target";
+        if (path.contains("/target/")) { //$NON-NLS-1$
+            path = path.substring(0, path.indexOf("/target/")) + "/target"; //$NON-NLS-1$ //$NON-NLS-2$
             targetDir = new File(path);
-            System.out.println("Detected runtime 'target' directory: " + targetDir);
+            System.out.println("Detected runtime 'target' directory: " + targetDir); //$NON-NLS-1$
         } else {
-            throw new RuntimeException("Failed to find target directory.");
+            throw new RuntimeException("Failed to find target directory."); //$NON-NLS-1$
         }
     }
 
@@ -178,7 +178,7 @@ public abstract class DevServerEnvironment {
      */
     private void detectAgent() {
         try {
-            Class.forName("org.jboss.errai.ClientLocalClassHidingAgent");
+            Class.forName("org.jboss.errai.ClientLocalClassHidingAgent"); //$NON-NLS-1$
             this.usingClassHiderAgent = true;
         } catch (ClassNotFoundException e) {
             this.usingClassHiderAgent = false;
@@ -191,41 +191,41 @@ public abstract class DevServerEnvironment {
      * @throws Exception
      */
     public void createAppConfigs() throws Exception {
-        File dir = new File(this.targetDir, "overlord-apps");
+        File dir = new File(this.targetDir, "overlord-apps"); //$NON-NLS-1$
         if (dir.isDirectory()) {
             FileUtils.deleteDirectory(dir);
         }
         dir.mkdirs();
 
-        File configFile1 = new File(dir, "srampui-overlordapp.properties");
+        File configFile1 = new File(dir, "srampui-overlordapp.properties"); //$NON-NLS-1$
         Properties props = new Properties();
-        props.setProperty("overlordapp.app-id", "s-ramp-ui");
-        props.setProperty("overlordapp.href", "/s-ramp-ui/index.html");// + (ide_srampUI ? "?gwt.codesvr=127.0.0.1:9997" : ""));
-        props.setProperty("overlordapp.label", "S-RAMP");
-        props.setProperty("overlordapp.primary-brand", "JBoss Overlord");
-        props.setProperty("overlordapp.secondary-brand", "S-RAMP Repository");
-        props.store(new FileWriter(configFile1), "S-RAMP UI application");
+        props.setProperty("overlordapp.app-id", "s-ramp-ui"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.href", "/s-ramp-ui/index.html");// + (ide_srampUI ? "?gwt.codesvr=127.0.0.1:9997" : "")); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.label", "S-RAMP"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.primary-brand", "JBoss Overlord"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.secondary-brand", "S-RAMP Repository"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.store(new FileWriter(configFile1), "S-RAMP UI application"); //$NON-NLS-1$
 
-        File configFile2 = new File(dir, "dtgov-overlordapp.properties");
+        File configFile2 = new File(dir, "dtgov-overlordapp.properties"); //$NON-NLS-1$
         props = new Properties();
-        props.setProperty("overlordapp.app-id", "dtgov");
-        props.setProperty("overlordapp.href", "/dtgov/index.html");// + (ide_dtgovUI ? "?gwt.codesvr=127.0.0.1:9997" : ""));
-        props.setProperty("overlordapp.label", "DTGov");
-        props.setProperty("overlordapp.primary-brand", "JBoss Overlord");
-        props.setProperty("overlordapp.secondary-brand", "Design Time Governance");
-        props.store(new FileWriter(configFile2), "DTGov UI application");
+        props.setProperty("overlordapp.app-id", "dtgov"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.href", "/dtgov/index.html");// + (ide_dtgovUI ? "?gwt.codesvr=127.0.0.1:9997" : "")); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.label", "DTGov"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.primary-brand", "JBoss Overlord"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.secondary-brand", "Design Time Governance"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.store(new FileWriter(configFile2), "DTGov UI application"); //$NON-NLS-1$
 
-        File configFile3 = new File(dir, "gadgets-overlordapp.properties");
+        File configFile3 = new File(dir, "gadgets-overlordapp.properties"); //$NON-NLS-1$
         props = new Properties();
-        props.setProperty("overlordapp.app-id", "gadget-server");
-        props.setProperty("overlordapp.href", "/gadget-web/Application.html");
-        props.setProperty("overlordapp.label", "Gadget Server");
-        props.setProperty("overlordapp.primary-brand", "JBoss Overlord");
-        props.setProperty("overlordapp.secondary-brand", "Gadget Server");
-        props.store(new FileWriter(configFile3), "Gadget Server UI application");
+        props.setProperty("overlordapp.app-id", "gadget-server"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.href", "/gadget-web/Application.html"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.label", "Gadget Server"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.primary-brand", "JBoss Overlord"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.setProperty("overlordapp.secondary-brand", "Gadget Server"); //$NON-NLS-1$ //$NON-NLS-2$
+        props.store(new FileWriter(configFile3), "Gadget Server UI application"); //$NON-NLS-1$
 
-        System.setProperty("org.overlord.apps.config-dir", dir.getCanonicalPath());
-        System.out.println("Generated app configs in: " + dir.getCanonicalPath());
+        System.setProperty("org.overlord.apps.config-dir", dir.getCanonicalPath()); //$NON-NLS-1$
+        System.out.println("Generated app configs in: " + dir.getCanonicalPath()); //$NON-NLS-1$
     }
 
 }

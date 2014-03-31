@@ -69,10 +69,10 @@ public class AsyncActionButton extends Button {
         setEnabled(false);
         this.html = getHTML();
         StringBuilder builder = new StringBuilder();
-        builder.append("<i class=\"");
-        builder.append("fa fa-spin ");
+        builder.append("<i class=\""); //$NON-NLS-1$
+        builder.append("fa fa-spin "); //$NON-NLS-1$
         builder.append(getIcon());
-        builder.append("\"></i> ");
+        builder.append("\"></i> "); //$NON-NLS-1$
         builder.append(getActionText());
         this.setHTML(builder.toString());
     }
@@ -91,8 +91,8 @@ public class AsyncActionButton extends Button {
     protected void initFromTemplate() {
         if (actionText == null) {
             this.html = getHTML();
-            this.actionText = getElement().getAttribute("placeholder");
-            this.icon = getElement().getAttribute("data-icon");
+            this.actionText = getElement().getAttribute("placeholder"); //$NON-NLS-1$
+            this.icon = getElement().getAttribute("data-icon"); //$NON-NLS-1$
         }
     }
     

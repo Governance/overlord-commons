@@ -51,8 +51,8 @@ public class MultiDefaultServlet extends DefaultServlet {
     @Override
     public void init() throws UnavailableException {
         super.init();
-        String rbsParam = getInitParameter("resourceBases");
-        String[] rbs = rbsParam.split("\\|");
+        String rbsParam = getInitParameter("resourceBases"); //$NON-NLS-1$
+        String[] rbs = rbsParam.split("\\|"); //$NON-NLS-1$
         for (String rb : rbs) {
             try {
                 Resource r = ctxHandler.newResource(rb);
@@ -94,7 +94,7 @@ public class MultiDefaultServlet extends DefaultServlet {
      */
     private void setResourceBase(Resource resourceBase) {
         try {
-            Field declaredField = DefaultServlet.class.getDeclaredField("_resourceBase");
+            Field declaredField = DefaultServlet.class.getDeclaredField("_resourceBase"); //$NON-NLS-1$
             declaredField.setAccessible(true);
             declaredField.set(this, resourceBase);
             declaredField.setAccessible(false);

@@ -56,7 +56,7 @@ public class BusAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpreq = (HttpServletRequest) request;
         if (httpreq.getRemoteUser() == null) {
-            ((HttpServletResponse) response).sendError(401, "Not authenticated.");
+            ((HttpServletResponse) response).sendError(401, "Not authenticated."); //$NON-NLS-1$
         } else {
             chain.doFilter(request, response);
         }

@@ -56,17 +56,17 @@ public class SimpleCorsFilter implements Filter {
         HttpServletResponse httpResp = (HttpServletResponse) response;
         
         if (isPreflightRequest(httpReq)) {
-            httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin"));
-            httpResp.setHeader("Access-Control-Allow-Credentials", "true");
-            httpResp.setHeader("Access-Control-Max-Age", "1800");
-            httpResp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,HEAD,DELETE");
-            httpResp.setHeader("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Accept,Origin,Authorization");
-            httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error");
+            httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin")); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResp.setHeader("Access-Control-Allow-Credentials", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResp.setHeader("Access-Control-Max-Age", "1800"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,HEAD,DELETE"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResp.setHeader("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Accept,Origin,Authorization"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             if (hasOriginHeader(httpReq)) {
-                httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin"));
-                httpResp.setHeader("Access-Control-Allow-Credentials", "true");
-                httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error");
+                httpResp.setHeader("Access-Control-Allow-Origin", httpReq.getHeader("Origin")); //$NON-NLS-1$ //$NON-NLS-2$
+                httpResp.setHeader("Access-Control-Allow-Credentials", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                httpResp.setHeader("Access-Control-Expose-Headers", "X-Apiman-Error"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             chain.doFilter(httpReq, httpResp);
         }
@@ -85,7 +85,7 @@ public class SimpleCorsFilter implements Filter {
      * @param httpReq
      */
     protected boolean isOptionsMethod(HttpServletRequest httpReq) {
-        return "OPTIONS".equals(httpReq.getMethod());
+        return "OPTIONS".equals(httpReq.getMethod()); //$NON-NLS-1$
     }
 
     /**
@@ -93,7 +93,7 @@ public class SimpleCorsFilter implements Filter {
      * @param httpReq
      */
     protected boolean hasOriginHeader(HttpServletRequest httpReq) {
-        String origin = httpReq.getHeader("Origin");
+        String origin = httpReq.getHeader("Origin"); //$NON-NLS-1$
         return origin != null && origin.trim().length() > 0;
     }
     

@@ -31,8 +31,8 @@ public abstract class AbstractModuleDiscoveryStrategy implements IModuleDiscover
      * @param message
      */
     protected void debug(String message) {
-        if ("true".equals(System.getProperty("discovery-strategy.debug")))
-            System.out.println(getClass().getSimpleName() + ": " + message);
+        if ("true".equals(System.getProperty("discovery-strategy.debug"))) //$NON-NLS-1$ //$NON-NLS-2$
+            System.out.println(getClass().getSimpleName() + ": " + message); //$NON-NLS-1$
     }
 
 }

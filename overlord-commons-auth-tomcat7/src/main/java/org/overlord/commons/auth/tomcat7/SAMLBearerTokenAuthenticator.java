@@ -78,17 +78,17 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
             throws IOException {
         Principal principal = request.getUserPrincipal();
         if (principal == null) {
-            MessageBytes authorization = request.getCoyoteRequest().getMimeHeaders().getValue("authorization");
+            MessageBytes authorization = request.getCoyoteRequest().getMimeHeaders().getValue("authorization"); //$NON-NLS-1$
             if (authorization != null) {
                 authorization.toBytes();
                 ByteChunk authorizationBC = authorization.getByteChunk();
-                if (authorizationBC.startsWithIgnoreCase("basic ", 0)) {
+                if (authorizationBC.startsWithIgnoreCase("basic ", 0)) { //$NON-NLS-1$
                     authorizationBC.setOffset(authorizationBC.getOffset() + 6);
                     String b64Data = new String(authorizationBC.getBuffer(), authorizationBC.getOffset(),
                             authorizationBC.getLength());
                     byte[] decoded = Base64.decodeBase64(b64Data);
-                    String data = new String(decoded, "UTF-8");
-                    if (data.startsWith("SAML-BEARER-TOKEN:")) {
+                    String data = new String(decoded, "UTF-8"); //$NON-NLS-1$
+                    if (data.startsWith("SAML-BEARER-TOKEN:")) { //$NON-NLS-1$
                         try {
                             String assertionData = data.substring(18);
                             Document samlAssertion = DocumentUtil.getDocument(assertionData);
@@ -167,7 +167,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
                 AttributeStatementType attrStatement = (AttributeStatementType) statement;
                 List<ASTChoiceType> attributes = attrStatement.getAttributes();
                 for (ASTChoiceType astChoiceType : attributes) {
-                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) {
+                    if (astChoiceType.getAttribute() != null && astChoiceType.getAttribute().getName().equals("Role")) { //$NON-NLS-1$
                         List<Object> values = astChoiceType.getAttribute().getAttributeValue();
                         for (Object roleValue : values) {
                             if (roleValue != null) {
@@ -179,7 +179,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
             }
         }
 
-        Principal identity = new GenericPrincipal(samlSubject, "", roles);
+        Principal identity = new GenericPrincipal(samlSubject, "", roles); //$NON-NLS-1$
         return identity;
     }
 
@@ -200,7 +200,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
         }
         this.allowedIssuers.clear();
         if (allowedIssuers != null) {
-            String[] issuers = allowedIssuers.split(",");
+            String[] issuers = allowedIssuers.split(","); //$NON-NLS-1$
             for (String issuer : issuers) {
                 this.allowedIssuers.add(issuer.trim());
             }
@@ -235,10 +235,10 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
     public void setKeystorePath(String keystorePath) {
         keystorePath = interpolate(keystorePath);
         // Handle relative path - always relative to catalina.home
-        if (keystorePath != null && !keystorePath.startsWith("/") && keystorePath.charAt(2) != ':') {
-            String home = System.getProperty("catalina.home");
+        if (keystorePath != null && !keystorePath.startsWith("/") && keystorePath.charAt(2) != ':') { //$NON-NLS-1$
+            String home = System.getProperty("catalina.home"); //$NON-NLS-1$
             if (home != null) {
-                keystorePath = home + "/" + keystorePath;
+                keystorePath = home + "/" + keystorePath; //$NON-NLS-1$
             }
         }
         this.keystorePath = keystorePath;
@@ -294,8 +294,8 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
      * @param value
      */
     private String interpolate(String value) {
-        if (value != null && value.startsWith("${")) {
-            int idx = value.indexOf("::");
+        if (value != null && value.startsWith("${")) { //$NON-NLS-1$
+            int idx = value.indexOf("::"); //$NON-NLS-1$
             if (idx < 3) {
                 return value;
             }

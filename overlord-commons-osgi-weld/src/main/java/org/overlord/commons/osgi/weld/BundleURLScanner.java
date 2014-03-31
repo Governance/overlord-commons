@@ -54,13 +54,13 @@ public class BundleURLScanner extends URLScanner {
         BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
         ServiceReference serviceReference = bundleContext.getServiceReference(IVfsBundleFactory.class.getName());
         if (serviceReference == null)
-            throw new RuntimeException("Failed to find OSGi service [IVfsBundleFactory].");
+            throw new RuntimeException("Failed to find OSGi service [IVfsBundleFactory]."); //$NON-NLS-1$
         IVfsBundleFactory factory = (IVfsBundleFactory) bundleContext.getService(serviceReference);
         VfsBundle vfsBundle = factory.getVfsBundle(url);
         File file = vfsBundle.asFile(url);
         Set<String> paths = new HashSet<String>();
         if (file.isDirectory()) {
-            File webClasses = new File(file, "WEB-INF/classes");
+            File webClasses = new File(file, "WEB-INF/classes"); //$NON-NLS-1$
             if (webClasses.exists()) {
                 paths.add(webClasses.getAbsolutePath());
             } else {

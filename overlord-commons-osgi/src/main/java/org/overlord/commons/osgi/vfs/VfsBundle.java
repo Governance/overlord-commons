@@ -59,7 +59,7 @@ public class VfsBundle {
      */
     public VfsBundle(Bundle bundle) {
         vfsBundleDir = getOrCreateVfsBundleDir(bundle);
-        vfsBundleIndexFile = new File(vfsBundleDir, "index.properties");
+        vfsBundleIndexFile = new File(vfsBundleDir, "index.properties"); //$NON-NLS-1$
         if (vfsBundleIndexFile.isFile()) {
             readVfsBundle();
         } else {
@@ -74,7 +74,7 @@ public class VfsBundle {
      * @param bundle
      */
     private void createVfsBundle(Bundle bundle) {
-        Enumeration<?> entries = bundle.findEntries("", "*.*", true);
+        Enumeration<?> entries = bundle.findEntries("", "*.*", true); //$NON-NLS-1$ //$NON-NLS-2$
         while (entries.hasMoreElements()) {
             Object nextElement = entries.nextElement();
             try {
@@ -98,10 +98,10 @@ public class VfsBundle {
      */
     private File writeBundleEntry(URL entryURL) {
         String path = entryURL.getPath();
-        if (path == null || path.trim().length() == 0 || path.endsWith("/")) {
+        if (path == null || path.trim().length() == 0 || path.endsWith("/")) { //$NON-NLS-1$
             return null;
         }
-        File entryFile = new File(vfsBundleDir, "content/" + path);
+        File entryFile = new File(vfsBundleDir, "content/" + path); //$NON-NLS-1$
         entryFile.getParentFile().mkdirs();
         InputStream is = null;
         OutputStream os = null;
@@ -125,7 +125,7 @@ public class VfsBundle {
     private boolean isJar(File entryFile) {
         if (entryFile == null)
             return false;
-        return entryFile.getName().toLowerCase().endsWith(".jar");
+        return entryFile.getName().toLowerCase().endsWith(".jar"); //$NON-NLS-1$
     }
 
     /**
@@ -136,7 +136,7 @@ public class VfsBundle {
         ZipFile zipFile = null;
         try {
             zipFile = new ZipFile(entryFile);
-            ZipEntry zipEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
+            ZipEntry zipEntry = zipFile.getEntry("META-INF/MANIFEST.MF"); //$NON-NLS-1$
             if (zipEntry != null) {
                 InputStream inputStream = zipFile.getInputStream(zipEntry);
                 String hash = DigestUtils.shaHex(inputStream);
@@ -156,7 +156,7 @@ public class VfsBundle {
     private boolean isManifest(File entryFile) {
         if (entryFile == null)
             return false;
-        return entryFile.getName().equals("MANIFEST.MF");
+        return entryFile.getName().equals("MANIFEST.MF"); //$NON-NLS-1$
     }
 
     /**
@@ -168,7 +168,7 @@ public class VfsBundle {
         try {
             is = new FileInputStream(entryFile);
             String hash = DigestUtils.shaHex(is);
-            index.put(hash, new File(vfsBundleDir, "content"));
+            index.put(hash, new File(vfsBundleDir, "content")); //$NON-NLS-1$
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -222,11 +222,11 @@ public class VfsBundle {
      * @param bundle
      */
     private File getOrCreateVfsBundleDir(Bundle bundle) {
-        String karafHome = System.getProperty("karaf.home");
+        String karafHome = System.getProperty("karaf.home"); //$NON-NLS-1$
         if (karafHome == null) {
             throw new RuntimeException("System property 'karaf.home' not set.");
         }
-        File tmpDir = new File(karafHome, "data/tmp/errai-vfs/" + bundle.getBundleId());
+        File tmpDir = new File(karafHome, "data/tmp/errai-vfs/" + bundle.getBundleId()); //$NON-NLS-1$
         if (!tmpDir.exists()) {
             tmpDir.mkdirs();
         }
@@ -249,7 +249,7 @@ public class VfsBundle {
     public File asFile(URL url) {
         InputStream manifestStream = null;
         try {
-            String manifestUrl = "bundle://" + url.getHost() + ":" + url.getPort() + "/META-INF/MANIFEST.MF";
+            String manifestUrl = "bundle://" + url.getHost() + ":" + url.getPort() + "/META-INF/MANIFEST.MF"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             URL manifestURL = new URL(manifestUrl);
             manifestStream = manifestURL.openStream();
             String manifestHash = DigestUtils.shaHex(manifestStream);
@@ -277,7 +277,7 @@ public class VfsBundle {
         InputStream manifestStream = null;
         StringBuilder builder = new StringBuilder();
         try {
-            String manifestPath = "META-INF/MANIFEST.MF";
+            String manifestPath = "META-INF/MANIFEST.MF"; //$NON-NLS-1$
             URL manifestURL = new URL(url.toExternalForm() + manifestPath);
             manifestStream = manifestURL.openStream();
             Manifest manifest = new Manifest(manifestStream);
@@ -285,7 +285,7 @@ public class VfsBundle {
             for (Entry<Object, Object> entry : attributes.entrySet()) {
                 String key = String.valueOf(entry.getKey());
                 String value = String.valueOf(entry.getValue());
-                builder.append(key).append(": ").append(value).append("\n");
+                builder.append(key).append(": ").append(value).append("\n"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } catch (Exception e) {
         } finally {
@@ -293,7 +293,7 @@ public class VfsBundle {
         }
         // Include the full manifest in the exception - this is helpful to diagnose which
         // JAR gave us fits.  Hopefully this will not happen!
-        throw new RuntimeException("Failed to create a Vfs.Dir for URL: " + url + "\n--Manifest--\n====================" + builder.toString());
+        throw new RuntimeException("Failed to create a Vfs.Dir for URL: " + url + "\n--Manifest--\n====================" + builder.toString()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

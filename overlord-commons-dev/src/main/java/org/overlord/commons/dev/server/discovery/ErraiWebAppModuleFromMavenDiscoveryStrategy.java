@@ -42,8 +42,8 @@ public class ErraiWebAppModuleFromMavenDiscoveryStrategy extends WebAppModuleFro
         try {
             DevServerModule module = super.discover(context);
             if (module != null) {
-                FileUtils.deleteDirectory(new File(module.getWorkDir(), "WEB-INF/lib"));
-                FileUtils.deleteDirectory(new File(module.getWorkDir(), "WEB-INF/classes/org/overlord/sramp/ui/client/local"));
+                FileUtils.deleteDirectory(new File(module.getWorkDir(), "WEB-INF/lib")); //$NON-NLS-1$
+                FileUtils.deleteDirectory(new File(module.getWorkDir(), "WEB-INF/classes/org/overlord/sramp/ui/client/local")); //$NON-NLS-1$
             }
             return module;
         } catch (IOException e) {

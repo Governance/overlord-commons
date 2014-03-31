@@ -31,7 +31,7 @@ public class Activator implements BundleActivator {
      */
     @Override
     public void start(BundleContext context) throws Exception {
-        System.setProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP, "true");
+        System.setProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP, "true"); //$NON-NLS-1$
     }
 
     /**

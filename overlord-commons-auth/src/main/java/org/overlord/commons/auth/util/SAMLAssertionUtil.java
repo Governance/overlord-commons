@@ -75,7 +75,7 @@ public class SAMLAssertionUtil {
                 return factory.createSAMLAssertion(issuerName, forService, timeValidInMillis);
             }
         }
-        throw new RuntimeException("Unsupported/undetected platform.");
+        throw new RuntimeException("Unsupported/undetected platform."); //$NON-NLS-1$
     }
 
 }

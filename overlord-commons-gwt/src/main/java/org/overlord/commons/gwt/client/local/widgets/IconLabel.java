@@ -30,7 +30,7 @@ public class IconLabel extends Widget implements HasText {
      * Creates an empty label.
      */
     public IconLabel() {
-      setElement(DOM.createElement("i"));
+      setElement(DOM.createElement("i")); //$NON-NLS-1$
     }
 
     /**

@@ -45,9 +45,9 @@ public class TomcatSAMLAssertionFactory implements SAMLAssertionFactory {
      */
     @Override
     public boolean accept() {
-        String property = System.getProperty("catalina.home");
+        String property = System.getProperty("catalina.home"); //$NON-NLS-1$
         if (property != null) {
-            File f = new File(property, "bin/catalina.sh");
+            File f = new File(property, "bin/catalina.sh"); //$NON-NLS-1$
             if (f.isFile())
                 return true;
         }

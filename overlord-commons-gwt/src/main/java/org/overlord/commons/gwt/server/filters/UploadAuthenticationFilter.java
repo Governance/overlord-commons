@@ -51,11 +51,11 @@ public class UploadAuthenticationFilter implements Filter {
         HttpServletRequest httpreq = (HttpServletRequest) request;
         if (httpreq.getRemoteUser() == null) {
             StringBuilder builder = new StringBuilder();
-            builder.append("{");
-            builder.append(" \"exception\" : \"true\",");
-            builder.append(" \"exception-message\" : \"Error 401: Not authenticated.\",");
-            builder.append(" \"exception-stack\" : \"\"");
-            builder.append("}");
+            builder.append("{"); //$NON-NLS-1$
+            builder.append(" \"exception\" : \"true\","); //$NON-NLS-1$
+            builder.append(" \"exception-message\" : \"Error 401: Not authenticated.\","); //$NON-NLS-1$
+            builder.append(" \"exception-stack\" : \"\""); //$NON-NLS-1$
+            builder.append("}"); //$NON-NLS-1$
             byte [] jsonData = builder.toString().getBytes("UTF-8"); //$NON-NLS-1$
             response.setContentType("text/html; charset=UTF8"); //$NON-NLS-1$
             response.setContentLength(jsonData.length);

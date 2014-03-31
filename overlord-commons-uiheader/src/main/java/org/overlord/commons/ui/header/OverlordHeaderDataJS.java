@@ -64,13 +64,13 @@ public class OverlordHeaderDataJS extends HttpServlet {
     @Override
     public void init() throws ServletException {
         ServletConfig config = getServletConfig();
-        appId = config.getInitParameter("app-id");
+        appId = config.getInitParameter("app-id"); //$NON-NLS-1$
         if (appId == null || appId.trim().length() == 0) {
-            throw new ServletException("Application identifier (app-id) parameter missing from Overlord Header Data JS servlet.");
+            throw new ServletException("Application identifier (app-id) parameter missing from Overlord Header Data JS servlet."); //$NON-NLS-1$
         }
-        logoutUrl = config.getInitParameter("logout-url");
+        logoutUrl = config.getInitParameter("logout-url"); //$NON-NLS-1$
         if (logoutUrl == null || logoutUrl.trim().length() == 0) {
-            logoutUrl = "?GLO=true";
+            logoutUrl = "?GLO=true"; //$NON-NLS-1$
         }
     }
 
@@ -86,33 +86,33 @@ public class OverlordHeaderDataJS extends HttpServlet {
         noCache(response);
 
         // Now generate the JavaScript data (JSON)
-        response.setContentType("text/javascript");
+        response.setContentType("text/javascript"); //$NON-NLS-1$
 
         try {
             List<TabInfo> tabs = getTabs(request);
 
-            response.getOutputStream().write("var OVERLORD_HEADER_DATA = ".getBytes("UTF-8"));
+            response.getOutputStream().write("var OVERLORD_HEADER_DATA = ".getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
             JsonFactory f = new JsonFactory();
             JsonGenerator g = f.createJsonGenerator(response.getOutputStream(), JsonEncoding.UTF8);
             g.useDefaultPrettyPrinter();
             g.writeStartObject();
-            g.writeStringField("username", getRemoteUser(request));
-            g.writeStringField("logoutLink", getLogoutLink(request));
-            g.writeStringField("primaryBrand", getPrimaryBrand(tabs));
-            g.writeStringField("secondaryBrand", getSecondaryBrand(tabs));
-            g.writeArrayFieldStart("tabs");
+            g.writeStringField("username", getRemoteUser(request)); //$NON-NLS-1$
+            g.writeStringField("logoutLink", getLogoutLink(request)); //$NON-NLS-1$
+            g.writeStringField("primaryBrand", getPrimaryBrand(tabs)); //$NON-NLS-1$
+            g.writeStringField("secondaryBrand", getSecondaryBrand(tabs)); //$NON-NLS-1$
+            g.writeArrayFieldStart("tabs"); //$NON-NLS-1$
             for (TabInfo tabInfo : tabs) {
                 g.writeStartObject();
-                g.writeStringField("app-id", tabInfo.appId);
-                g.writeStringField("href", tabInfo.href);
-                g.writeStringField("label", tabInfo.label);
-                g.writeBooleanField("active", tabInfo.active);
+                g.writeStringField("app-id", tabInfo.appId); //$NON-NLS-1$
+                g.writeStringField("href", tabInfo.href); //$NON-NLS-1$
+                g.writeStringField("label", tabInfo.label); //$NON-NLS-1$
+                g.writeBooleanField("active", tabInfo.active); //$NON-NLS-1$
                 g.writeEndObject();
             }
             g.writeEndArray();
             g.writeEndObject();
             g.flush();
-            response.getOutputStream().write(";".getBytes("UTF-8"));
+            response.getOutputStream().write(";".getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
             g.close();
         } catch (Exception e) {
             throw new ServletException(e);
@@ -124,7 +124,7 @@ public class OverlordHeaderDataJS extends HttpServlet {
      * @param request
      */
     private String getRemoteUser(HttpServletRequest request) {
-        return request.getRemoteUser() == null ? "<anonymous>" : request.getRemoteUser();
+        return request.getRemoteUser() == null ? "<anonymous>" : request.getRemoteUser(); //$NON-NLS-1$
     }
 
     /**
@@ -145,7 +145,7 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 return tabInfo.primaryBrand;
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -158,7 +158,7 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 return tabInfo.secondaryBrand;
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -168,11 +168,11 @@ public class OverlordHeaderDataJS extends HttpServlet {
     private List<TabInfo> getTabs(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         @SuppressWarnings("unchecked")
-        List<TabInfo> tabs = (List<TabInfo>) session.getAttribute("overlord-tabs");
+        List<TabInfo> tabs = (List<TabInfo>) session.getAttribute("overlord-tabs"); //$NON-NLS-1$
         if (tabs == null) {
             tabs = new ArrayList<TabInfo>();
             getConfiguredTabs(tabs);
-            session.setAttribute("overlord-tabs", tabs);
+            session.setAttribute("overlord-tabs", tabs); //$NON-NLS-1$
         }
         return tabs;
     }
@@ -193,20 +193,20 @@ public class OverlordHeaderDataJS extends HttpServlet {
                 return o1.appId.compareTo(o2.appId);
             }
         });
-        Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false);
+        Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false); //$NON-NLS-1$
         for (File configFile : configFiles) {
-            if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties"))
+            if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties")) //$NON-NLS-1$
                 continue;
             FileReader reader = new FileReader(configFile);
             try {
                 Properties configProps = new Properties();
                 configProps.load(new FileReader(configFile));
-                String appId = configProps.getProperty("overlordapp.app-id");
-                String href = configProps.getProperty("overlordapp.href");
+                String appId = configProps.getProperty("overlordapp.app-id"); //$NON-NLS-1$
+                String href = configProps.getProperty("overlordapp.href"); //$NON-NLS-1$
                 // TODO need i18n support here - need different versions of the config files for each lang?
-                String primaryBrand = configProps.getProperty("overlordapp.primary-brand");
-                String secondaryBrand = configProps.getProperty("overlordapp.secondary-brand");
-                String label = configProps.getProperty("overlordapp.label");
+                String primaryBrand = configProps.getProperty("overlordapp.primary-brand"); //$NON-NLS-1$
+                String secondaryBrand = configProps.getProperty("overlordapp.secondary-brand"); //$NON-NLS-1$
+                String label = configProps.getProperty("overlordapp.label"); //$NON-NLS-1$
                 sortedTabs.add(new TabInfo(appId, primaryBrand, secondaryBrand, href, label, appId.equals(this.appId)));
             } finally {
                 IOUtils.closeQuietly(reader);
@@ -223,7 +223,7 @@ public class OverlordHeaderDataJS extends HttpServlet {
         File configDir = null;
 
         // First, check for a configured system property
-        String configDirProp = System.getProperty("org.overlord.apps.config-dir");
+        String configDirProp = System.getProperty("org.overlord.apps.config-dir"); //$NON-NLS-1$
         if (configDirProp != null) {
             configDir = new File(configDirProp);
             if (configDir.isDirectory()) {
@@ -232,31 +232,31 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
 
         // Next, check for JBoss
-        String jbossConfigDir = System.getProperty("jboss.server.config.dir");
+        String jbossConfigDir = System.getProperty("jboss.server.config.dir"); //$NON-NLS-1$
         if (jbossConfigDir != null) {
             File dirFile = new File(jbossConfigDir);
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
             }
         }
-        String jbossConfigUrl = System.getProperty("jboss.server.config.url");
+        String jbossConfigUrl = System.getProperty("jboss.server.config.url"); //$NON-NLS-1$
         if (jbossConfigUrl != null) {
             File dirFile = new File(jbossConfigUrl);
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
             }
         }
-        String jbossDataDir = System.getProperty("jboss.server.data.dir");
+        String jbossDataDir = System.getProperty("jboss.server.data.dir"); //$NON-NLS-1$
         if (jbossDataDir != null) {
             File dirFile = new File(jbossDataDir);
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
@@ -264,11 +264,11 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
         
         // Now try tomcat
-        String catalinaHomeDir = System.getProperty("catalina.home");
+        String catalinaHomeDir = System.getProperty("catalina.home"); //$NON-NLS-1$
         if (catalinaHomeDir != null) {
-            File dirFile = new File(catalinaHomeDir, "conf");
+            File dirFile = new File(catalinaHomeDir, "conf"); //$NON-NLS-1$
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
@@ -276,11 +276,11 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
         
         // Now try karaf/fuse
-        String karafDir = System.getProperty("karaf.home");
+        String karafDir = System.getProperty("karaf.home"); //$NON-NLS-1$
         if (karafDir != null) {
-            File dirFile = new File(karafDir, "etc");
+            File dirFile = new File(karafDir, "etc"); //$NON-NLS-1$
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
@@ -288,11 +288,11 @@ public class OverlordHeaderDataJS extends HttpServlet {
         }
 
         // Now try jetty
-        String jettyDir = System.getProperty("jetty.home");
+        String jettyDir = System.getProperty("jetty.home"); //$NON-NLS-1$
         if (jettyDir != null) {
-            File dirFile = new File(jettyDir, "etc");
+            File dirFile = new File(jettyDir, "etc"); //$NON-NLS-1$
             if (dirFile.isDirectory()) {
-                configDir = new File(dirFile, "overlord-apps");
+                configDir = new File(dirFile, "overlord-apps"); //$NON-NLS-1$
                 if (configDir.isDirectory()) {
                     return configDir;
                 }
@@ -309,11 +309,11 @@ public class OverlordHeaderDataJS extends HttpServlet {
      */
     private void noCache(HttpServletResponse response) {
         Date now = new Date();
-        response.setDateHeader("Date", now.getTime());
+        response.setDateHeader("Date", now.getTime()); //$NON-NLS-1$
         // one day old
-        response.setDateHeader("Expires", now.getTime() - 86400000L);
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
+        response.setDateHeader("Expires", now.getTime() - 86400000L); //$NON-NLS-1$
+        response.setHeader("Pragma", "no-cache"); //$NON-NLS-1$ //$NON-NLS-2$
+        response.setHeader("Cache-control", "no-cache, no-store, must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

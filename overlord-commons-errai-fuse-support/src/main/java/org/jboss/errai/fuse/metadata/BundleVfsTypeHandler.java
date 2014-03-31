@@ -40,7 +40,7 @@ import org.overlord.commons.osgi.vfs.VfsBundle;
  */
 public class BundleVfsTypeHandler implements Vfs.UrlType {
 
-    private final static String BUNDLE = "bundle";
+    private final static String BUNDLE = "bundle"; //$NON-NLS-1$
 
     /**
      * Constructor.
@@ -64,7 +64,7 @@ public class BundleVfsTypeHandler implements Vfs.UrlType {
         BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
         ServiceReference serviceReference = bundleContext.getServiceReference(IVfsBundleFactory.class.getName());
         if (serviceReference == null)
-            throw new RuntimeException("OSGi Service Reference for [IVfsBundleFactory] not found.");
+            throw new RuntimeException("OSGi Service Reference for [IVfsBundleFactory] not found."); //$NON-NLS-1$
         IVfsBundleFactory vfsBundleFactory = (IVfsBundleFactory) bundleContext.getService(serviceReference);
         VfsBundle bundle = vfsBundleFactory.getVfsBundle(url);
         File vfsFile = bundle.asFile(url);
