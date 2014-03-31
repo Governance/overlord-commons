@@ -100,7 +100,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
                             if (signatureRequired) {
                                 KeyPair keyPair = getKeyPair(assertion);
                                 if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
-                                    throw new IOException("Invalid signature found on SAML assertion!");
+                                    throw new IOException(Messages.getString("SAMLBearerTokenAuthenticator.InvalidSignature")); //$NON-NLS-1$
                                 }
                             }
                             principal = consumeAssertion(assertion);
@@ -133,7 +133,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
             return SAMLBearerTokenUtil.getKeyPair(keystore, keyAlias, keyPassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Failed to get KeyPair when validating SAML assertion signature.  Alias: " + keyAlias);
+            throw new IOException(Messages.getString("SAMLBearerTokenAuthenticator.FailedToGetKeyPair") + keyAlias); //$NON-NLS-1$
         }
     }
 
@@ -146,7 +146,7 @@ public class SAMLBearerTokenAuthenticator extends BasicAuthenticator {
             return SAMLBearerTokenUtil.loadKeystore(keystorePath, keystorePassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Error loading signature keystore: " + e.getMessage());
+            throw new IOException(Messages.getString("SAMLBearerTokenAuthenticator.ErrorLoadingKeystore") + e.getMessage()); //$NON-NLS-1$
         }
     }
 

@@ -311,7 +311,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
             if (signatureRequired) {
                 KeyPair keyPair = getKeyPair(assertion);
                 if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
-                    throw new IOException("Invalid signature found on SAML assertion!");
+                    throw new IOException(Messages.getString("SamlBearerTokenAuthFilter.InvalidSig")); //$NON-NLS-1$
                 }
             }
             return consumeAssertion(assertion);
@@ -334,7 +334,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
             return SAMLBearerTokenUtil.getKeyPair(keystore, keyAlias, keyPassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Failed to get KeyPair when validating SAML assertion signature.  Alias: " + keyAlias);
+            throw new IOException(Messages.getString("SamlBearerTokenAuthFilter.FailedToGetKeyPair") + keyAlias); //$NON-NLS-1$
         }
     }
 
@@ -347,7 +347,7 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
             return SAMLBearerTokenUtil.loadKeystore(keystorePath, keystorePassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Error loading signature keystore: " + e.getMessage());
+            throw new IOException(Messages.getString("SamlBearerTokenAuthFilter.ErrorLoadingKeystore") + e.getMessage()); //$NON-NLS-1$
         }
     }
 

@@ -71,7 +71,7 @@ public class TomcatSAMLAssertionFactory implements SAMLAssertionFactory {
                 }
                 return SAMLBearerTokenUtil.createSAMLAssertion(principal, roles, issuerName, forService, timeValidInMillis);
             }
-            throw new Exception("Unexpected/unsupported principal type: " + principal.getClass());
+            throw new Exception(Messages.getString("TomcatSAMLAssertionFactory.UnexpectedPrincipalType") + principal.getClass()); //$NON-NLS-1$
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

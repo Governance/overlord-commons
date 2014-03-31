@@ -48,7 +48,7 @@ public class OSGiServiceRegistry implements ServiceRegistry {
                 if (serviceReferences.length == 1)
                     service = (T) context.getService(serviceReferences[0]);
                 else
-                    throw new IllegalStateException("Multiple implementations registered for service: " + serviceInterface);
+                    throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
             }
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);

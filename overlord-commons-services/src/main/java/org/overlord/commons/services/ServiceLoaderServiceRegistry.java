@@ -49,7 +49,7 @@ public class ServiceLoaderServiceRegistry implements ServiceRegistry {
                 serviceCache.put(serviceInterface, rval);
                 break;
             } else {
-                throw new IllegalStateException("Multiple implementations found for service: " + serviceInterface);
+                throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
             }
         }
         return rval;

@@ -98,7 +98,7 @@ public class SAMLBearerTokenLoginService extends JAASLoginService {
             if (signatureRequired) {
                 KeyPair keyPair = getKeyPair(assertion);
                 if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
-                    throw new IOException("Invalid signature found on SAML assertion!");
+                    throw new IOException(Messages.getString("SAMLBearerTokenLoginService.InvalidSignature")); //$NON-NLS-1$
                 }
             }
             return consumeAssertion(assertion);
@@ -121,7 +121,7 @@ public class SAMLBearerTokenLoginService extends JAASLoginService {
             return SAMLBearerTokenUtil.getKeyPair(keystore, keyAlias, keyPassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Failed to get KeyPair when validating SAML assertion signature.  Alias: " + keyAlias);
+            throw new IOException(Messages.getString("SAMLBearerTokenLoginService.FailedToGetKeyPair") + keyAlias); //$NON-NLS-1$
         }
     }
 
@@ -134,7 +134,7 @@ public class SAMLBearerTokenLoginService extends JAASLoginService {
             return SAMLBearerTokenUtil.loadKeystore(keystorePath, keystorePassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IOException("Error loading signature keystore: " + e.getMessage());
+            throw new IOException(Messages.getString("SAMLBearerTokenLoginService.ErrorLoadingKeystore") + e.getMessage()); //$NON-NLS-1$
         }
     }
 

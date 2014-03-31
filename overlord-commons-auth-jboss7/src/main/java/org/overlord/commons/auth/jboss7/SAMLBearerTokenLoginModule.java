@@ -134,7 +134,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                     if ("true".equals(signatureRequired)) { //$NON-NLS-1$
                         KeyPair keyPair = getKeyPair(assertion);
                         if (!SAMLBearerTokenUtil.isSAMLAssertionSignatureValid(samlAssertion, keyPair)) {
-                            throw new LoginException("Invalid signature found on SAML assertion!");
+                            throw new LoginException(Messages.getString("SAMLBearerTokenLoginModule.InvalidSignature")); //$NON-NLS-1$
                         }
                     }
                     consumeAssertion(assertion);
@@ -183,7 +183,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
             return SAMLBearerTokenUtil.getKeyPair(keystore, keyAlias, keyPassword);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new LoginException("Failed to get KeyPair when validating SAML assertion signature.  Alias: " + keyAlias);
+            throw new LoginException(Messages.getString("SAMLBearerTokenLoginModule.FailedToGetKeyPair") + keyAlias); //$NON-NLS-1$
         }
     }
 
@@ -250,7 +250,7 @@ public class SAMLBearerTokenLoginModule extends AbstractServerLoginModule {
                 groups[0].addMember(createIdentity(role));
             }
         } catch (Exception e) {
-            throw new LoginException("Failed to create group principal: " + e.getMessage());
+            throw new LoginException(Messages.getString("SAMLBearerTokenLoginModule.FailedToCreateGroupPrincipal") + e.getMessage()); //$NON-NLS-1$
         }
         return groups;
     }

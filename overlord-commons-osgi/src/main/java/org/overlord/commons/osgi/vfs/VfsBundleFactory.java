@@ -56,7 +56,7 @@ public class VfsBundleFactory implements IVfsBundleFactory {
         
         // Shouldn't happen, but throw a runtime exception if it does.
         if (theBundle == null) {
-            throw new RuntimeException("Unable to find bundle for URL: " + url);
+            throw new RuntimeException(Messages.getString("VfsBundleFactory.BundleNotFound") + url); //$NON-NLS-1$
         }
         
         VfsBundle vfsBundle = vfsBundleCache.get(bundleId);
