@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.jboss.as.security.vault.VaultSession;
+import org.overlord.commons.auth.jboss7.Messages;
 
 /**
  * A handy authentication tool for Overlord projects.  This tool can do two things.
@@ -73,7 +74,7 @@ public class AuthTool {
      * @throws Exception
      */
     protected static void storePassword(Options options) throws Exception {
-        System.out.println("Storing a password in the password vault.");
+        System.out.println(Messages.getString("AuthTool.StoringPassword")); //$NON-NLS-1$
         String vaultdir = options.cmdLineOptions.get("vaultdir"); //$NON-NLS-1$
         String keystore = options.cmdLineOptions.get("keystore"); //$NON-NLS-1$
         String storepass = options.cmdLineOptions.get("storepass"); //$NON-NLS-1$
@@ -89,14 +90,14 @@ public class AuthTool {
         if (vaultdir == null || keystore == null || storepass == null || salt == null
                 || alias == null || count == null || name == null || password == null
                 || block == null) {
-            throw new Exception("Missing required argument.");
+            throw new Exception(Messages.getString("AuthTool.MissingRequiredArgument")); //$NON-NLS-1$
         }
 
         VaultSession session = new VaultSession(keystore, storepass, vaultdir, salt, Integer.parseInt(count));
         session.startVaultSession(alias);
         String vaultHash = session.addSecuredAttribute(block, name, password.toCharArray());
 
-        System.out.println("Password stored in vault.  Vault hash is:");
+        System.out.println(Messages.getString("AuthTool.PasswordStored")); //$NON-NLS-1$
         System.out.println(vaultHash);
 
         if (property != null && propertyfile != null) {
@@ -125,7 +126,7 @@ public class AuthTool {
      * @throws Exception
      */
     protected static void addUser(Options options) throws Exception {
-        System.out.println("Adding an Overlord user.");
+        System.out.println(Messages.getString("AuthTool.AddingUser")); //$NON-NLS-1$
 
         String configdir = options.cmdLineOptions.get("configdir"); //$NON-NLS-1$
         String vaultdir = options.cmdLineOptions.get("vaultdir"); //$NON-NLS-1$
@@ -145,14 +146,14 @@ public class AuthTool {
 
         if (vaultdir == null || keystore == null || storepass == null || salt == null
                 || alias == null || count == null || user == null || password == null) {
-            throw new Exception("Missing required argument.");
+            throw new Exception(Messages.getString("AuthTool.MissingRequiredArgument")); //$NON-NLS-1$
         }
 
         VaultSession session = new VaultSession(keystore, storepass, vaultdir, salt, Integer.parseInt(count));
         session.startVaultSession(alias);
         String vaultHash = session.addSecuredAttribute(block, name, password.toCharArray());
 
-        System.out.println("New Overlord user's password stored in vault.  Vault hash is:");
+        System.out.println(Messages.getString("AuthTool.NewUserPasswordStored")); //$NON-NLS-1$
         System.out.println(vaultHash);
 
         createUser(user, roles, vaultHash, configdir);
@@ -161,7 +162,7 @@ public class AuthTool {
             outputResult(vaultHash, propertyfile, property);
         }
 
-        System.out.println("Overlord user succesfully created.");
+        System.out.println(Messages.getString("AuthTool.UserCreated")); //$NON-NLS-1$
     }
 
     /**
@@ -228,7 +229,7 @@ public class AuthTool {
 
         public static final Options parse(String [] args) throws Exception {
             if (args.length == 0) {
-                throw new Exception("Missing first argument (tool type).");
+                throw new Exception(Messages.getString("AuthTool.MissingToolTypeArgument")); //$NON-NLS-1$
             }
             Options options = new Options();
             String et = args[0];

@@ -35,6 +35,7 @@ import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.overlord.commons.auth.filters.Messages;
 import org.picketlink.identity.federation.api.saml.v2.sig.SAML2Signature;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.saml.v2.factories.SAMLAssertionFactory;
@@ -165,10 +166,10 @@ public class SAMLBearerTokenUtil {
                 PublicKey publicKey = cert.getPublicKey();
                 return new KeyPair(publicKey, (PrivateKey) key);
             }
-            throw new Exception("Failed to get KeyPair from KeyStore.  Incorrect key type found for alias: " + keyAlias);
+            throw new Exception(Messages.format("SAMLBearerTokenUtil.FailedToGetKeyPair.IncorrectKeyType", keyAlias)); //$NON-NLS-1$
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("Failed to get KeyPair from KeyStore.  Alias: " + keyAlias);
+            throw new Exception(Messages.format("SAMLBearerTokenUtil.FailedToGetKeyPair.Alias", keyAlias)); //$NON-NLS-1$
         }
     }
 
@@ -181,7 +182,7 @@ public class SAMLBearerTokenUtil {
     public static KeyStore loadKeystore(String keystorePath, String keystorePassword) throws Exception {
         File keystoreFile = new File(keystorePath);
         if (!keystoreFile.isFile()) {
-            throw new Exception("No KeyStore found at path " + keystorePath);
+            throw new Exception(Messages.format("SAMLBearerTokenUtil.NoKeystore", keystorePath)); //$NON-NLS-1$
         }
         KeyStore keystore = KeyStore.getInstance("jks"); //$NON-NLS-1$
         InputStream is = null;
@@ -201,19 +202,19 @@ public class SAMLBearerTokenUtil {
      * @param allowedIssuers
      * @throws LoginException
      */
-    public static void validateAssertion(AssertionType assertion, HttpServletRequest request, Set<String> allowedIssuers) throws LoginException {
+    public static void validateAssertion(AssertionType assertion, HttpServletRequest request,
+            Set<String> allowedIssuers) throws LoginException {
         // Possibly fail the assertion based on issuer.
         String issuer = assertion.getIssuer().getValue();
         if (allowedIssuers != null && !allowedIssuers.contains(issuer)) {
-            throw new LoginException("Dis-allowed SAML Assertion Issuer: " + issuer + " Allowed: " + allowedIssuers);
+            throw new LoginException(Messages.format("SAMLBearerTokenUtil.BadIssuer", issuer, allowedIssuers.toString())); //$NON-NLS-1$
         }
 
         // Possibly fail the assertion based on audience restriction
         String currentAudience = request.getContextPath();
         Set<String> audienceRestrictions = getAudienceRestrictions(assertion);
         if (!audienceRestrictions.contains(currentAudience)) {
-            throw new LoginException("SAML Assertion Audience Restrictions not valid for this context ("
-                    + currentAudience + ")");
+            throw new LoginException(Messages.format("SAMLBearerTokenUtil.InvalidAudienceRestrictions", currentAudience)); //$NON-NLS-1$
         }
 
         // Possibly fail the assertion based on time.
@@ -224,12 +225,12 @@ public class SAMLBearerTokenUtil {
                 XMLGregorianCalendar notBefore = conditionsType.getNotBefore();
                 XMLGregorianCalendar notOnOrAfter = conditionsType.getNotOnOrAfter();
                 if (!XMLTimeUtil.isValid(now, notBefore, notOnOrAfter)) {
-                    String msg = "SAML Assertion has expired: " +
-                            "Now=" + now.toXMLFormat() + " ::notBefore=" + notBefore.toXMLFormat() + " ::notOnOrAfter=" + notOnOrAfter;
+                    String msg = Messages.format("SAMLBearerTokenUtil.AssertionExpired", now.toXMLFormat(), //$NON-NLS-1$
+                            notBefore.toXMLFormat(), notOnOrAfter);
                     throw new LoginException(msg);
                 }
             } else {
-                throw new LoginException("SAML Assertion not valid (no Conditions supplied).");
+                throw new LoginException(Messages.getString("SAMLBearerTokenUtil.InvalidAssertion")); //$NON-NLS-1$
             }
         } catch (ConfigurationException e) {
             // should never happen - see AssertionUtil.hasExpired code for why

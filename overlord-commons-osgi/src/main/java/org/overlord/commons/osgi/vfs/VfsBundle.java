@@ -41,6 +41,7 @@ import java.util.zip.ZipFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.Bundle;
+import org.overlord.commons.osgi.Messages;
 
 /**
  * A representation of an OSGi bundle as a vfs file.
@@ -188,7 +189,7 @@ public class VfsBundle {
         Writer writer = null;
         try {
             writer = new FileWriter(vfsBundleIndexFile);
-            props.store(writer, "Generated VfsBundle index file.");
+            props.store(writer, Messages.getString("VfsBundle.GeneratedBundleIndex")); //$NON-NLS-1$
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
@@ -224,7 +225,7 @@ public class VfsBundle {
     private File getOrCreateVfsBundleDir(Bundle bundle) {
         String karafHome = System.getProperty("karaf.home"); //$NON-NLS-1$
         if (karafHome == null) {
-            throw new RuntimeException("System property 'karaf.home' not set.");
+            throw new RuntimeException(Messages.getString("VfsBundle.SystemPropertyMissing")); //$NON-NLS-1$
         }
         File tmpDir = new File(karafHome, "data/tmp/errai-vfs/" + bundle.getBundleId()); //$NON-NLS-1$
         if (!tmpDir.exists()) {

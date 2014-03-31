@@ -50,15 +50,15 @@ public class ArchiveUtils {
 				File outFile = new File(toDir, entryName);
 				if (!outFile.getParentFile().exists()) {
 					if (!outFile.getParentFile().mkdirs()) {
-						throw new IOException("Failed to create parent directory: " + outFile.getParentFile().getCanonicalPath());
+						throw new IOException("Failed to create parent directory: " + outFile.getParentFile().getCanonicalPath()); //$NON-NLS-1$
 					}
 				}
 
 				if (entry.isDirectory()) {
 					if (!outFile.exists() && !outFile.mkdir()) {
-						throw new IOException("Failed to create directory: " + outFile.getCanonicalPath());
+						throw new IOException("Failed to create directory: " + outFile.getCanonicalPath()); //$NON-NLS-1$
 					} else if (outFile.exists() && !outFile.isDirectory()) {
-						throw new IOException("Failed to create directory (already exists but is a file): " + outFile.getCanonicalPath());
+						throw new IOException("Failed to create directory (already exists but is a file): " + outFile.getCanonicalPath()); //$NON-NLS-1$
 					}
 				} else {
 					InputStream zipStream = null;
