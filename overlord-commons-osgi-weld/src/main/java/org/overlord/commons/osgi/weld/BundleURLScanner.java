@@ -17,7 +17,9 @@
 package org.overlord.commons.osgi.weld;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +31,8 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.overlord.commons.osgi.vfs.IVfsBundleFactory;
 import org.overlord.commons.osgi.vfs.VfsBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link URLScanner} capable of running in an OSGi environment.
@@ -36,6 +40,8 @@ import org.overlord.commons.osgi.vfs.VfsBundle;
  * @author eric.wittmann@redhat.com
  */
 public class BundleURLScanner extends URLScanner {
+
+    private static final Logger log = LoggerFactory.getLogger(BundleURLScanner.class);
 
     /**
      * Constructor.
@@ -66,8 +72,28 @@ public class BundleURLScanner extends URLScanner {
             } else {
                 paths.add(file.getAbsolutePath());
             }
+        } else {
+            paths.add(file.getAbsolutePath());
         }
         handle(paths, classes, urls);
+    }
+    
+    /**
+     * @see org.jboss.weld.environment.servlet.deployment.URLScanner#scanResources(java.lang.String[], java.util.Set, java.util.Set)
+     */
+    @Override
+    public void scanResources(String[] resources, Set<String> classes, Set<URL> urls) {
+        for (String resourceName : resources) {
+            try {
+                Enumeration<URL> urlEnum = getClassLoader().getResources(resourceName);
+                while (urlEnum.hasMoreElements()) {
+                    URL url = urlEnum.nextElement();
+                    handleURL(url, classes, urls);
+                }
+            } catch (IOException ioe) {
+                log.warn("could not read: " + resourceName, ioe);
+            }
+        }
     }
 
 }
