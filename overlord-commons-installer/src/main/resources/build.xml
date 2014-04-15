@@ -8,7 +8,7 @@
   <!-- ****************************************************** -->
   <!-- Customize these properties when calling this installer -->
   <!-- ****************************************************** -->
-  <property name="appserver.id" value="jboss-eap-6.1" />
+  <property name="appserver.id" value="jboss-eap-6" />
   <property name="overlord-commons.install.dir" location="target" />
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
   <!-- ****************************************************** -->
