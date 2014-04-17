@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Install Overlord Commons Components into JBoss EAP 6.1" default="install">
+<project name="Install Overlord Commons Components into JBoss EAP 6" default="install">
 
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
@@ -8,13 +8,13 @@
     <property name="overlord-commons.jboss.deploy.dir" value="${overlord-commons.appserver.dir}/standalone/deployments" />
     <property name="overlord-commons.jboss.config.dir" value="${overlord-commons.appserver.dir}/standalone/configuration" />
     
-    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap61/${overlord-commons.version}/overlord-commons-idp-eap61-${overlord-commons.version}.war" />
+    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap6/${overlord-commons.version}/overlord-commons-idp-eap6-${overlord-commons.version}.war" />
     <property name="overlord-commons.services.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-services/${overlord-commons.version}/overlord-commons-services-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.jboss7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-jboss7/${overlord-commons.version}/overlord-commons-auth-jboss7-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.tomcat7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-tomcat7/${overlord-commons.version}/overlord-commons-auth-tomcat7-${overlord-commons.version}.war" />
 
-    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap61.war" />
+    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap6.war" />
     <property name="overlord-commons.services.file" value="${overlord-commons.install.dir}/overlord-commons-services.jar" />
     <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
     <property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-jboss7.jar" />
@@ -61,7 +61,7 @@
     <antcall target="download-auth-tomcat7" />
     
     <antcall target="install-overlord-idp" />
-    <antcall target="install-jboss-eap-6.1" />
+    <antcall target="install-jboss-eap-6" />
   </target>
 
   <!-- Installs the Overlord IDP WAR -->
@@ -75,11 +75,11 @@
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.jboss.deploy.dir}/overlord-idp.war" overwrite="true" />
   </target>
 
-  <!-- Install into EAP 6.1 -->
-  <target name="install-jboss-eap-6.1">
+  <!-- Install into EAP 6 -->
+  <target name="install-jboss-eap-6">
     <echo message=" " />
     <echo message="########################################" />
-    <echo message="# Installing into JBoss EAP 6.1        #" />
+    <echo message="# Installing into JBoss EAP 6          #" />
     <echo message="########################################" />
     <echo message=" " />
 
