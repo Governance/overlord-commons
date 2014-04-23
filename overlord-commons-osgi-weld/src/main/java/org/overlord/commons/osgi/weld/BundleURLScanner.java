@@ -91,7 +91,7 @@ public class BundleURLScanner extends URLScanner {
                     handleURL(url, classes, urls);
                 }
             } catch (IOException ioe) {
-                log.warn("could not read: " + resourceName, ioe);
+                log.warn("could not read: " + resourceName, ioe); //$NON-NLS-1$
             }
         }
     }
