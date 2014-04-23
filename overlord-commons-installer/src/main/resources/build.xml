@@ -3,7 +3,7 @@
 
   <property name="overlord-commons.build.properties" location="overlord-commons-installer.properties" />
   <property file="${overlord-commons.build.properties}" />
-
+  <property name="overlord-commons-ant.jar" location="overlord-commons-ant.jar"/>
   
   <!-- ****************************************************** -->
   <!-- Customize these properties when calling this installer -->
