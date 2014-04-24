@@ -122,7 +122,8 @@
     <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
     <module>overlord-commons-i18n</module>
-  </modules>
+    <module>overlord-commons-ant</module> 
+ </modules>
 
   <build>
     <!-- This section defines the default plugin settings inherited by child projects. -->

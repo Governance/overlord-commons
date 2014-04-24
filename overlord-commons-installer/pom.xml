@@ -11,7 +11,13 @@
   <properties>
     <overlord-commons.version>${project.version}</overlord-commons.version>
   </properties>
-
+  <dependencies>
+		<dependency>
+			<artifactId>overlord-commons-ant</artifactId>
+			<groupId>org.overlord</groupId>
+			<version>${project.version}</version>
+		</dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into JBoss EAP 6" default="install">
-
+  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JbossGetPassword" classpath="${overlord-commons.ant.jar}">
+  </taskdef>
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
@@ -19,7 +20,7 @@
     <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
     <property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-jboss7.jar" />
     <property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-tomcat7.jar" />
-
+    <property name="overlord-commons.user.jboss" value="${overlord-commons.user.jboss.jar}"/>
     <condition property="standalone-osgi-exists">
       <available file="${overlord-commons.jboss.config.dir}/standalone-osgi.xml" />
     </condition>
@@ -285,31 +286,29 @@
     <echo message="!    User Input Required    !" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <echo message="" />
-    <input message="Please enter a password for the Overlord 'admin' user: "
-           addproperty="overlord-commons.admin.password">
-      <handler type="secure" />
-    </input>
-    <echo message="" />
-
-    <!-- Create Overlord admin user -->
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-          fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.jboss.as.domain-add-user"/>
-      <arg value="-a"/>
-      <arg value="-s"/>
-      <arg value="-u"/>
-      <arg value="admin"/>
-      <arg value="-p"/>
-      <arg value="${overlord-commons.admin.password}"/>
-      <arg value="-r"/>
-      <arg value="ApplicationRealm"/>
-      <arg value="-ro"/>
-      <arg value="overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
-    </java>
+  	<inputPassword message="\tPlease enter a password for the Overlord 'admin' user: "
+  		confirmationMessage="\tPlease write again the password: " addProperty="overlord-commons.admin.password"
+  	/>
+  	<!-- Create Overlord admin user -->
+  	<java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
+  	          fork="true" dir="${overlord-commons.appserver.dir}"
+  	          failonerror="true" maxmemory="128m">
+  	      <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
+  	      <arg value="-mp"/>
+  	      <arg value="${overlord-commons.appserver.module-path}"/>
+  	      <arg value="org.jboss.as.domain-add-user"/>
+  	      <arg value="-a"/>
+  	      <arg value="-s"/>
+  	      <arg value="-u"/>
+  	      <arg value="admin"/>
+  	      <arg value="-p"/>
+  	      <arg value="${overlord-commons.admin.password}"/>
+  	      <arg value="-r"/>
+  	      <arg value="ApplicationRealm"/>
+  	      <arg value="-ro"/>
+  	      <arg value="overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
+  	 </java>
+  	
   </target>
 
   <!-- Download the IDP WAR -->

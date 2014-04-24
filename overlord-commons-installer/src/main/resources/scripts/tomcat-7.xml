@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Tomcat 7" default="install">
-
+	<taskdef name="validateUser" classname="org.overlord.commons.ant.user.TomcatGetPassword" classpath="${overlord-commons.ant.jar}">
+	</taskdef>
   <property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
@@ -112,10 +113,10 @@
     <echo message="!    User Input Required    !" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <echo message="" />
-    <input message="Please enter a password for the Overlord 'admin' user: "
-           addproperty="overlord-commons.admin.password">
-      <handler type="secure" />
-    </input>
+    
+  	<inputPassword message="\tPlease enter a password for the Overlord 'admin' user: "
+  		confirmationMessage="\tPlease write again the password: " addProperty="overlord-commons.admin.password"
+  	/>
     <echo message="" />
     
     <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
