@@ -17,12 +17,9 @@ package org.overlord.commons.ant.user;
 
 
 /**
- *
- * The Tomcat User validator. Execute the common validator and apart includes
- * its own validation.
+ * The Tomcat password validator.
  *
  * @author David Virgil Naranjo
- *
  */
 public class TomcatGetPassword extends AbstractGetPassword {
 
@@ -32,11 +29,7 @@ public class TomcatGetPassword extends AbstractGetPassword {
      * @see org.overlord.commons.ant.user.AbstractUserValidator#validate()
      */
     @Override
-    protected boolean validate(String password) throws Exception {
-        if (password.equals("admin")) {
-            log(" * Error *\nThe password for admin user should be different than admin");
-            return false;
-        }
+    protected boolean validate(String password) {
         return true;
     }
 
