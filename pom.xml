@@ -95,7 +95,7 @@
 
     <!-- Third party libraries -->
     <picketbox.version>4.0.7.Final</picketbox.version>
-    <picketlink.version>2.1.6.Final</picketlink.version>
+    <picketlink.version>2.5.3.SP1</picketlink.version>
     <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
     <servlet-api.version>2.5</servlet-api.version>
     <jetty.version>8.1.9.v20130131</jetty.version>
@@ -268,7 +268,7 @@
       </dependency>
       <dependency>
         <groupId>org.picketlink</groupId>
-        <artifactId>picketlink-core</artifactId>
+        <artifactId>picketlink-federation</artifactId>
         <version>${picketlink.version}</version>
       </dependency>
       <dependency>
