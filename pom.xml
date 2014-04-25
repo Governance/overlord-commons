@@ -94,7 +94,7 @@
     <build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
 
     <!-- Third party libraries -->
-    <picketbox.version>4.0.7.Final</picketbox.version>
+    <picketbox.version>4.0.19.SP4</picketbox.version>
     <picketlink.version>2.5.3.SP1</picketlink.version>
     <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
     <servlet-api.version>2.5</servlet-api.version>
