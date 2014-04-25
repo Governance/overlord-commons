@@ -75,15 +75,15 @@ public abstract class AbstractGetPassword extends Task {
         if (console == null) {
             throw new BuildException("\tConsole is not available");
         }
-        if (addproperty == null || addproperty.equals("")) {
+        if (addproperty == null || addproperty.equals("")) { //$NON-NLS-1$
             throw new BuildException("\tThe output property is required for this task.");
         }
 
-        if (message == null || message.equals("")) {
+        if (message == null || message.equals("")) { //$NON-NLS-1$
             throw new BuildException("\tThe message property is required for this task.");
         }
 
-        if (confirmationMessage == null || confirmationMessage.equals("")) {
+        if (confirmationMessage == null || confirmationMessage.equals("")) { //$NON-NLS-1$
             throw new BuildException("\tThe confirmationMessage property is required for this task.");
         }
 
@@ -92,25 +92,28 @@ public abstract class AbstractGetPassword extends Task {
         boolean validated = false;
 
         do {
+            // Read the password
             console.printf(message);
             char[] readed = console.readPassword();
             password = new String(readed);
-            console.printf(confirmationMessage);
-            readed = console.readPassword();
-            repeatedPassword = new String(readed);
-            validated = validatePassword(password, repeatedPassword);
+
+            validated = validatePassword(password) && validate(password);
 
             if (validated) {
-                try {
-                    validated = validate(password);
-                } catch (Exception re) {
+                // Now confirm the password
+                console.printf(confirmationMessage);
+                readed = console.readPassword();
+                repeatedPassword = new String(readed);
+
+                if (!password.equals(repeatedPassword)) {
+                    log(""); //$NON-NLS-1$
+                    log(" * Error *\nThe passwords you entered do not match. Please try again.");
                     validated = false;
                 }
             }
-
         } while (!validated);
 
-        if (addproperty != null && !addproperty.equals("")) {
+        if (addproperty != null && !addproperty.equals("")) { //$NON-NLS-1$
             getProject().setNewProperty(addproperty, password);
         }
 
@@ -119,38 +122,23 @@ public abstract class AbstractGetPassword extends Task {
     /**
      * Validate the password introduced by the user.
      *
-     * @param password
-     *            the password
-     * @param repeatedPassword
-     *            the repeated password
+     * @param password the password
      * @return true, if successful
      */
-    private boolean validatePassword(String password, String repeatedPassword) {
-        if (password == null || password.trim().equals("")) {
-            log("");
+    private boolean validatePassword(String password) {
+        if (password == null || password.trim().equals("")) { //$NON-NLS-1$
+            log(""); //$NON-NLS-1$
             log(" * Error *\nThe password should not be empty");
             return false;
         }
-        if (repeatedPassword == null || repeatedPassword.trim().equals("")) {
-            log("");
-            log(" * Error *\nThe repeated password should not be empty");
-            return false;
-        }
-
-        if (!password.equals(repeatedPassword)) {
-            log("");
-            log(" * Error *\nThe passwords you introduced do not match each other. Please write them again.");
-            return false;
-        }
-
-        if (!password.matches(".*\\d+.*")) {
-            log("");
-            log(" * Error *\nThe passwords should include numbers.");
+        if (!password.matches(".*\\d+.*")) { //$NON-NLS-1$
+            log(""); //$NON-NLS-1$
+            log(" * Error *\nThe password should include at least one number.");
             return false;
         }
         if (password.length() < 8) {
-            log("");
-            log(" * Error *\nThe length of the password should be at least of 8 characters.");
+            log(""); //$NON-NLS-1$
+            log(" * Error *\nThe length of the password should be at least 8 characters.");
             return false;
         }
         return true;
@@ -158,15 +146,8 @@ public abstract class AbstractGetPassword extends Task {
 
     /**
      * Validate.
-     *
-     * @return true, if successful
-     * @throws Exception
-     *             the exception
+     * @return true, if the password is valid
      */
-    protected abstract boolean validate(String password) throws Exception;
-
-
-
-
+    protected abstract boolean validate(String password);
 
 }

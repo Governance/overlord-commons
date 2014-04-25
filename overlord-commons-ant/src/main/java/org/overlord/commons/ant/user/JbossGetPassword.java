@@ -17,16 +17,11 @@ package org.overlord.commons.ant.user;
 
 
 /**
- *
- * The Jboss EAP User validator. Execute the common validator and apart includes
- * its own validation.
+ * The Jboss EAP password validator.
  *
  * @author David Virgil Naranjo
- *
  */
 public class JbossGetPassword extends AbstractGetPassword {
-
-
 
     /*
      * (non-Javadoc)
@@ -34,13 +29,12 @@ public class JbossGetPassword extends AbstractGetPassword {
      * @see org.overlord.commons.ant.user.AbstractUserValidator#validate()
      */
     @Override
-    protected boolean validate(String password) throws Exception {
-        if (!password.matches("^.*[^a-zA-Z0-9 ].*$")) {
-            log(" * Error *\nThe password should contain at least one character not alphanumeric.");
+    protected boolean validate(String password) {
+        if (!password.matches("^.*[^a-zA-Z0-9 ].*$")) { //$NON-NLS-1$
+            log(" * Error *\nThe password should contain at least one non-alphanumeric (symbol) character.");
             return false;
         }
         return true;
     }
-
 
 }

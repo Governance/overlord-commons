@@ -16,12 +16,9 @@
 package org.overlord.commons.ant.user;
 
 /**
- *
- * The Fuse User validator. Execute the common validator and apart includes its
- * own validation.
+ * The Fuse password validator.
  *
  * @author David Virgil Naranjo
- *
  */
 public class FuseGetPassword extends AbstractGetPassword {
 
@@ -31,7 +28,7 @@ public class FuseGetPassword extends AbstractGetPassword {
      * @see org.overlord.commons.ant.user.AbstractUserValidator#validate()
      */
     @Override
-    protected boolean validate(String password) throws Exception {
+    protected boolean validate(String password) {
         return true;
     }
 }

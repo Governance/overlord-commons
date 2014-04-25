@@ -286,8 +286,8 @@
     <echo message="!    User Input Required    !" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <echo message="" />
-  	<inputPassword message="\tPlease enter a password for the Overlord 'admin' user: "
-  		confirmationMessage="\tPlease write again the password: " addProperty="overlord-commons.admin.password"
+  	<inputPassword message="Please enter a password for the Overlord 'admin' user: "
+  		confirmationMessage="Please write again the password: " addProperty="overlord-commons.admin.password"
   	/>
   	<!-- Create Overlord admin user -->
   	<java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
