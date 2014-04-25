@@ -21,7 +21,7 @@
     <!-- PicketLink -->
     <dependency>
       <groupId>org.picketlink</groupId>
-      <artifactId>picketlink-core</artifactId>
+      <artifactId>picketlink-federation</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -55,7 +55,7 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
+            <!-- <Export-Package>
               org.overlord.commons.auth.util,
               org.overlord.commons.auth.filters
             </Export-Package>
@@ -69,8 +69,8 @@
               javax.xml.stream,
               javax.xml.transform,
               javax.xml.transform.dom,
+              org.picketlink.common.exceptions.exceptions,
               org.picketlink.identity.federation.api.saml.v2.sig,
-              org.picketlink.identity.federation.core.exceptions,
               org.picketlink.identity.federation.core.parsers.saml,
               org.picketlink.identity.federation.core.saml.v2.factories,
               org.picketlink.identity.federation.core.saml.v2.util,
@@ -78,7 +78,7 @@
               org.apache.commons.codec.binary,
               org.overlord.commons.services,
               org.w3c.dom
-            </Import-Package>
+            </Import-Package> -->
           </instructions>
         </configuration>
       </plugin>

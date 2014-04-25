@@ -37,7 +37,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.overlord.commons.auth.filters.Messages;
 import org.picketlink.identity.federation.api.saml.v2.sig.SAML2Signature;
-import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.saml.v2.factories.SAMLAssertionFactory;
 import org.picketlink.identity.federation.core.saml.v2.util.AssertionUtil;
 import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
@@ -232,7 +231,9 @@ public class SAMLBearerTokenUtil {
             } else {
                 throw new LoginException(Messages.getString("SAMLBearerTokenUtil.InvalidAssertion")); //$NON-NLS-1$
             }
-        } catch (ConfigurationException e) {
+        // Note: Do not explicitly catch Picketlink's ConfigurationException.  It was refactored between 2.1.x (EAP 6.1)
+        // and 2.5.x (EAP 6.3).  To maintain compatibility with both, leave it  out.
+        } catch (Exception e) {
             // should never happen - see AssertionUtil.hasExpired code for why
             throw new LoginException(e.getMessage());
         }
