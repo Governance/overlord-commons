@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -297,6 +298,22 @@ public class MockHttpServletResponse extends MockHttpResponse implements HttpSer
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaders(String name) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+
+        return null;
     }
 
 }
