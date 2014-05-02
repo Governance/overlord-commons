@@ -121,7 +121,7 @@
     <echo message="" />
     
     <inputPassword message="Please enter a password for the Overlord 'admin' user: "
-      confirmationMessage="Please write again the password: " addProperty="overlord-commons.admin.password"/>
+      confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
     <echo message="" />
     
     <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
