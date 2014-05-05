@@ -31,7 +31,7 @@ public class JbossGetPassword extends AbstractGetPassword {
     @Override
     protected boolean validate(String password) {
         if (!password.matches("^.*[^a-zA-Z0-9 ].*$")) { //$NON-NLS-1$
-            log(" * Error *\nThe password should contain at least one non-alphanumeric (symbol) character.");
+            log(" * Error *\nThe password should contain at least one non-alphanumeric (symbol) character."); //$NON-NLS-1$
             return false;
         }
         return true;

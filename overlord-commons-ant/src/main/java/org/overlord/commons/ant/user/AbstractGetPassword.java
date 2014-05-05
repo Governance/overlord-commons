@@ -73,22 +73,22 @@ public abstract class AbstractGetPassword extends Task {
         Console console = System.console();
 
         if (console == null) {
-            throw new BuildException("\tConsole is not available");
+            throw new BuildException("\tConsole is not available"); //$NON-NLS-1$
         }
         if (addproperty == null || addproperty.equals("")) { //$NON-NLS-1$
-            throw new BuildException("\tThe output property is required for this task.");
+            throw new BuildException("\tThe output property is required for this task."); //$NON-NLS-1$
         }
 
         if (message == null || message.equals("")) { //$NON-NLS-1$
-            throw new BuildException("\tThe message property is required for this task.");
+            throw new BuildException("\tThe message property is required for this task."); //$NON-NLS-1$
         }
 
         if (confirmationMessage == null || confirmationMessage.equals("")) { //$NON-NLS-1$
-            throw new BuildException("\tThe confirmationMessage property is required for this task.");
+            throw new BuildException("\tThe confirmationMessage property is required for this task."); //$NON-NLS-1$
         }
 
-        String password = "";
-        String repeatedPassword = "";
+        String password = ""; //$NON-NLS-1$
+        String repeatedPassword = ""; //$NON-NLS-1$
         boolean validated = false;
 
         do {
@@ -107,7 +107,7 @@ public abstract class AbstractGetPassword extends Task {
 
                 if (!password.equals(repeatedPassword)) {
                     log(""); //$NON-NLS-1$
-                    log(" * Error *\nThe passwords you entered do not match. Please try again.");
+                    log(" * Error *\nThe passwords you entered do not match. Please try again."); //$NON-NLS-1$
                     validated = false;
                 }
             }
@@ -128,17 +128,17 @@ public abstract class AbstractGetPassword extends Task {
     private boolean validatePassword(String password) {
         if (password == null || password.trim().equals("")) { //$NON-NLS-1$
             log(""); //$NON-NLS-1$
-            log(" * Error *\nThe password should not be empty");
+            log(" * Error *\nThe password should not be empty"); //$NON-NLS-1$
             return false;
         }
         if (!password.matches(".*\\d+.*")) { //$NON-NLS-1$
             log(""); //$NON-NLS-1$
-            log(" * Error *\nThe password should include at least one number.");
+            log(" * Error *\nThe password should include at least one number."); //$NON-NLS-1$
             return false;
         }
         if (password.length() < 8) {
             log(""); //$NON-NLS-1$
-            log(" * Error *\nThe length of the password should be at least 8 characters.");
+            log(" * Error *\nThe length of the password should be at least 8 characters."); //$NON-NLS-1$
             return false;
         }
         return true;
