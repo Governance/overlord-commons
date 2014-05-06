@@ -224,9 +224,17 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append(artifact.getArtifactId());
             builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getBaseVersion());
-            if (!"jar".equalsIgnoreCase(artifact.getType())) { //$NON-NLS-1$
+            String classifier = artifact.getClassifier();
+            if (classifier != null && classifier.trim().length() == 0) {
+                classifier = null;
+            }
+            if (!"jar".equalsIgnoreCase(artifact.getType()) || classifier != null) { //$NON-NLS-1$
                 builder.append("/"); //$NON-NLS-1$
                 builder.append(artifact.getType());
+            }
+            if (classifier != null) {
+                builder.append("/"); //$NON-NLS-1$
+                builder.append(classifier);
             }
         } else {
             // Example:  wrap:mvn:log4j/log4j/1.2.14$Bundle-SymbolicName=log4j.log4j&amp;Bundle-Version=1.2.14&amp;Bundle-Name=Log4j
@@ -236,9 +244,17 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append(artifact.getArtifactId());
             builder.append("/"); //$NON-NLS-1$
             builder.append(artifact.getBaseVersion());
-            if (!"jar".equalsIgnoreCase(artifact.getType())) { //$NON-NLS-1$
+            String classifier = artifact.getClassifier();
+            if (classifier != null && classifier.trim().length() == 0) {
+                classifier = null;
+            }
+            if (!"jar".equalsIgnoreCase(artifact.getType()) || classifier != null) { //$NON-NLS-1$
                 builder.append("/"); //$NON-NLS-1$
                 builder.append(artifact.getType());
+            }
+            if (classifier != null) {
+                builder.append("/"); //$NON-NLS-1$
+                builder.append(classifier);
             }
             
             MavenProject project = resolveProject(artifact);
