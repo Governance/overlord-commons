@@ -15,7 +15,6 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>overlord-commons-auth</artifactId>
-      <version>${project.version}</version>
     </dependency>
     
     <!-- PicketLink -->
@@ -29,13 +28,11 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>${jetty.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-plus</artifactId>
-      <version>${jetty.version}</version>
       <scope>provided</scope>
     </dependency>
 

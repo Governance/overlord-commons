@@ -11,13 +11,11 @@
     <dependency>
       <groupId>org.jboss.errai.reflections</groupId>
       <artifactId>reflections</artifactId>
-      <version>${version.org.jboss.errai}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-osgi</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
