@@ -20,7 +20,6 @@
     <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
     <property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-jboss7.jar" />
     <property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-tomcat7.jar" />
-    <property name="overlord-commons.user.jboss" value="${overlord-commons.user.jboss.jar}"/>
     <condition property="standalone-osgi-exists">
       <available file="${overlord-commons.jboss.config.dir}/standalone-osgi.xml" />
     </condition>

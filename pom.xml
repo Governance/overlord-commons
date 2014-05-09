@@ -123,7 +123,8 @@
     <module>overlord-commons-osgi-weld</module>
     <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
- </modules>
+    <module>overlord-commons-dist</module>
+  </modules>
 
   <build>
     <!-- This section defines the default plugin settings inherited by child projects. -->
@@ -260,7 +261,15 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      
+      <!-- APIs -->
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>${servlet-api.version}</version>
+      </dependency>
 
+      <!-- PicketLink -->
       <dependency>
         <groupId>org.picketbox</groupId>
         <artifactId>picketbox</artifactId>
@@ -276,12 +285,8 @@
         <artifactId>jboss-as-security</artifactId>
         <version>${jboss-as-security.version}</version>
       </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>${servlet-api.version}</version>
-      </dependency>
 
+      <!-- Tomcat -->
       <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-catalina</artifactId>
@@ -292,21 +297,16 @@
         <artifactId>tomcat-coyote</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
+      
+      <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-plus</artifactId>
-        <version>${jetty.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
@@ -328,8 +328,9 @@
         <groupId>org.jboss.errai.reflections</groupId>
         <artifactId>reflections</artifactId>
         <version>${version.org.jboss.errai}</version>
-        <scope>provided</scope>
       </dependency>
+      
+      <!-- Maven -->
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-artifact</artifactId>
@@ -384,7 +385,17 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-auth-jboss7</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-auth-tomcat7</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-auth-jetty8</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

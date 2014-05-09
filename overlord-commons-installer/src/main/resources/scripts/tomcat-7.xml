@@ -17,29 +17,12 @@
     <echo message="Setting all Overlord Commons properties" />
 
     <property name="overlord-commons.lib.download.url" value="https://repository.jboss.org/nexus/content/groups/public" />
-    <property name="overlord-commons.lib.download.url2" value="http://central.maven.org/maven2" />
 
     <property name="overlord-commons.tomcat.deploy.dir" location="${overlord-commons.appserver.dir}/webapps" />
     <property name="overlord-commons.tomcat.config.dir" location="${overlord-commons.appserver.dir}/conf" />
     <property name="overlord-commons.tomcat.lib.dir" location="${overlord-commons.appserver.dir}/lib" />
     <property name="overlord-commons.idp.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-idp-tomcat7/${overlord-commons.version}/overlord-commons-idp-tomcat7-${overlord-commons.version}.war" />
-    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-tomcat7.war" />
-    <property name="overlord-commons.services.file" value="${overlord-commons.install.dir}/overlord-commons-services.jar" />
-    <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
-    <property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-tomcat7.jar" />
-
-    <property name="overlord-commons.lib.overlord-commons-services.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-services/${overlord-commons.version}/overlord-commons-services-${overlord-commons.version}.jar" />
-    <property name="overlord-commons.lib.overlord-commons-auth.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.jar" />
-    <property name="overlord-commons.lib.overlord-commons-auth-tomcat7.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-auth-tomcat7/${overlord-commons.version}/overlord-commons-auth-tomcat7-${overlord-commons.version}.jar" />
-    <property name="overlord-commons.lib.picketbox.download.url" value="${overlord-commons.lib.download.url}/org/picketbox/picketbox/${picketbox.version}/picketbox-${picketbox.version}.jar" />
-    <property name="overlord-commons.lib.picketlink-federation.download.url" value="${overlord-commons.lib.download.url}/org/picketlink/picketlink-federation/${picketlink.version}/picketlink-federation-${picketlink.version}.jar" />
-    <property name="overlord-commons.lib.picketlink-config.download.url" value="${overlord-commons.lib.download.url}/org/picketlink/picketlink-config/${picketlink.version}/picketlink-config-${picketlink.version}.jar" />
-    <property name="overlord-commons.lib.picketlink-common.download.url" value="${overlord-commons.lib.download.url}/org/picketlink/picketlink-common/${picketlink.version}/picketlink-common-${picketlink.version}.jar" />
-    <property name="overlord-commons.lib.picketlink-tomcat-common.download.url" value="${overlord-commons.lib.download.url}/org/picketlink/picketlink-tomcat-common/${picketlink.version}/picketlink-tomcat-common-${picketlink.version}.jar" />
-    <property name="overlord-commons.lib.picketlink-tomcat7-single.download.url" value="${overlord-commons.lib.download.url}/org/picketlink/picketlink-tomcat7-single/${picketlink.version}/picketlink-tomcat7-single-${picketlink.version}.jar" />
-    <property name="overlord-commons.lib.commons-codec.download.url" value="${overlord-commons.lib.download.url}/commons-codec/commons-codec/${version.commons-codec}/commons-codec-${version.commons-codec}.jar" />
-    <property name="overlord-commons.lib.log4j.download.url" value="${overlord-commons.lib.download.url2}/log4j/log4j/${version.log4j}/log4j-${version.log4j}.jar" />
-    <property name="overlord-commons.lib.jboss-logging.download.url" value="${overlord-commons.lib.download.url}/org/jboss/logging/jboss-logging/${version.org.jboss.logging}/jboss-logging-${version.org.jboss.logging}.jar" />
+    <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
   </target>
 
   <!-- Do some config -->
@@ -70,36 +53,10 @@
       <available file="${overlord-commons.idp.file}" />
     </condition>
     <antcall target="download-idp" />
-    <condition property="overlord-commons.services.file.exists">
-      <available file="${overlord-commons.services.file}" />
-    </condition>
-    <antcall target="download-services" />
-    <condition property="overlord-commons.auth.file.exists">
-      <available file="${overlord-commons.auth.file}" />
-    </condition>
-    <antcall target="download-auth" />
-    <condition property="overlord-commons.auth.tomcat7.file.exists">
-      <available file="${overlord-commons.auth.tomcat7.file}" />
-    </condition>
-    <antcall target="download-auth-tomcat7" />
     
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.tomcat.deploy.dir}/overlord-idp.war" overwrite="true" />
     
-    <echo>Deploying authentication JARs into tomcat/lib</echo>
-    <get src="${overlord-commons.lib.picketbox.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.picketlink-federation.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.picketlink-config.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.picketlink-common.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.picketlink-tomcat-common.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.picketlink-tomcat7-single.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.commons-codec.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.log4j.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <get src="${overlord-commons.lib.jboss-logging.download.url}" dest="${overlord-commons.tomcat.lib.dir}" usetimestamp="false" />
-    <copy file="${overlord-commons.services.file}" tofile="${overlord-commons.tomcat.lib.dir}/overlord-commons-services-${overlord-commons.version}.jar" overwrite="true" />
-    <copy file="${overlord-commons.auth.file}" tofile="${overlord-commons.tomcat.lib.dir}/overlord-commons-auth-${overlord-commons.version}.jar" overwrite="true" />
-    <copy file="${overlord-commons.auth.tomcat7.file}" tofile="${overlord-commons.tomcat.lib.dir}/overlord-commons-auth-tomcat7-${overlord-commons.version}.jar" overwrite="true" />
-
     <echo>Creating SAML authentication keystore</echo>
     <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
     <property name="overlord-commons.overlord-alias.password" value="overlord99" />
@@ -139,21 +96,6 @@
   <!-- Download the IDP WAR -->
   <target name="download-idp" unless="overlord-commons.idp.file.exists">
     <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
-  </target>
-  
-  <!-- Download the services jar -->
-  <target name="download-services" unless="overlord-commons.services.file.exists">
-    <get src="${overlord-commons.lib.overlord-commons-services.download.url}" dest="${overlord-commons.services.file}" usetimestamp="true" />
-  </target>
-  
-  <!-- Download the auth jar -->
-  <target name="download-auth" unless="overlord-commons.auth.file.exists">
-    <get src="${overlord-commons.lib.overlord-commons-auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
-  </target>
-  
-  <!-- Download the IDP auth-tomcat7 jar -->
-  <target name="download-auth-tomcat7" unless="overlord-commons.auth.tomcat7.file.exists">
-    <get src="${overlord-commons.lib.overlord-commons-auth-tomcat7.download.url}" dest="${overlord-commons.auth.tomcat7.file}" usetimestamp="true" />
   </target>
 
 </project>

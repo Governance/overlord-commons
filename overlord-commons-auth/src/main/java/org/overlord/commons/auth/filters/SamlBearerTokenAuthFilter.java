@@ -41,6 +41,7 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 
 import org.apache.commons.codec.binary.Base64;
+import org.overlord.commons.auth.Messages;
 import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
 import org.picketlink.identity.federation.core.parsers.saml.SAMLAssertionParser;
 import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
@@ -54,11 +55,17 @@ import org.w3c.dom.Document;
 
 /**
  * A filter that supports both BASIC authentication and custom SAML Bearer Token
- * authentication.
+ * authentication.  Can be extended by platform-specific implementations to handle
+ * the actual user/pass login.  However, the default implementation uses 
+ * httpRequest.login() to delegate to container managed auth.  Hopefully that
+ * will be good enough for *most* platforms.
  *
  * @author eric.wittmann@redhat.com
  */
-public abstract class SamlBearerTokenAuthFilter implements Filter {
+public class SamlBearerTokenAuthFilter implements Filter {
+    
+    // Indicates that the request has been logged in and does not need to be wrapped.
+    private static final SimplePrincipal NO_PROXY = new SimplePrincipal(null);
 
     private String realm;
     private Set<String> allowedIssuers;
@@ -223,7 +230,11 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
      */
     protected void doFilterChain(ServletRequest request, ServletResponse response, FilterChain chain,
             SimplePrincipal principal) throws IOException, ServletException {
-        chain.doFilter(proxyRequest(request, principal), response);
+        if (principal == NO_PROXY) {
+            chain.doFilter(request, response);
+        } else {
+            chain.doFilter(proxyRequest(request, principal), response);
+        }
     }
 
     /**
@@ -385,14 +396,21 @@ public abstract class SamlBearerTokenAuthFilter implements Filter {
     }
 
     /**
-     * Fall back to standard basic authentication.  Subclasses must implement this
-     * method.
+     * Fall back to standard basic authentication.  Subclasses may implement this
+     * method if {@link HttpServletRequest#login(String, String)} is not sufficient.
      * @param username
      * @param password
      * @param request 
      * @throws IOException
      */
-    protected abstract SimplePrincipal doBasicLogin(String username, String password, HttpServletRequest request) throws IOException;
+    protected SimplePrincipal doBasicLogin(String username, String password, HttpServletRequest request) throws IOException {
+        try {
+            request.login(username, password);
+            return NO_PROXY;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Sends a response that tells the client that authentication is required.

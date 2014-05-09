@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overlord</groupId>
+    <artifactId>overlord-commons-dist</artifactId>
+    <version>2.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>overlord-commons-dist-fuse6</artifactId>
+  <name>Overlord Commons: Dist: Fuse 6.x</name>
+  <packaging>pom</packaging>
+  <dependencies>
+    <!-- The overlord-commons bundles -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-auth</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-auth-jetty8</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-osgi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-services</artifactId>
+    </dependency>
+  
+    <!-- The IDP WAR -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-idp</artifactId>
+      <type>war</type>
+    </dependency>
+    
+    <!-- Third Party Libraries -->
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-federation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-maven-plugin</artifactId>
+        <version>2.0.0.Final</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate-features-xml</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.build.directory}/features.xml</outputFile>
+              <attach>true</attach>
+              <features>
+                <!-- Dependencies -->
+                <feature>
+                  <name>overlord-commons-dependencies</name>
+                  <version>${project.version}</version>
+                  <comment>Overlord Commons Dependencies</comment>
+                  <excludes>
+                    <exclude>org.overlord:*:*</exclude>
+                  </excludes>
+                </feature>
+
+                <!-- The Overlord Commons Bundles -->
+                <feature>
+                  <name>overlord-commons</name>
+                  <version>${project.version}</version>
+                  <comment>Overlord Commons Bundles</comment>
+                  <dependsOnFeatures>
+                    <feature>
+                      <name>overlord-commons-dependencies</name>
+                      <version>${project.version}</version>
+                    </feature>
+                  </dependsOnFeatures>
+                  <includes>
+                    <include>org.overlord:overlord-commons-*:*</include>
+                  </includes>
+                  <excludes>
+                    <exclude>org.overlord:overlord-commons-*:war</exclude>
+                  </excludes>
+                </feature>
+
+                <!-- The Overlord IDP -->
+                <feature>
+                  <name>overlord-commons-idp</name>
+                  <version>${project.version}</version>
+                  <comment>Overlord Commons Bundles</comment>
+                  <dependsOnFeatures>
+                    <feature>
+                      <name>overlord-commons</name>
+                      <version>${project.version}</version>
+                    </feature>
+                  </dependsOnFeatures>
+                  <includes>
+                    <include>org.overlord:overlord-commons-idp:war</include>
+                  </includes>
+                </feature>
+              </features>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
