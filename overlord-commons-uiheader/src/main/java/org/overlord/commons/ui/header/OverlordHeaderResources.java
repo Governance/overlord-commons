@@ -72,6 +72,10 @@ public class OverlordHeaderResources implements Filter {
             throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
         String path = "/META-INF/resources" + httpReq.getServletPath(); //$NON-NLS-1$
+        if (path.endsWith("/")) {
+            chain.doFilter(request, response);
+            return;
+        }
         Boolean exists = EXISTS_CHECK.get(path);
         if (exists != null && !exists) {
             chain.doFilter(request, response);

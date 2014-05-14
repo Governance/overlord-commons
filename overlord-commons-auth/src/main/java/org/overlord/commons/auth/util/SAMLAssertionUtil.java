@@ -27,6 +27,9 @@ import org.overlord.commons.services.ServiceRegistryUtil;
  * @author eric.wittmann@redhat.com
  */
 public class SAMLAssertionUtil {
+	
+    private static final SAMLAssertionFactory standardFactory = new StandardSAMLAssertionFactory();
+    private static SAMLAssertionFactory cachedFactory;
 
     /**
      * Create a SAML assertion that is good for 10s.
@@ -50,6 +53,26 @@ public class SAMLAssertionUtil {
      * @param timeValidInMillis how long the saml assertion should be valid for (in milliseconds)
      */
     public static String createSAMLAssertion(String issuerName, String forService, int timeValidInMillis) {
+    	SAMLAssertionFactory factory = getSAMLAssertionFactory();
+    	if (factory == null) {
+    		throw new RuntimeException("Failed to create SAML Assertion:  Unsupported/undetected platform."); //$NON-NLS-1$
+    	} else {
+            return factory.createSAMLAssertion(issuerName, forService, timeValidInMillis);
+    	}
+    }
+
+	/**
+	 * @return the SAML assertion factory for the current runtime platform
+	 */
+	private static SAMLAssertionFactory getSAMLAssertionFactory() {
+        if (standardFactory.accept()) {
+            return standardFactory;
+        }
+
+        if (cachedFactory != null) {
+			return cachedFactory;
+		}
+		
         Set<SAMLAssertionFactory> factories = null;
         
         // Note: use our classloader when loading the services because the application-specific
@@ -72,10 +95,11 @@ public class SAMLAssertionUtil {
         // Now that the factories are loaded, go ahead and try to use one of them.
         for (SAMLAssertionFactory factory : factories) {
             if (factory.accept()) {
-                return factory.createSAMLAssertion(issuerName, forService, timeValidInMillis);
+            	cachedFactory = factory;
+            	return factory;
             }
         }
-        throw new RuntimeException("Unsupported/undetected platform."); //$NON-NLS-1$
-    }
+        return null;
+	}
 
 }

@@ -24,14 +24,14 @@
 
 <module xmlns="urn:jboss:module:1.1" name="org.overlord.commons.overlord-commons-auth-tool">
 
-    <main-class name="org.overlord.commons.auth.jboss7.tools.AuthTool"/>
+  <main-class name="org.overlord.commons.auth.jboss7.tools.AuthTool" />
 
-    <resources>
-        <!-- Insert resources here -->
-    </resources>
+  <resources>
+    <resource-root path="overlord-commons-auth-jboss7-@VERSION@.jar" />
+  </resources>
 
-    <dependencies>
-        <module name="org.jboss.as.vault-tool"/>
-        <module name="org.overlord.commons.overlord-commons-auth"/>
-    </dependencies>
+  <dependencies>
+    <module name="org.jboss.as.security"/>
+    <module name="org.jboss.as.vault-tool" />
+  </dependencies>
 </module>

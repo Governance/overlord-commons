@@ -56,7 +56,8 @@
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
               org.overlord.commons.auth.util,
-              org.overlord.commons.auth.filters
+              org.overlord.commons.auth.filters,
+              org.overlord.commons.auth.handlers
             </Export-Package>
           </instructions>
         </configuration>

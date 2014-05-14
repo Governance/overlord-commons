@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.auth.jetty8;
+package org.overlord.commons.auth.filters;
 
 import java.io.IOException;
 

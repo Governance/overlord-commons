@@ -95,7 +95,7 @@
 
     <!-- Third party libraries -->
     <picketbox.version>4.0.19.SP4</picketbox.version>
-    <picketlink.version>2.5.3.SP1</picketlink.version>
+    <picketlink.version>2.5.3.SP4</picketlink.version>
     <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
     <servlet-api.version>2.5</servlet-api.version>
     <jetty.version>8.1.9.v20130131</jetty.version>
@@ -117,13 +117,16 @@
     <module>overlord-commons-idp</module>
     <module>overlord-commons-idp-eap6</module>
     <module>overlord-commons-idp-tomcat7</module>
+    <module>overlord-commons-idp-jetty8</module>
+    <module>overlord-commons-idp-fuse61</module>
     <module>overlord-commons-installer</module>
     <module>overlord-commons-maven-plugin</module>
     <module>overlord-commons-osgi</module>
     <module>overlord-commons-osgi-weld</module>
     <module>overlord-commons-services</module>
     <module>overlord-commons-uiheader</module>
- </modules>
+    <module>overlord-commons-dist</module>
+  </modules>
 
   <build>
     <!-- This section defines the default plugin settings inherited by child projects. -->
@@ -261,6 +264,7 @@
         <scope>import</scope>
       </dependency>
 
+      <!-- PicketLink -->
       <dependency>
         <groupId>org.picketbox</groupId>
         <artifactId>picketbox</artifactId>
@@ -276,12 +280,8 @@
         <artifactId>jboss-as-security</artifactId>
         <version>${jboss-as-security.version}</version>
       </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>${servlet-api.version}</version>
-      </dependency>
 
+      <!-- Tomcat -->
       <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-catalina</artifactId>
@@ -292,21 +292,16 @@
         <artifactId>tomcat-coyote</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
+      
+      <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
-        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-plus</artifactId>
-        <version>${jetty.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-server</artifactId>
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
@@ -328,8 +323,9 @@
         <groupId>org.jboss.errai.reflections</groupId>
         <artifactId>reflections</artifactId>
         <version>${version.org.jboss.errai}</version>
-        <scope>provided</scope>
       </dependency>
+      
+      <!-- Maven -->
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-artifact</artifactId>
@@ -379,12 +375,27 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-auth</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-auth-jboss7</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-auth-tomcat7</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-auth-jetty8</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -398,7 +409,13 @@
         <version>${project.version}</version>
         <type>war</type>
       </dependency>
-    </dependencies>
+      <dependency>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-idp-fuse61</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+      </dependency>
+      </dependencies>
   </dependencyManagement>
 
   <reporting>

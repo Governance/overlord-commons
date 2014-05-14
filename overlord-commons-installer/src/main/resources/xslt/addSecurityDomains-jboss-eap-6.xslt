@@ -72,42 +72,6 @@
         <xsl:attribute name="cache-type">default</xsl:attribute>
         <xsl:element name="authentication" namespace="{$currentNS}">
           <xsl:element name="login-module" namespace="{$currentNS}">
-            <xsl:attribute name="code">org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule</xsl:attribute>
-            <xsl:attribute name="flag">sufficient</xsl:attribute>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">allowedIssuers</xsl:attribute>
-              <xsl:attribute name="value">/s-ramp-ui,/dtgov,/dtgov-ui,/gadget-web</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">signatureRequired</xsl:attribute>
-              <xsl:attribute name="value">true</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">keystorePath</xsl:attribute>
-              <xsl:attribute name="value">${jboss.server.config.dir}/overlord-saml.keystore</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">keystorePassword</xsl:attribute>
-              <xsl:attribute name="value">
-                <xsl:text>${</xsl:text>
-                <xsl:value-of select="$keystore-password" />
-                <xsl:text>}</xsl:text>
-              </xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">keyAlias</xsl:attribute>
-              <xsl:attribute name="value">overlord</xsl:attribute>
-            </xsl:element>
-            <xsl:element name="module-option" namespace="{$currentNS}">
-              <xsl:attribute name="name">keyPassword</xsl:attribute>
-              <xsl:attribute name="value">
-                <xsl:text>${</xsl:text>
-                <xsl:value-of select="$key-password" />
-                <xsl:text>}</xsl:text>
-              </xsl:attribute>
-            </xsl:element>
-          </xsl:element>
-          <xsl:element name="login-module" namespace="{$currentNS}">
             <xsl:attribute name="code">RealmDirect</xsl:attribute>
             <xsl:attribute name="flag">required</xsl:attribute>
             <xsl:element name="module-option" namespace="{$currentNS}">

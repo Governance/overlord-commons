@@ -6,51 +6,17 @@
     <artifactId>overlord-commons</artifactId>
     <version>2.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>overlord-commons-idp</artifactId>
+  <artifactId>overlord-commons-idp-fuse61</artifactId>
   <packaging>war</packaging>
-  <name>Overlord Commons: IDP</name>
-  <description>An identity provider using PicketLink SAML.</description>
+  <name>Overlord Commons: IDP (Fuse 6.1)</name>
+  <description>An identity provider using PicketLink SAML (Fuse 6.1 Edition).</description>
 
   <dependencies>
-    <!-- Third Party Dependencies -->
-    <dependency>
-      <groupId>org.picketlink</groupId>
-      <artifactId>picketlink-federation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picketbox</groupId>
-      <artifactId>picketbox</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picketlink</groupId>
-      <artifactId>picketlink-federation</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging</artifactId>
-    </dependency>
+    <!-- The base WAR being extended -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-commons-auth</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-commons-auth-jboss7</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-commons-auth-jetty8</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-commons-auth-tomcat7</artifactId>
-    </dependency>
-
-    <!-- Provided Dependencies -->
-    <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-      <scope>provided</scope>
+      <artifactId>overlord-commons-idp</artifactId>
+      <type>war</type>
     </dependency>
   </dependencies>
 
@@ -78,10 +44,14 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <warName>${project.artifactId}</warName>
           <attachClasses>true</attachClasses>
           <classesClassifier>classes</classesClassifier>
+          <overlays>
+            <overlay>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>overlord-commons-idp</artifactId>
+            </overlay>
+          </overlays>
           <archive>
             <manifestEntries>
               <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
@@ -91,7 +61,8 @@
               <Webapp-Context>/overlord-idp</Webapp-Context>
               <Import-Package>
                 org.apache.log4j,
-                javax.servlet, javax.servlet.http,
+                javax.servlet,
+                javax.servlet.http,
                 javax.security.auth.login,
                 javax.xml.stream,
                 javax.xml.stream.events,
@@ -106,27 +77,36 @@
                 javax.xml.bind,
                 org.apache.karaf.jaas.boot.principal,
                 org.eclipse.jetty.plus.jaas,
+                org.jboss.logging,
+                org.overlord.commons.auth.util,
+                org.overlord.commons.auth.filters,
+                org.picketlink.identity.federation.core.interfaces,
+                org.picketlink.identity.federation.web.listeners,
+                org.picketlink.identity.federation.web.filters,
                 org.xml.sax,
                 org.w3c.dom,
-                org.w3c.dom.ls,
-                org.overlord.commons.auth.util,
-                org.picketlink.identity.federation.core.interfaces
+                org.w3c.dom.ls
               </Import-Package>
               <Bundle-ClassPath>
-                .,WEB-INF/classes,
-                WEB-INF/lib/commons-logging-${version.commons-logging}.jar,
-                WEB-INF/lib/jboss-logging-${version.org.jboss.logging}.jar,
-                WEB-INF/lib/jbossxacml-2.0.8.Final.jar,
-                WEB-INF/lib/picketbox-${picketbox.version}.jar,
-                WEB-INF/lib/picketlink-common-${picketlink.version}.jar,
-                WEB-INF/lib/picketlink-config-${picketlink.version}.jar,
-                WEB-INF/lib/picketlink-federation-${picketlink.version}.jar,
-                WEB-INF/lib/picketlink-idm-api-${picketlink.version}.jar,
-                WEB-INF/lib/picketlink-idm-impl-${picketlink.version}.jar,
-                WEB-INF/lib/xmlsec-1.5.1.jar
+                .,WEB-INF/classes
               </Bundle-ClassPath>
             </manifestEntries>
           </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <overlays>
+            <overlay>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>overlord-commons-idp</artifactId>
+              <excludes>
+                <exclude>WEB-INF/lib/*.jar</exclude>
+              </excludes>
+            </overlay>
+          </overlays>
         </configuration>
       </plugin>
     </plugins>

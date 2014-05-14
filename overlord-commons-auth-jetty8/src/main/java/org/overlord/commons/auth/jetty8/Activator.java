@@ -18,6 +18,7 @@ package org.overlord.commons.auth.jetty8;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.overlord.commons.auth.util.IRoleGenerator;
 import org.overlord.commons.auth.util.SAMLAssertionFactory;
 
 /**
@@ -33,6 +34,7 @@ public class Activator implements BundleActivator {
     @Override
     public void start(BundleContext context) throws Exception {
         context.registerService(SAMLAssertionFactory.class.getName(), new Jetty8SAMLAssertionFactory(), null);
+        context.registerService(IRoleGenerator.class.getName(), new Jetty8RoleGenerator(), null);
     }
 
     /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.commons.auth.filters;
+package org.overlord.commons.auth;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
  */
 public class Messages {
 
-    private static final String BUNDLE_NAME = "org.overlord.commons.auth.filters.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.overlord.commons.auth.messages"; //$NON-NLS-1$
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
     /**

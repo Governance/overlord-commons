@@ -14,25 +14,7 @@
     <listener-class>org.picketlink.identity.federation.web.listeners.IDPHttpSessionListener</listener-class>
   </listener>
 
-  <filter>
-    <filter-name>RequestThreadLocalFilter</filter-name>
-    <filter-class>org.overlord.commons.auth.filters.HttpRequestThreadLocalFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>RequestThreadLocalFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <filter>
-    <filter-name>IDPFilter</filter-name>
-    <filter-class>org.picketlink.identity.federation.web.filters.IDPFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>IDPFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <!-- Define a security constraint that gives unlimited access to resources -->
+  <!-- Define a security constraint that gives unlimted access to images -->
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Resources</web-resource-name>
@@ -54,7 +36,7 @@
   <!-- Define the Login Configuration for this Application -->
   <login-config>
     <auth-method>FORM</auth-method>
-    <realm-name>Overlord</realm-name>
+    <realm-name>OverlordRealm</realm-name>
     <form-login-config>
       <form-login-page>/login.html</form-login-page>
       <form-error-page>/login-error.html</form-error-page>
