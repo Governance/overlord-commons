@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author kconner@redhat.com
  */
 public class WelcomeFileFilter implements Filter {
-    private static final String WELCOME_FILES = "welcomeFiles";
+    private static final String WELCOME_FILES = "welcomeFiles"; //$NON-NLS-1$
     private String[] welcomeFiles;
 
     /**
@@ -50,21 +50,21 @@ public class WelcomeFileFilter implements Filter {
     public void init(final FilterConfig filterConfig) throws ServletException {
         final String initParam = filterConfig.getInitParameter(WELCOME_FILES);
         if (initParam == null) {
-            throw new ServletException("Missing '" + WELCOME_FILES + "' initialisation parameter");
+            throw new ServletException("Missing '" + WELCOME_FILES + "' initialisation parameter"); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        final String[] files = initParam.split(",");
+        final String[] files = initParam.split(","); //$NON-NLS-1$
         final List<String> fileList = new ArrayList<String>();
         for(String file: files) {
             final String trimmed = file.trim();
             if (trimmed.length() > 0) {
-                if (trimmed.contains("/")) {
-                    throw new ServletException("Invalid '" + WELCOME_FILES + "' initialisation parameter, must not contain '/'");
+                if (trimmed.contains("/")) { //$NON-NLS-1$
+                    throw new ServletException("Invalid '" + WELCOME_FILES + "' initialisation parameter, must not contain '/'"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 fileList.add(trimmed);
             }
         }
         if (fileList.size() == 0) {
-            throw new ServletException("Invalid '" + WELCOME_FILES + "' initialisation parameter");
+            throw new ServletException("Invalid '" + WELCOME_FILES + "' initialisation parameter"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
         welcomeFiles = fileList.toArray(new String[0]);
@@ -83,8 +83,8 @@ public class WelcomeFileFilter implements Filter {
         final String requestPathInfo = httpServletRequest.getPathInfo();
         final String basePath = normalise(requestServletPath) + normalise(requestPathInfo);
 
-        if ((basePath.length() == 0) || basePath.endsWith("/")) {
-            final String path = (basePath.length() == 0) ? "/" : basePath;
+        if ((basePath.length() == 0) || basePath.endsWith("/")) { //$NON-NLS-1$
+            final String path = (basePath.length() == 0) ? "/" : basePath; //$NON-NLS-1$
 
             final ServletContext servletContext = request.getServletContext();
             for (String welcomeFile : welcomeFiles) {
@@ -111,6 +111,6 @@ public class WelcomeFileFilter implements Filter {
      * @param path
      */
     private static String normalise(final String path) {
-        return (path == null ? "" : path);
+        return (path == null ? "" : path); //$NON-NLS-1$
     }
 }

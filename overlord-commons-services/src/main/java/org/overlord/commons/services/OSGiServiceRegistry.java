@@ -40,6 +40,7 @@ public class OSGiServiceRegistry implements ServiceRegistry {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
+        // TODO use the osgi service tracker here
         T service = null;
         try {
             BundleContext context = FrameworkUtil.getBundle(serviceInterface).getBundleContext();

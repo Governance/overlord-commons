@@ -72,7 +72,7 @@ public class OverlordHeaderResources implements Filter {
             throws IOException, ServletException {
         HttpServletRequest httpReq = (HttpServletRequest) request;
         String path = "/META-INF/resources" + httpReq.getServletPath(); //$NON-NLS-1$
-        if (path.endsWith("/")) {
+        if (path.endsWith("/")) { //$NON-NLS-1$
             chain.doFilter(request, response);
             return;
         }
