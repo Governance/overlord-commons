@@ -19,7 +19,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * 
+ * i18n messages for the jboss7 auth module.
  *
  * @author eric.wittmann@redhat.com
  */

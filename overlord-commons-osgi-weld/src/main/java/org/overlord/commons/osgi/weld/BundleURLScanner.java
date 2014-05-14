@@ -70,7 +70,9 @@ public class BundleURLScanner extends URLScanner {
             if (webClasses.exists()) {
                 paths.add(webClasses.getAbsolutePath());
             } else {
-                paths.add(file.getAbsolutePath());
+                // Don't include root bundles.  Essentially this means that Weld should
+                // only scan what's in the WAR, not OSGi bundles that the WAR may reference
+                //paths.add(file.getAbsolutePath());
             }
         } else {
             paths.add(file.getAbsolutePath());

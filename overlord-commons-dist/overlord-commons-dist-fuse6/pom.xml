@@ -20,6 +20,10 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>overlord-commons-osgi</artifactId>
     </dependency>
     <dependency>
@@ -30,7 +34,7 @@
     <!-- The IDP WAR -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-commons-idp</artifactId>
+      <artifactId>overlord-commons-idp-fuse61</artifactId>
       <type>war</type>
     </dependency>
     
@@ -42,6 +46,26 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-jxpath</groupId>
+      <artifactId>commons-jxpath</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jdom</groupId>
+      <artifactId>jdom</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
     </dependency>
   </dependencies>
 
@@ -102,7 +126,7 @@
                     </feature>
                   </dependsOnFeatures>
                   <includes>
-                    <include>org.overlord:overlord-commons-idp:war</include>
+                    <include>org.overlord:overlord-commons-idp-fuse61:war</include>
                   </includes>
                 </feature>
               </features>

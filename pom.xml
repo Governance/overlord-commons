@@ -95,7 +95,7 @@
 
     <!-- Third party libraries -->
     <picketbox.version>4.0.19.SP4</picketbox.version>
-    <picketlink.version>2.5.3.SP1</picketlink.version>
+    <picketlink.version>2.5.3.SP4</picketlink.version>
     <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
     <servlet-api.version>2.5</servlet-api.version>
     <jetty.version>8.1.9.v20130131</jetty.version>
@@ -117,6 +117,8 @@
     <module>overlord-commons-idp</module>
     <module>overlord-commons-idp-eap6</module>
     <module>overlord-commons-idp-tomcat7</module>
+    <module>overlord-commons-idp-jetty8</module>
+    <module>overlord-commons-idp-fuse61</module>
     <module>overlord-commons-installer</module>
     <module>overlord-commons-maven-plugin</module>
     <module>overlord-commons-osgi</module>
@@ -261,13 +263,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      
-      <!-- APIs -->
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>${servlet-api.version}</version>
-      </dependency>
 
       <!-- PicketLink -->
       <dependency>
@@ -380,6 +375,11 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-auth</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -409,7 +409,13 @@
         <version>${project.version}</version>
         <type>war</type>
       </dependency>
-    </dependencies>
+      <dependency>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-idp-fuse61</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+      </dependency>
+      </dependencies>
   </dependencyManagement>
 
   <reporting>

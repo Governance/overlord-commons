@@ -24,9 +24,6 @@
     <property name="overlord-commons.jetty.lib.dir" location="${overlord-commons.appserver.dir}/lib/ext" />
     <property name="overlord-commons.idp.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-idp-jetty8/${overlord-commons.version}/overlord-commons-idp-jetty8-${overlord-commons.version}.war" />
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
-    <property name="overlord-commons.services.file" value="${overlord-commons.install.dir}/overlord-commons-services.jar" />
-
-    <property name="overlord-commons.lib.overlord-commons-services.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-services/${overlord-commons.version}/overlord-commons-services-${overlord-commons.version}.jar" />
   </target>
 
   <!-- Do some config -->
@@ -57,17 +54,10 @@
       <available file="${overlord-commons.idp.file}" />
     </condition>
     <antcall target="download-idp" />
-    <condition property="overlord-commons.services.file.exists">
-      <available file="${overlord-commons.services.file}" />
-    </condition>
-    <antcall target="download-services" />
     
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.jetty.deploy.dir}/overlord-idp.war" overwrite="true" />
     
-    <echo>Deploying dependency JARs into jett/lib/ext</echo>
-    <copy file="${overlord-commons.services.file}" tofile="${overlord-commons.jetty.lib.dir}/overlord-commons-services-${overlord-commons.version}.jar" overwrite="true" />
-
     <echo>Creating SAML authentication keystore</echo>
     <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
     <property name="overlord-commons.overlord-alias.password" value="overlord99" />
@@ -106,11 +96,6 @@
   <!-- Download the IDP WAR -->
   <target name="download-idp" unless="overlord-commons.idp.file.exists">
     <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
-  </target>
-
-  <!-- Download the services jar -->
-  <target name="download-services" unless="overlord-commons.services.file.exists">
-    <get src="${overlord-commons.lib.overlord-commons-services.download.url}" dest="${overlord-commons.services.file}" usetimestamp="true" />
   </target>
 
 </project>

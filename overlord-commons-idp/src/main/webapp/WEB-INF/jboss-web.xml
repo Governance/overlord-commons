@@ -1,4 +1,0 @@
-<jboss-web>
-  <security-domain>overlord-idp</security-domain>
-  <context-root>overlord-idp</context-root>
-</jboss-web>

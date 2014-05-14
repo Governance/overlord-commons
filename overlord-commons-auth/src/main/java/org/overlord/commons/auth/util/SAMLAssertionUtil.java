@@ -28,7 +28,8 @@ import org.overlord.commons.services.ServiceRegistryUtil;
  */
 public class SAMLAssertionUtil {
 	
-	private static SAMLAssertionFactory cachedFactory;
+    private static final SAMLAssertionFactory standardFactory = new StandardSAMLAssertionFactory();
+    private static SAMLAssertionFactory cachedFactory;
 
     /**
      * Create a SAML assertion that is good for 10s.
@@ -64,7 +65,11 @@ public class SAMLAssertionUtil {
 	 * @return the SAML assertion factory for the current runtime platform
 	 */
 	private static SAMLAssertionFactory getSAMLAssertionFactory() {
-		if (cachedFactory != null) {
+        if (standardFactory.accept()) {
+            return standardFactory;
+        }
+
+        if (cachedFactory != null) {
 			return cachedFactory;
 		}
 		

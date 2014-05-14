@@ -1,11 +1,8 @@
-<jboss-deployment-structure>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
   <deployment>
-    <!-- Add picketlink module dependency -->
     <dependencies>
       <module name="org.picketlink" />
-      <module name="org.overlord.commons.overlord-commons-auth" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>
-

@@ -10,16 +10,10 @@
     <property name="overlord-commons.jboss.config.dir" value="${overlord-commons.appserver.dir}/standalone/configuration" />
     
     <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap6/${overlord-commons.version}/overlord-commons-idp-eap6-${overlord-commons.version}.war" />
-    <property name="overlord-commons.services.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-services/${overlord-commons.version}/overlord-commons-services-${overlord-commons.version}.war" />
-    <property name="overlord-commons.auth.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth/${overlord-commons.version}/overlord-commons-auth-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.jboss7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-jboss7/${overlord-commons.version}/overlord-commons-auth-jboss7-${overlord-commons.version}.war" />
-    <property name="overlord-commons.auth.tomcat7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-tomcat7/${overlord-commons.version}/overlord-commons-auth-tomcat7-${overlord-commons.version}.war" />
 
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap6.war" />
-    <property name="overlord-commons.services.file" value="${overlord-commons.install.dir}/overlord-commons-services.jar" />
-    <property name="overlord-commons.auth.file" value="${overlord-commons.install.dir}/overlord-commons-auth.jar" />
     <property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-jboss7.jar" />
-    <property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-tomcat7.jar" />
     <condition property="standalone-osgi-exists">
       <available file="${overlord-commons.jboss.config.dir}/standalone-osgi.xml" />
     </condition>
@@ -43,22 +37,10 @@
 
   <!-- Install Overlord Commons -->
   <target name="install-overlord-commons" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <condition property="overlord-commons.services.file.exists">
-      <available file="${overlord-commons.services.file}" />
-    </condition>
-    <antcall target="download-services" />
-    <condition property="overlord-commons.auth.file.exists">
-      <available file="${overlord-commons.auth.file}" />
-    </condition>
-    <antcall target="download-auth" />
     <condition property="overlord-commons.auth.jboss7.file.exists">
       <available file="${overlord-commons.auth.jboss7.file}" />
     </condition>
     <antcall target="download-auth-jboss7" />
-    <condition property="overlord-commons.auth.tomcat7.file.exists">
-      <available file="${overlord-commons.auth.tomcat7.file}" />
-    </condition>
-    <antcall target="download-auth-tomcat7" />
     
     <antcall target="install-overlord-idp" />
     <antcall target="install-jboss-eap-6" />
@@ -82,34 +64,16 @@
     <echo message="# Installing into JBoss EAP 6          #" />
     <echo message="########################################" />
     <echo message=" " />
-
-    <!-- Create the Overlord Commons Services module -->
-    <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-services/main" />
-    <copy file="modules/overlord-commons-services-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-services/main/module.xml">
-      <filterset>
-        <filter token="VERSION" value="${overlord-commons.version}"/>
-      </filterset>
-    </copy>
-    <copy file="${overlord-commons.services.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-services/main/overlord-commons-services-${overlord-commons.version}.jar" overwrite="false" />
     
-    <!-- Create the Overlord Commons Auth module -->
-    <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main" />
-    <copy file="modules/overlord-commons-auth-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/module.xml">
-      <filterset>
-        <filter token="VERSION" value="${overlord-commons.version}"/>
-      </filterset>
-    </copy>
-    <copy file="${overlord-commons.auth.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-${overlord-commons.version}.jar" overwrite="false" />
-    <copy file="${overlord-commons.auth.jboss7.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-jboss7-${overlord-commons.version}.jar" overwrite="false" />
-    <copy file="${overlord-commons.auth.tomcat7.file}" 
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth/main/overlord-commons-auth-tomcat7-${overlord-commons.version}.jar" overwrite="false" />
-
     <!-- Create the Overlord Commons Auth Tool module -->
     <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main" />
-    <copy file="modules/overlord-commons-auth-tool-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/module.xml" />
+    <copy file="modules/overlord-commons-auth-tool-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/module.xml">
+      <filterset>
+        <filter token="VERSION" value="${overlord-commons.version}"/>
+      </filterset>
+    </copy>
+    <copy file="${overlord-commons.auth.jboss7.file}" 
+          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/overlord-commons-auth-jboss7-${overlord-commons.version}.jar" overwrite="false" />
 
     <antcall target="install-jboss" />
     <antcall target="configure-standalone-osgi" />
@@ -315,26 +279,11 @@
     <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
   </target>
 
-  <!-- Download the services jar -->
-  <target name="download-services" unless="overlord-commons.services.file.exists">
-    <get src="${overlord-commons.services.download.url}" dest="${overlord-commons.services.file}" usetimestamp="true" />
-  </target>
-  
-  <!-- Download the auth jar -->
-  <target name="download-auth" unless="overlord-commons.auth.file.exists">
-    <get src="${overlord-commons.auth.download.url}" dest="${overlord-commons.auth.file}" usetimestamp="true" />
-  </target>
-
-  <!-- Download the JBoss 7u auth jar -->
+  <!-- Download the JBoss 7 auth jar -->
   <target name="download-auth-jboss7" unless="overlord-commons.auth.jboss7.file.exists">
     <get src="${overlord-commons.auth.jboss7.download.url}" dest="${overlord-commons.auth.jboss7.file}" usetimestamp="true" />
   </target>
 
-  <!-- Download the Tomcat 7 auth jar -->
-  <target name="download-auth-tomcat7" unless="overlord-commons.auth.tomcat7.file.exists">
-    <get src="${overlord-commons.auth.tomcat7.download.url}" dest="${overlord-commons.auth.tomcat7.file}" usetimestamp="true" />
-  </target>
-  
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">
