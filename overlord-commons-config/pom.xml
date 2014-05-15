@@ -16,6 +16,7 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
+    
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
@@ -30,10 +31,24 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric-api</artifactId>
+        <scope>provided</scope>
+     </dependency>
+    <dependency>
       <groupId>org.picketbox</groupId>
       <artifactId>picketbox</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-services</artifactId>
+    </dependency>
+    <!-- Declarative Service Annotations -->
+    <dependency>
+	  <groupId>org.apache.felix</groupId>
+	  <artifactId>org.apache.felix.scr.annotations</artifactId>
+	</dependency>    
   </dependencies>
   
   <build>
@@ -49,14 +64,17 @@
             <Bundle-Version>${project.version}</Bundle-Version>
             <Export-Package>
               org.overlord.commons.config,
-              org.overlord.commons.config.services
+              org.overlord.commons.config.configurator
             </Export-Package>
             <Import-Package>
               org.apache.commons.configuration,
               org.apache.commons.configuration.interpol,
               org.apache.commons.configuration.reloading,
               org.apache.commons.lang.text,
+              org.apache.commons.lang,
               org.osgi.framework,
+              org.overlord.commons.services,
+              io.fabric8.api,
               !org.jboss.security.vault
             </Import-Package>
           </instructions>

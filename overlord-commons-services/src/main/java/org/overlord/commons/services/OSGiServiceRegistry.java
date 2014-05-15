@@ -31,7 +31,7 @@ import org.osgi.framework.ServiceReference;
  * @author eric.wittmann@redhat.com
  */
 public class OSGiServiceRegistry implements ServiceRegistry {
-    
+
     public static final String OSGI_ENABLED_PROP = "overlord-commons-config.osgi-enabled"; //$NON-NLS-1$
 
     /**
@@ -66,13 +66,17 @@ public class OSGiServiceRegistry implements ServiceRegistry {
         Set<T> services = new HashSet<T>();
         try {
             BundleContext context = FrameworkUtil.getBundle(serviceInterface).getBundleContext();
-            ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
-            if (serviceReferences != null) {
-                for (ServiceReference serviceReference : serviceReferences) {
-                    T service = (T) context.getService(serviceReference);
-                    services.add(service);
+            if (context != null) {
+                ServiceReference[] serviceReferences = context.getServiceReferences(
+                        serviceInterface.getName(), null);
+                if (serviceReferences != null) {
+                    for (ServiceReference serviceReference : serviceReferences) {
+                        T service = (T) context.getService(serviceReference);
+                        services.add(service);
+                    }
                 }
             }
+
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);
         }
