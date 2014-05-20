@@ -66,6 +66,18 @@
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
 
     <antcall target="install-admin-user" />
+    
+    <echo>Adding Overlord realm to jetty.xml</echo>
+    <property name="overlord-commons.addRealm.xslt" value="xslt/addRealm-jetty-8.xslt" />
+    <copy file="${overlord-commons.jetty.config.dir}/jetty.xml" tofile="${overlord-commons.jetty.config.dir}/jetty-overlord-backup.xml" overwrite="true" />
+    <xslt 
+      style="${overlord-commons.addRealm.xslt}"
+      in="${overlord-commons.jetty.config.dir}/jetty.xml"
+      out="${overlord-commons.install.dir}/_tmp_jetty.xml">
+    </xslt>
+    <copy file="${overlord-commons.install.dir}/_tmp_jetty.xml" tofile="${overlord-commons.jetty.config.dir}/jetty.xml" overwrite="true" />
+    <delete file="${overlord-commons.install.dir}/_tmp_jetty.xml" />
+
   </target>
 
   <!-- Installs the overlord admin user -->
