@@ -253,7 +253,10 @@
                 <phase>install</phase>
                 <configuration>
                   <tasks>
+                    <property name="overlord-commons.jetty.download.url" value="http://eclipse.org/downloads/download.php?file=/jetty/8.1.14.v20131031/dist/jetty-distribution-8.1.14.v20131031.zip&amp;r=1" />
+                    <get src="${overlord-commons.jetty.download.url}" dest="${basedir}/jetty-distribution-8.1.14.v20131031.zip" usetimestamp="true" />
                     <unzip src="jetty-distribution-8.1.14.v20131031.zip" dest="${project.build.directory}" overwrite="false" />
+                    
                     <property name="appserver.id" value="jetty-8" />
                     <property name="overlord-commons.install.dir" value="${project.build.directory}" />
                     <property name="overlord-commons.appserver.dir" location="${project.build.directory}/jetty-distribution-8.1.14.v20131031" />
