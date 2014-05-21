@@ -23,6 +23,8 @@ import java.util.Set;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.server.Request;
@@ -33,6 +35,8 @@ import org.overlord.commons.auth.util.IRoleGenerator;
 /**
  * Generates user roles when running in Jetty 8.
  */
+@Component(name = "The jetty 8 Role Generator", immediate = true)
+@Service(value = org.overlord.commons.auth.util.IRoleGenerator.class)
 public class Jetty8RoleGenerator implements IRoleGenerator {
 
 	/**
@@ -40,7 +44,7 @@ public class Jetty8RoleGenerator implements IRoleGenerator {
 	 */
 	public Jetty8RoleGenerator() {
 	}
-	
+
 	/**
 	 * @see org.overlord.commons.auth.util.IRoleGenerator#accept()
 	 */
@@ -66,7 +70,7 @@ public class Jetty8RoleGenerator implements IRoleGenerator {
             if (sp != null) {
             	return sp.getRoles();
             }
-            
+
             // If that didn't work, try to rip apart the current request, with specific
             // Jetty knowledge.
             Request jettyRequest = (Request) request;

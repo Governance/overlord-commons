@@ -18,29 +18,41 @@ package org.overlord.commons.services;
 
 import java.util.Set;
 
+import org.osgi.framework.Bundle;
+
 /**
  * Provides simple access to services.
  *
  * @author eric.wittmann@redhat.com
  */
 public class ServiceRegistryUtil {
-    
+
     private static ServiceRegistry registry = null;
-    private static ServiceRegistry getRegistry() {
+
+    private static ServiceRegistry getRegistry(Class serviceInterface) {
         if (registry == null) {
-            registry = createRegistry();
+            registry = createRegistry(serviceInterface);
         }
         return registry;
     }
 
     /**
-     * Creates the appropriate service registry depending on the current runtime 
+     * Creates the appropriate service registry depending on the current runtime
      * environment.
      */
-    private static ServiceRegistry createRegistry() {
+    private static ServiceRegistry createRegistry(Class serviceInterface) {
         if ("true".equals(System.getProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP))) { //$NON-NLS-1$
             return new OSGiServiceRegistry();
         } else {
+            try {
+                Bundle b = org.osgi.framework.FrameworkUtil.getBundle(serviceInterface);
+                if (b != null) {
+                    return new OSGiServiceRegistry();
+                }
+            } catch (NoClassDefFoundError ee) {
+
+            }
+
             return new ServiceLoaderServiceRegistry();
         }
     }
@@ -49,14 +61,14 @@ public class ServiceRegistryUtil {
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
-        return getRegistry().getSingleService(serviceInterface);
+        return getRegistry(serviceInterface).getSingleService(serviceInterface);
     }
 
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> Set<T> getServices(Class<T> serviceInterface) {
-        return getRegistry().getServices(serviceInterface);
+        return getRegistry(serviceInterface).getServices(serviceInterface);
     }
 
 }
