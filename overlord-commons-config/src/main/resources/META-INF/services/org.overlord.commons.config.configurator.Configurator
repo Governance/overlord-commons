@@ -1,0 +1,4 @@
+org.overlord.commons.config.configurator.JbossConfigurator
+org.overlord.commons.config.configurator.JettyConfigurator
+org.overlord.commons.config.configurator.TomcatConfigurator
+org.overlord.commons.config.configurator.UserHomeConfigurator

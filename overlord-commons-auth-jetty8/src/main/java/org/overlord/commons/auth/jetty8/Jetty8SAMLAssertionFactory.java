@@ -23,6 +23,8 @@ import java.util.Set;
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.server.Request;
@@ -38,8 +40,10 @@ import org.overlord.commons.auth.util.SAMLBearerTokenUtil;
  *
  * @author eric.wittmann@redhat.com
  */
+@Component(name = "The jetty 8 saml Assertion Factory", immediate = true)
+@Service(value = org.overlord.commons.auth.util.SAMLAssertionFactory.class)
 public class Jetty8SAMLAssertionFactory implements SAMLAssertionFactory {
-    
+
     /**
      * Constructor.
      */
@@ -58,7 +62,7 @@ public class Jetty8SAMLAssertionFactory implements SAMLAssertionFactory {
         }
         return false;
     }
-    
+
     /**
      * @see org.overlord.commons.auth.util.SAMLAssertionFactory#createSAMLAssertion(java.lang.String, java.lang.String, int)
      */

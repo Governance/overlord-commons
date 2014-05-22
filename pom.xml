@@ -100,6 +100,8 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jetty.version>8.1.9.v20130131</jetty.version>
     <tomcat.version>7.0.47</tomcat.version>
+    
+    <fabric8.version>1.0.0.redhat-379</fabric8.version>
   </properties>
 
   <modules>
@@ -179,6 +181,12 @@
           <artifactId>properties-maven-plugin</artifactId>
           <version>1.0-alpha-2</version>
         </plugin>
+		<plugin>
+		  <groupId>org.apache.felix</groupId>
+		  <artifactId>maven-scr-plugin</artifactId>
+		  <version>1.9.0</version>
+		</plugin>
+        
       </plugins>
     </pluginManagement>
 
@@ -250,11 +258,39 @@
           </archive>
         </configuration>
       </plugin>
+	  <plugin>
+		  <groupId>org.apache.felix</groupId>
+		  <artifactId>maven-scr-plugin</artifactId>
+		  <executions>
+		    <execution>
+		      <id>generate-scr-scrdescriptor</id>
+		      <goals>
+		        <goal>scr</goal>
+		      </goals>
+		    </execution>
+	  </executions>
+	  </plugin>
+      
     </plugins>
   </build>
 
   <dependencyManagement>
     <dependencies>
+      
+      <!-- Fabric 8 api library -->
+      <dependency>
+		<groupId>io.fabric8</groupId>
+      	<artifactId>fabric-api</artifactId>
+      	<version>${fabric8.version}</version>
+      </dependency>      
+      
+      <!-- Declarative Service Annotations -->   
+	  <dependency>
+	    <groupId>org.apache.felix</groupId>
+	  	<artifactId>org.apache.felix.scr.annotations</artifactId>
+	  	<version>1.7.0</version>
+	  </dependency>
+    
       <!-- Integration Platform Imports -->
       <dependency>
         <groupId>org.jboss.integration-platform</groupId>
@@ -362,6 +398,7 @@
         <version>2.0.11</version>
       </dependency>
 
+
       <!-- Internal dependencies -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -415,7 +452,8 @@
         <version>${project.version}</version>
         <type>war</type>
       </dependency>
-      </dependencies>
+   
+    </dependencies>
   </dependencyManagement>
 
   <reporting>
@@ -443,6 +481,21 @@
         <updatePolicy>daily</updatePolicy>
       </snapshots>
     </repository>
+    <repository>
+      <id>jboss-fuse-repository</id>
+      <name>JBoss Fuse Public Repository Group</name>
+      <url>http://repository.jboss.org/nexus/content/repositories/fs-releases</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+    </repository>
+    
   </repositories>
 
   <pluginRepositories>

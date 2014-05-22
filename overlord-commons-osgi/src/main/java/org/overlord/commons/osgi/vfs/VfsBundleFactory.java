@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Service;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
@@ -28,10 +30,13 @@ import org.osgi.framework.FrameworkUtil;
  *
  * @author eric.wittmann@redhat.com
  */
+
+@Component(name = "The Vfs Bundle Factory", immediate = true)
+@Service(value = org.overlord.commons.osgi.vfs.IVfsBundleFactory.class)
 public class VfsBundleFactory implements IVfsBundleFactory {
-    
+
     private final Map<Long, VfsBundle> vfsBundleCache = new HashMap<Long, VfsBundle>();
-    
+
     /**
      * Constructor.
      */
@@ -53,18 +58,18 @@ public class VfsBundleFactory implements IVfsBundleFactory {
                 break;
             }
         }
-        
+
         // Shouldn't happen, but throw a runtime exception if it does.
         if (theBundle == null) {
             throw new RuntimeException(Messages.getString("VfsBundleFactory.BundleNotFound") + url); //$NON-NLS-1$
         }
-        
+
         VfsBundle vfsBundle = vfsBundleCache.get(bundleId);
         if (vfsBundle == null) {
             vfsBundle = new VfsBundle(theBundle);
             vfsBundleCache.put(bundleId, vfsBundle);
         }
-        
+
         return vfsBundle;
     }
 

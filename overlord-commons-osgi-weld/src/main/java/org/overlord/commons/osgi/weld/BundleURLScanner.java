@@ -43,6 +43,9 @@ public class BundleURLScanner extends URLScanner {
 
     private static final Logger log = LoggerFactory.getLogger(BundleURLScanner.class);
 
+    private static final int MAXIMUM_TRIES = 10;
+
+    private static final int MILLISECONDS_WAIT = 500;
     /**
      * Constructor.
      * @param classLoader
@@ -51,14 +54,24 @@ public class BundleURLScanner extends URLScanner {
     public BundleURLScanner(ClassLoader classLoader, ServletContext context) {
         super(classLoader);
     }
-    
+
     /**
      * @see org.jboss.weld.environment.servlet.deployment.URLScanner#handleURL(java.net.URL, java.util.Set, java.util.Set)
      */
     @Override
     protected void handleURL(URL url, Set<String> classes, Set<URL> urls) {
         BundleContext bundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
-        ServiceReference serviceReference = bundleContext.getServiceReference(IVfsBundleFactory.class.getName());
+        ServiceReference serviceReference = null;
+        int tries = 0;
+        do {
+            try {
+                Thread.sleep(MILLISECONDS_WAIT);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            serviceReference = bundleContext.getServiceReference(IVfsBundleFactory.class.getName());
+        } while (serviceReference == null && tries < MAXIMUM_TRIES);
+
         if (serviceReference == null)
             throw new RuntimeException("Failed to find OSGi service [IVfsBundleFactory]."); //$NON-NLS-1$
         IVfsBundleFactory factory = (IVfsBundleFactory) bundleContext.getService(serviceReference);
@@ -79,7 +92,7 @@ public class BundleURLScanner extends URLScanner {
         }
         handle(paths, classes, urls);
     }
-    
+
     /**
      * @see org.jboss.weld.environment.servlet.deployment.URLScanner#scanResources(java.lang.String[], java.util.Set, java.util.Set)
      */

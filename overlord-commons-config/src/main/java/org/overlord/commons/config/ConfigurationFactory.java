@@ -15,17 +15,16 @@
  */
 package org.overlord.commons.config;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.Set;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.overlord.commons.config.configurator.Configurator;
 import org.overlord.commons.config.vault.VaultLookup;
+import org.overlord.commons.services.ServiceRegistryUtil;
 
 /**
  * Factory used to create instances of {@link Configuration}, used by various
@@ -36,6 +35,7 @@ import org.overlord.commons.config.vault.VaultLookup;
 public class ConfigurationFactory {
 
     private static boolean globalLookupsRegistered = false;
+
 
     /**
      * Shared method used to locate and load configuration information from a number of
@@ -53,14 +53,15 @@ public class ConfigurationFactory {
         try {
             CompositeConfiguration config = new CompositeConfiguration();
             config.addConfiguration(new SystemPropertiesConfiguration());
-            URL url = findConfig(configFileOverride, standardConfigFileName);
-            if (url != null) {
-                PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(url);
-                FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
-                fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);
-                propertiesConfiguration.setReloadingStrategy(fileChangedReloadingStrategy);
-                config.addConfiguration(propertiesConfiguration);
+
+            Set<Configurator> configurators = ServiceRegistryUtil.getServices(Configurator.class);
+            if (!configurators.isEmpty()) {
+                for (Configurator configurator : configurators) {
+                    configurator.addConfiguration(config, configFileOverride, standardConfigFileName,
+                            refreshDelay);
+                }
             }
+
             if (defaultConfigPath != null) {
                 config.addConfiguration(new PropertiesConfiguration(defaultConfigLoader.getResource(defaultConfigPath)));
             }
@@ -81,96 +82,5 @@ public class ConfigurationFactory {
         }
     }
 
-    /**
-     * Try to find the configuration file. This will look for the config file in a number of places.
-     *
-     * @param configFileOverride
-     * @param standardConfigFileName
-     */
-    private static URL findConfig(String configFileOverride, String standardConfigFileName) {
-        // If a config file was given (passed in to this method) then try to
-        // find it.  If not, then look for a 'standard' config file.
-        try {
-            if (configFileOverride != null) {
-                // Check on the classpath
-                URL fromClasspath = Thread.currentThread().getContextClassLoader().getResource(configFileOverride);
-                if (fromClasspath != null)
-                    return fromClasspath;
-
-                // Check on the file system
-                File file = new File(configFileOverride);
-                if (file.isFile())
-                    return file.toURI().toURL();
-            } else {
-                // Check the current user's home directory
-                String userHomeDir = System.getProperty("user.home"); //$NON-NLS-1$
-                if (userHomeDir != null) {
-                    File dirFile = new File(userHomeDir);
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-
-                // Next, check for JBoss
-                String jbossConfigDir = System.getProperty("jboss.server.config.dir"); //$NON-NLS-1$
-                if (jbossConfigDir != null) {
-                    File dirFile = new File(jbossConfigDir);
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-                String jbossConfigUrl = System.getProperty("jboss.server.config.url"); //$NON-NLS-1$
-                if (jbossConfigUrl != null) {
-                    File dirFile = new File(jbossConfigUrl);
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-                
-                // Then check for Tomcat
-                String tomcatDir = System.getProperty("catalina.home"); //$NON-NLS-1$
-                if (tomcatDir != null) {
-                    File dirFile = new File(tomcatDir, "conf"); //$NON-NLS-1$
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-
-                // Now check for karaf
-                String karafDir = System.getProperty("karaf.home"); //$NON-NLS-1$
-                if (karafDir != null) {
-                    File dirFile = new File(karafDir, "etc"); //$NON-NLS-1$
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-
-                // Now check for jetty
-                String jettyDir = System.getProperty("jetty.home"); //$NON-NLS-1$
-                if (jettyDir != null) {
-                    File dirFile = new File(jettyDir, "etc"); //$NON-NLS-1$
-                    if (dirFile.isDirectory()) {
-                        File cfile = new File(dirFile, standardConfigFileName);
-                        if (cfile.isFile())
-                            return cfile.toURI().toURL();
-                    }
-                }
-                
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
 
 }

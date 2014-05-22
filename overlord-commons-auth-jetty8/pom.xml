@@ -49,7 +49,12 @@
       <artifactId>org.osgi.core</artifactId>
       <scope>provided</scope>
     </dependency>
-
+    
+    <!-- Declarative Service Annotations -->
+    <dependency>
+	  <groupId>org.apache.felix</groupId>
+	  <artifactId>org.apache.felix.scr.annotations</artifactId>
+	</dependency>
     <!-- Common libraries -->
     <dependency>
       <groupId>commons-codec</groupId>
@@ -68,7 +73,6 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Bundle-Activator>org.overlord.commons.auth.jetty8.Activator</Bundle-Activator>
             <Export-Package>
               org.overlord.commons.auth.jetty8
             </Export-Package>
