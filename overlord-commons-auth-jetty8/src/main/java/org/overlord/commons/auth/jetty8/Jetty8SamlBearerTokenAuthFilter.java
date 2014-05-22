@@ -41,6 +41,7 @@ import org.overlord.commons.auth.filters.SimplePrincipal;
  *
  * @author eric.wittmann@redhat.com
  */
+@Deprecated
 public class Jetty8SamlBearerTokenAuthFilter extends SamlBearerTokenAuthFilter {
 
     public static final ThreadLocal<SimplePrincipal> TL_principal = new ThreadLocal<SimplePrincipal>();

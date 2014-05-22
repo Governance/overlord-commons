@@ -64,6 +64,8 @@ import org.w3c.dom.Document;
  */
 public class SamlBearerTokenAuthFilter implements Filter {
     
+    public static final ThreadLocal<SimplePrincipal> TL_principal = new ThreadLocal<SimplePrincipal>();
+
     // Indicates that the request has been logged in and does not need to be wrapped.
     private static final SimplePrincipal NO_PROXY = new SimplePrincipal(null);
 
@@ -203,6 +205,8 @@ public class SamlBearerTokenAuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
+        TL_principal.remove();
+
         HttpServletRequest req = (HttpServletRequest) request;
         String authHeader = req.getHeader("Authorization"); //$NON-NLS-1$
         Creds credentials = parseAuthorizationHeader(authHeader);
@@ -391,6 +395,8 @@ public class SamlBearerTokenAuthFilter implements Filter {
                 }
             }
         }
+        
+        TL_principal.set(identity);
 
         return identity;
     }

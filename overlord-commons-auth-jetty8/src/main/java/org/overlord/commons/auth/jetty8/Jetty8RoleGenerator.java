@@ -27,7 +27,6 @@ import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.UserIdentity;
-import org.overlord.commons.auth.filters.SimplePrincipal;
 import org.overlord.commons.auth.util.IRoleGenerator;
 
 /**
@@ -60,13 +59,6 @@ public class Jetty8RoleGenerator implements IRoleGenerator {
 	@Override
 	public Set<String> generateRoles(HttpServletRequest request) {
         try {
-            // Try our thread local first.  If we're using our own authentication mechanism,
-            // we would have stored it in the ThreadLocal for just this purpose.
-            SimplePrincipal sp = Jetty8SamlBearerTokenAuthFilter.TL_principal.get();
-            if (sp != null) {
-            	return sp.getRoles();
-            }
-            
             // If that didn't work, try to rip apart the current request, with specific
             // Jetty knowledge.
             Request jettyRequest = (Request) request;

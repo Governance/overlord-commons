@@ -11,6 +11,11 @@
     <xsl:copy>
       <xsl:apply-templates select="@*|node()|text()" />
     </xsl:copy>
+    
+    <xsl:text>
+    
+    </xsl:text>
+    <Set class="org.eclipse.jetty.util.resource.Resource" name="defaultUseCaches">false</Set>
 
     <xsl:text>
     
