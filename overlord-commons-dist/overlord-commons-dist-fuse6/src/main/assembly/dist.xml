@@ -13,7 +13,7 @@
       	<include>*</include>
       </includes>
       <outputDirectory>overlord/commons.profile/</outputDirectory>
-      <filtered>false</filtered>
+      <filtered>true</filtered>
       <directoryMode>0755</directoryMode>
       <fileMode>0755</fileMode>
     </fileSet>

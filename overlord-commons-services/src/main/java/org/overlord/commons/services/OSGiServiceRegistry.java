@@ -19,7 +19,9 @@ package org.overlord.commons.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -65,7 +67,11 @@ public class OSGiServiceRegistry implements ServiceRegistry {
     public <T> Set<T> getServices(Class<T> serviceInterface) {
         Set<T> services = new HashSet<T>();
         try {
-            BundleContext context = FrameworkUtil.getBundle(serviceInterface).getBundleContext();
+            Bundle bundle=FrameworkUtil.getBundle(serviceInterface);
+            if(bundle.getState()==Bundle.RESOLVED){
+                bundle.start();
+            }
+            BundleContext context =bundle.getBundleContext();
             if (context != null) {
                 ServiceReference[] serviceReferences = context.getServiceReferences(
                         serviceInterface.getName(), null);
@@ -77,10 +83,11 @@ public class OSGiServiceRegistry implements ServiceRegistry {
                 }
             }
 
-        } catch (InvalidSyntaxException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return services;
     }
 
 }
+
