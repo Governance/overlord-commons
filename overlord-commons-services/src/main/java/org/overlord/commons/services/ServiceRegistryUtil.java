@@ -29,7 +29,7 @@ public class ServiceRegistryUtil {
 
     private static ServiceRegistry registry = null;
 
-    private static ServiceRegistry getRegistry(Class serviceInterface) {
+    private static ServiceRegistry getRegistry(Class<?> serviceInterface) {
         if (registry == null) {
             registry = createRegistry(serviceInterface);
         }
@@ -40,7 +40,7 @@ public class ServiceRegistryUtil {
      * Creates the appropriate service registry depending on the current runtime
      * environment.
      */
-    private static ServiceRegistry createRegistry(Class serviceInterface) {
+    private static ServiceRegistry createRegistry(Class<?> serviceInterface) {
         if ("true".equals(System.getProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP))) { //$NON-NLS-1$
             return new OSGiServiceRegistry();
         } else {

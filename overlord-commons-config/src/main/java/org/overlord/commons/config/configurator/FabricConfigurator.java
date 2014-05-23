@@ -70,9 +70,9 @@ public final class FabricConfigurator extends AbstractConfigurator {
                 && fabricService.getCurrentContainer().getOverlayProfile() != null) {
 
             Profile profile = fabricService.getCurrentContainer().getOverlayProfile();
-            String file_name = "";
-            if (urlFile.contains(".")) {
-                file_name = urlFile.substring(0, urlFile.lastIndexOf("."));
+            String file_name = ""; //$NON-NLS-1$
+            if (urlFile.contains(".")) { //$NON-NLS-1$
+                file_name = urlFile.substring(0, urlFile.lastIndexOf(".")); //$NON-NLS-1$
             } else {
                 file_name = urlFile;
             }
@@ -122,7 +122,7 @@ public final class FabricConfigurator extends AbstractConfigurator {
     protected URL getServerConfigUrl(String standardConfigFileName) {
         URL url = null;
         try {
-            url = new URL("profile:" + standardConfigFileName);
+            url = new URL("profile:" + standardConfigFileName); //$NON-NLS-1$
         } catch (MalformedURLException ee) {
 
         }
