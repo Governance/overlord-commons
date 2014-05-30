@@ -17,8 +17,9 @@
 package org.overlord.commons.services;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -43,15 +44,19 @@ public class ServiceLoaderServiceRegistry implements ServiceRegistry {
             return (T) serviceCache.get(serviceInterface);
 
         T rval = null;
-        for (T service : ServiceLoader.load(serviceInterface)) {
-            if (rval == null) {
-                rval = service;
-                serviceCache.put(serviceInterface, rval);
-                break;
-            } else {
-                throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
+        try {
+            for (T service : ServiceLoader.load(serviceInterface)) {
+                if (rval == null) {
+                    rval = service;
+                    break;
+                } else {
+                    throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
+                }
             }
+        } catch (ServiceConfigurationError sce) {
+            // No services found - don't check again.
         }
+        serviceCache.put(serviceInterface, rval);
         return rval;
     }
 
@@ -64,9 +69,13 @@ public class ServiceLoaderServiceRegistry implements ServiceRegistry {
         if (servicesCache.containsKey(serviceInterface))
             return (Set<T>) servicesCache.get(serviceInterface);
 
-        Set<T> services = new HashSet<T>();
-        for (T service : ServiceLoader.load(serviceInterface)) {
-            services.add(service);
+        Set<T> services = new LinkedHashSet<T>();
+        try {
+            for (T service : ServiceLoader.load(serviceInterface)) {
+                services.add(service);
+            }
+        } catch (ServiceConfigurationError sce) {
+            // No services found - don't check again.
         }
         servicesCache.put(serviceInterface, services);
         return services;
