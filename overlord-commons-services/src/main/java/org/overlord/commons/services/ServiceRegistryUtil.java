@@ -18,8 +18,6 @@ package org.overlord.commons.services;
 
 import java.util.Set;
 
-import org.osgi.framework.Bundle;
-
 /**
  * Provides simple access to services.
  *
@@ -27,33 +25,17 @@ import org.osgi.framework.Bundle;
  */
 public class ServiceRegistryUtil {
 
-    private static ServiceRegistry registry = null;
-
-    private static ServiceRegistry getRegistry(Class<?> serviceInterface) {
-        if (registry == null) {
-            registry = createRegistry(serviceInterface);
+    private static CompositeServiceRegistry registry = new CompositeServiceRegistry();
+    static {
+        try {
+            registry.addRegistry(new ServiceLoaderServiceRegistry());
+        } catch (Throwable t) {
+            // do nothing
         }
-        return registry;
-    }
-
-    /**
-     * Creates the appropriate service registry depending on the current runtime
-     * environment.
-     */
-    private static ServiceRegistry createRegistry(Class<?> serviceInterface) {
-        if ("true".equals(System.getProperty(OSGiServiceRegistry.OSGI_ENABLED_PROP))) { //$NON-NLS-1$
-            return new OSGiServiceRegistry();
-        } else {
-            try {
-                Bundle b = org.osgi.framework.FrameworkUtil.getBundle(serviceInterface);
-                if (b != null) {
-                    return new OSGiServiceRegistry();
-                }
-            } catch (NoClassDefFoundError ee) {
-
-            }
-
-            return new ServiceLoaderServiceRegistry();
+        try {
+            registry.addRegistry(new OSGiServiceRegistry());
+        } catch (Throwable t) {
+            // do nothing
         }
     }
 
@@ -61,14 +43,14 @@ public class ServiceRegistryUtil {
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
-        return getRegistry(serviceInterface).getSingleService(serviceInterface);
+        return registry.getSingleService(serviceInterface);
     }
 
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
      */
     public static <T> Set<T> getServices(Class<T> serviceInterface) {
-        return getRegistry(serviceInterface).getServices(serviceInterface);
+        return registry.getServices(serviceInterface);
     }
 
 }

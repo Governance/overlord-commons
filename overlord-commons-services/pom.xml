@@ -29,7 +29,6 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Bundle-Activator>org.overlord.commons.services.Activator</Bundle-Activator>
             <Export-Package>
               org.overlord.commons.services
             </Export-Package>

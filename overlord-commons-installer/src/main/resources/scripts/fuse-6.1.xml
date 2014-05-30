@@ -50,6 +50,26 @@
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
 
     <antcall target="install-admin-user" />
+    
+    <echo>Adding Overlord realm to jetty.xml</echo>
+    <property name="overlord-commons.xslt-dir" location="xslt" />
+    <property name="overlord-commons.configure.dtd" location="${overlord-commons.xslt-dir}/configure.dtd" />
+    <property name="overlord-commons.addRealm.xslt" location="${overlord-commons.xslt-dir}/addRealm-fuse-6.1.xslt" />
+    <copy file="${overlord-commons.fuse.config.dir}/jetty.xml" tofile="${overlord-commons.fuse.config.dir}/jetty-overlord-backup.xml" overwrite="true" />
+    <xslt 
+      style="${overlord-commons.addRealm.xslt}"
+      in="${overlord-commons.fuse.config.dir}/jetty.xml"
+      out="${overlord-commons.install.dir}/_tmp_jetty.xml">
+          <xmlcatalog>
+            <dtd publicId="-//Mort Bay Consulting//DTD Configure//EN"
+                 location="${overlord-commons.configure.dtd}" />
+            <dtd publicId="-//Mort Bay Consulting//
+DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
+            
+          </xmlcatalog>
+    </xslt>
+    <copy file="${overlord-commons.install.dir}/_tmp_jetty.xml" tofile="${overlord-commons.fuse.config.dir}/jetty.xml" overwrite="true" />
+    <delete file="${overlord-commons.install.dir}/_tmp_jetty.xml" />
   </target>
 
   <!-- Installs the overlord admin user -->

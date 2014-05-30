@@ -45,31 +45,32 @@ public final class FabricConfigurator extends AbstractConfigurator {
      * Instantiates a new fabric configurator.
      */
     public FabricConfigurator() {
-
     }
 
     /**
-     * Sets the service.
+     * Lazy load the fabric service.
      */
-    private void setService() {
-        fabricService = ServiceRegistryUtil.getSingleService(FabricService.class);
+    private FabricService getFabricService() {
+        if (fabricService == null) {
+            try {
+                fabricService = ServiceRegistryUtil.getSingleService(FabricService.class);
+            } catch (Throwable t) {
+            }
+        }
+        return fabricService;
     }
 
     /**
      * Gets the properties.
-     *
+     * 
      * @param urlFile
-     *            the url file
      * @return the properties
      */
     protected Map<String, String> getProperties(String urlFile) {
-        if(fabricService==null){
-            setService();
-        }
-        if (fabricService != null && fabricService.getCurrentContainer() != null
-                && fabricService.getCurrentContainer().getOverlayProfile() != null) {
+        if (getFabricService() != null && getFabricService().getCurrentContainer() != null
+                && getFabricService().getCurrentContainer().getOverlayProfile() != null) {
 
-            Profile profile = fabricService.getCurrentContainer().getOverlayProfile();
+            Profile profile = getFabricService().getCurrentContainer().getOverlayProfile();
             String file_name = ""; //$NON-NLS-1$
             if (urlFile.contains(".")) { //$NON-NLS-1$
                 file_name = urlFile.substring(0, urlFile.lastIndexOf(".")); //$NON-NLS-1$
@@ -80,21 +81,14 @@ public final class FabricConfigurator extends AbstractConfigurator {
             return toReturn;
         }
         return null;
-
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#
-     * setConfigurationFromServerApi
-     * (org.apache.commons.configuration.Configuration, java.lang.String,
-     * java.lang.String)
+    /**
+     * @see org.overlord.commons.config.configurator.AbstractConfigurator#setConfigurationFromServerApi(org.apache.commons.configuration.Configuration, java.lang.String, java.lang.String)
      */
     @Override
     protected boolean setConfigurationFromServerApi(Configuration config, String configFileOverride,
             String standardConfigFileName) {
-
         Map<String, String> props = null;
         if (StringUtils.isNotBlank(standardConfigFileName)) {
             props = this.getProperties(standardConfigFileName);
@@ -112,11 +106,8 @@ public final class FabricConfigurator extends AbstractConfigurator {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#
-     * getServerConfigUrl(java.lang.String)
+    /**
+     * @see org.overlord.commons.config.configurator.AbstractConfigurator#getServerConfigUrl(java.lang.String)
      */
     @Override
     protected URL getServerConfigUrl(String standardConfigFileName) {

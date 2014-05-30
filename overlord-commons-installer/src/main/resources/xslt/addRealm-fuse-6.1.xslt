@@ -30,14 +30,17 @@
     <xsl:text>
     </xsl:text>
     <Call name="addBean"><xsl:text>
-      </xsl:text><Arg><xsl:text>
-        </xsl:text><New class="org.eclipse.jetty.security.HashLoginService"><xsl:text>
-          </xsl:text><Set name="name">Overlord</Set><xsl:text>
-          </xsl:text><Set name="config"><xsl:text>
-            </xsl:text><SystemProperty name="jetty.home.url" default="." />/etc/realm.properties</Set><xsl:text>
-          </xsl:text><Set name="refreshInterval">0</Set><xsl:text>
-        </xsl:text></New><xsl:text>
-      </xsl:text></Arg><xsl:text>
+        </xsl:text><Arg><xsl:text>
+            </xsl:text><New class="org.eclipse.jetty.plus.jaas.JAASLoginService"><xsl:text>
+                </xsl:text><Set name="name">Overlord</Set><xsl:text>
+                </xsl:text><Set name="loginModuleName">karaf</Set><xsl:text>
+                </xsl:text><Set name="roleClassNames"><xsl:text>
+                    </xsl:text><Array type="java.lang.String"><xsl:text>
+                        </xsl:text><Item>org.apache.karaf.jaas.boot.principal.RolePrincipal</Item><xsl:text>
+                    </xsl:text></Array><xsl:text>
+                </xsl:text></Set><xsl:text>
+            </xsl:text></New><xsl:text>
+        </xsl:text></Arg><xsl:text>
     </xsl:text></Call>
   </xsl:template>
 

@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -34,7 +33,11 @@ import org.osgi.framework.ServiceReference;
  */
 public class OSGiServiceRegistry implements ServiceRegistry {
 
-    public static final String OSGI_ENABLED_PROP = "overlord-commons-config.osgi-enabled"; //$NON-NLS-1$
+    /**
+     * Constructor.
+     */
+    public OSGiServiceRegistry() {
+    }
 
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
@@ -45,13 +48,16 @@ public class OSGiServiceRegistry implements ServiceRegistry {
         // TODO use the osgi service tracker here
         T service = null;
         try {
-            BundleContext context = FrameworkUtil.getBundle(serviceInterface).getBundleContext();
-            ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
-            if (serviceReferences != null) {
-                if (serviceReferences.length == 1)
-                    service = (T) context.getService(serviceReferences[0]);
-                else
-                    throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
+            Bundle bundle = FrameworkUtil.getBundle(serviceInterface);
+            if (bundle != null) {
+                BundleContext context = bundle.getBundleContext();
+                ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
+                if (serviceReferences != null) {
+                    if (serviceReferences.length == 1)
+                        service = (T) context.getService(serviceReferences[0]);
+                    else
+                        throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
+                }
             }
         } catch (InvalidSyntaxException e) {
             throw new RuntimeException(e);
@@ -67,22 +73,23 @@ public class OSGiServiceRegistry implements ServiceRegistry {
     public <T> Set<T> getServices(Class<T> serviceInterface) {
         Set<T> services = new HashSet<T>();
         try {
-            Bundle bundle=FrameworkUtil.getBundle(serviceInterface);
-            if(bundle.getState()==Bundle.RESOLVED){
-                bundle.start();
-            }
-            BundleContext context =bundle.getBundleContext();
-            if (context != null) {
-                ServiceReference[] serviceReferences = context.getServiceReferences(
-                        serviceInterface.getName(), null);
-                if (serviceReferences != null) {
-                    for (ServiceReference serviceReference : serviceReferences) {
-                        T service = (T) context.getService(serviceReference);
-                        services.add(service);
+            Bundle bundle = FrameworkUtil.getBundle(serviceInterface);
+            if (bundle != null) {
+                if (bundle.getState() == Bundle.RESOLVED) {
+                    bundle.start();
+                }
+                BundleContext context = bundle.getBundleContext();
+                if (context != null) {
+                    ServiceReference[] serviceReferences = context.getServiceReferences(
+                            serviceInterface.getName(), null);
+                    if (serviceReferences != null) {
+                        for (ServiceReference serviceReference : serviceReferences) {
+                            T service = (T) context.getService(serviceReference);
+                            services.add(service);
+                        }
                     }
                 }
             }
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
