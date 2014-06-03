@@ -26,6 +26,7 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.jboss.weld.environment.servlet.deployment.URLScanner;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
@@ -35,7 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A {@link URLScanner} capable of running in an OSGi environment.
+ * A {@link URLScanner} capable of running in an OSGi environment.  This class allows Weld to actually
+ * scan the contents of bundles it thinks may contain injectable classes.  It does this by using
+ * the overlord commons VFS service to crack open bundles as normal JAR files.
  *
  * @author eric.wittmann@redhat.com
  */
@@ -44,8 +47,8 @@ public class BundleURLScanner extends URLScanner {
     private static final Logger log = LoggerFactory.getLogger(BundleURLScanner.class);
 
     private static final int MAXIMUM_TRIES = 10;
-
     private static final int MILLISECONDS_WAIT = 500;
+    
     /**
      * Constructor.
      * @param classLoader
@@ -64,12 +67,14 @@ public class BundleURLScanner extends URLScanner {
         ServiceReference serviceReference = null;
         int tries = 0;
         do {
-            try {
-                Thread.sleep(MILLISECONDS_WAIT);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             serviceReference = bundleContext.getServiceReference(IVfsBundleFactory.class.getName());
+            if (serviceReference == null) {
+                try {
+                    Thread.sleep(MILLISECONDS_WAIT);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         } while (serviceReference == null && tries < MAXIMUM_TRIES);
 
         if (serviceReference == null)
@@ -100,7 +105,9 @@ public class BundleURLScanner extends URLScanner {
     public void scanResources(String[] resources, Set<String> classes, Set<URL> urls) {
         for (String resourceName : resources) {
             try {
-                Enumeration<URL> urlEnum = getClassLoader().getResources(resourceName);
+                Bundle bundle = FrameworkUtil.getBundle(BundleURLScanner.class);
+                @SuppressWarnings("unchecked")
+                Enumeration<URL> urlEnum = bundle.getResources(resourceName);
                 while (urlEnum.hasMoreElements()) {
                     URL url = urlEnum.nextElement();
                     handleURL(url, classes, urls);
