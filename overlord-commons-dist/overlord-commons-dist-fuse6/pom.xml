@@ -72,9 +72,19 @@
   <build>
     <plugins>
       <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <!-- Disable 'require plugin versions' due to using snapshot -->
+          <execution>
+            <id>enforce-plugin-versions</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.overlord</groupId>
         <artifactId>overlord-commons-maven-plugin</artifactId>
-        <version>2.0.0.Final</version>
+        <version>${project.version}</version>
         <executions>
           <execution>
             <phase>generate-resources</phase>
