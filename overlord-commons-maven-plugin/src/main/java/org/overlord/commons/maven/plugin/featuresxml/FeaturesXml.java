@@ -112,14 +112,18 @@ public class FeaturesXml {
      * @param name
      * @param version
      * @param bundle
+     * @param startLevel 
      */
-    public void addBundle(String name, String version, String bundle) {
+    public void addBundle(String name, String version, String bundle, String startLevel) {
         String featureKey = name + "||" + version; //$NON-NLS-1$
         Element featureElem = features.get(featureKey);
         if (featureElem != null) {
             Element bundleElem = document.createElementNS(FEATURES_XML_NS, "bundle"); //$NON-NLS-1$
             featureElem.appendChild(bundleElem);
             bundleElem.setTextContent(bundle);
+            if (startLevel != null && !startLevel.trim().isEmpty()) {
+                bundleElem.setAttribute("start-level", startLevel); //$NON-NLS-1$
+            }
         }
     }
     

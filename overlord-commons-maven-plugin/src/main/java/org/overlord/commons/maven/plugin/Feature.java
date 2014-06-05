@@ -29,6 +29,7 @@ public class Feature {
     private String name;
     private String version;
     private String comment;
+    private String startLevel;
     private List<Feature> dependsOnFeatures;
     private List<String> includes;
     private List<String> excludes;
@@ -136,6 +137,20 @@ public class Feature {
      */
     public void setBundles(List<String> bundles) {
         this.bundles = bundles;
+    }
+
+    /**
+     * @return the startLevel
+     */
+    public String getStartLevel() {
+        return startLevel;
+    }
+
+    /**
+     * @param startLevel the startLevel to set
+     */
+    public void setStartLevel(String startLevel) {
+        this.startLevel = startLevel;
     }
     
 }

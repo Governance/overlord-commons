@@ -159,6 +159,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
                     feature.getIncludes());
             PatternExcludesArtifactFilter excludesFilter = new PatternExcludesArtifactFilter(
                     feature.getExcludes());
+            String startLevel = feature.getStartLevel();
             for (DependencyNode dependencyNode : nodes) {
                 if (isSelf(dependencyNode))
                     continue;
@@ -180,7 +181,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
 
                 if (includeBundle) {
                     featuresXml.addBundle(feature.getName(), feature.getVersion(),
-                            formatArtifactAsBundle(artifact));
+                            formatArtifactAsBundle(artifact), startLevel);
                 }
             }
             
@@ -189,7 +190,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             if (bundles != null && !bundles.isEmpty()) {
                 for (String bundle : bundles) {
                     getLog().debug("   Adding explicit bundle: " + bundle); //$NON-NLS-1$
-                    featuresXml.addBundle(feature.getName(), feature.getVersion(), bundle);
+                    featuresXml.addBundle(feature.getName(), feature.getVersion(), bundle, startLevel);
                 }
             }
         }
