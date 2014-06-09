@@ -42,6 +42,12 @@
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-federation</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>xmlsec</artifactId>
+          <groupId>org.apache.santuario</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
