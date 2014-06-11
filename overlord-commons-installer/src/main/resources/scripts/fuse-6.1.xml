@@ -17,15 +17,14 @@
     <echo message="Setting all Overlord Commons properties" />
 
     <property name="overlord-commons.fuse.config.dir" location="${overlord-commons.appserver.dir}/etc" />
+    <property name="overlord-commons.fuse.system.dir" location="${overlord-commons.appserver.dir}/system" />
   </target>
 
   <!-- Do some config -->
   <target name="config">
-  	<echo message="Config before mkdir" />
     <mkdir dir="${overlord-commons.install.dir}" />
-  	<echo message="Config after mkdir" />
   </target>
-  
+
   <!-- Install Everything -->
   <target name="install" depends="all-properties, config">
     <antcall target="install-fuse-6.1" />
@@ -36,16 +35,18 @@
     <fail message="install-vault not supported for Fuse 6.1" />
   </target>
 
-	
- <target name="generate_keystore" depends="all-properties">
+  
+  <!-- Generate the authentication keystore -->
+  <target name="generate_keystore" depends="all-properties">
     <echo>Creating SAML authentication keystore</echo>
     <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
     <property name="overlord-commons.overlord-alias.password" value="overlord99" />
     <genkey keystore="${overlord-commons.fuse.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
             keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
- </target>
-	
+  </target>
+
+  
   <!-- Install Overlord Commons -->
   <target name="install-fuse-6.1" depends="overlord-commons.check" unless="overlord-commons.already.installed">
     <echo message=" " />
@@ -56,6 +57,12 @@
 
 	<antcall target="generate_keystore"/>
     <antcall target="install-admin-user" />
+
+    <!-- Make some changes to Fuse 6.1!! (hopefully temporary) -->
+    <property name="overlord-commons.modules-dir" location="modules" />
+    <property name="overlord-commons.config-dir" location="config" />
+    <copy file="${overlord-commons.config-dir}/jre.properties" todir="${overlord-commons.fuse.config.dir}" overwrite="true" />
+    <copy file="${overlord-commons.modules-dir}/xmlsec-1.5.6.jar" todir="${overlord-commons.fuse.system.dir}/org/apache/santuario/xmlsec/1.5.6" overwrite="true" />
     
     <echo>Adding Overlord realm to jetty.xml</echo>
     <property name="overlord-commons.xslt-dir" location="xslt" />
@@ -78,6 +85,7 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
     <delete file="${overlord-commons.install.dir}/_tmp_jetty.xml" />
   </target>
 
+  
   <!-- Installs the overlord admin user -->
   <target name="install-admin-user">
 
@@ -97,6 +105,7 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
     <replace file="${overlord-commons.fuse.config.dir}/users.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
   </target>
 
+  
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">
