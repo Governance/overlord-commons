@@ -78,9 +78,11 @@ public class RoleCachingHandler implements SAML2Handler {
     public void handleStatusResponseType(SAML2HandlerRequest request, SAML2HandlerResponse response)
             throws ProcessingException {
         HttpSession session = BaseSAML2Handler.getHttpSession(request);
-        List<String> roles = response.getRoles();
-        if (roles != null) {
-            session.setAttribute(GeneralConstants.ROLES_ID, roles);
+        if (session != null) {
+            List<String> roles = response.getRoles();
+            if (roles != null) {
+                session.setAttribute(GeneralConstants.ROLES_ID, roles);
+            }
         }
     }
     
