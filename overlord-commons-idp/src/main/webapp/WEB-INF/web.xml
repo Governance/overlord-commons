@@ -10,6 +10,11 @@
     <session-timeout>480</session-timeout>
   </session-config>
 
+  <context-param>
+    <param-name>org.eclipse.jetty.servlet.SessionIdPathParameterName</param-name>
+    <param-value>none</param-value>
+  </context-param>
+
   <listener>
     <listener-class>org.picketlink.identity.federation.web.listeners.IDPHttpSessionListener</listener-class>
   </listener>
