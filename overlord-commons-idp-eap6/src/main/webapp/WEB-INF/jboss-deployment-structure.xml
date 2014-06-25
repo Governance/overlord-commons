@@ -3,6 +3,7 @@
   <deployment>
     <dependencies>
       <module name="org.picketlink" />
+      <module name="org.picketlink.config" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>
