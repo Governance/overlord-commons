@@ -241,18 +241,8 @@
   </target>
 
   <!-- Installs the overlord admin user -->
-  <target name="install-admin-user" unless="overlord-commons.vault-only">
-
-    <!-- Ask the user for the admin password -->
-    <echo message="" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="!    User Input Required    !" />
-    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-    <echo message="" />
-  	<inputPassword message="Please enter a password for the Overlord 'admin' user: "
-  		confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"
-  	/>
-  	<!-- Create Overlord admin user -->
+  <target name="install-admin-user" depends="password-prompt" unless="overlord-commons.vault-only">
+    <!-- Create Overlord admin user -->
   	<java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
   	          fork="true" dir="${overlord-commons.appserver.dir}"
   	          failonerror="true" maxmemory="128m">
@@ -272,6 +262,20 @@
   	      <arg value="overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
   	 </java>
   	
+  </target>
+  
+  <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
+  <target name="password-prompt" unless="overlord-commons.admin.password">
+    <!-- Ask the user for the admin password -->
+    <echo message="" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="!    User Input Required    !" />
+    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+    <echo message="" />
+    
+    <inputPassword message="Please enter a password for the Overlord 'admin' user: "
+      confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
+    <echo message="" />
   </target>
 
   <!-- Download the IDP WAR -->
