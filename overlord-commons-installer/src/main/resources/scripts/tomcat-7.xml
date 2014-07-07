@@ -68,8 +68,14 @@
   </target>
 
   <!-- Installs the overlord admin user -->
-  <target name="install-admin-user">
-
+  <target name="install-admin-user" depends="password-prompt">
+    <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
+    <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
+    <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+  </target>
+  
+  <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
+  <target name="password-prompt" unless="overlord-commons.admin.password">
     <!-- Ask the user for the admin password -->
     <echo message="" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
@@ -80,10 +86,6 @@
     <inputPassword message="Please enter a password for the Overlord 'admin' user: "
       confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
     <echo message="" />
-    
-    <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
-    <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
-    <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
   </target>
 
   <!-- Check if already installed -->

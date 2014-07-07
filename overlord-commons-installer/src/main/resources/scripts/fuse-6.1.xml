@@ -87,22 +87,24 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
 
   
   <!-- Installs the overlord admin user -->
-  <target name="install-admin-user">
-
+  <target name="install-admin-user" depends="password-prompt">
+    <echo>Configuring Overlord admin user in fuse/etc/users.properties</echo>
+    <copy file="config/fuse-users.properties" tofile="${overlord-commons.fuse.config.dir}/users.properties" overwrite="true" />
+    <replace file="${overlord-commons.fuse.config.dir}/users.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+  </target>
+  
+  <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
+  <target name="password-prompt" unless="overlord-commons.admin.password">
     <!-- Ask the user for the admin password -->
     <echo message="" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <echo message="!    User Input Required    !" />
     <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
     <echo message="" />
+    
     <inputPassword message="Please enter a password for the Overlord 'admin' user: "
       confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
-
     <echo message="" />
-    
-    <echo>Configuring Overlord admin user in fuse/etc/users.properties</echo>
-    <copy file="config/fuse-users.properties" tofile="${overlord-commons.fuse.config.dir}/users.properties" overwrite="true" />
-    <replace file="${overlord-commons.fuse.config.dir}/users.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
   </target>
 
   
