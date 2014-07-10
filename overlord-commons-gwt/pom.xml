@@ -57,6 +57,7 @@
             <Import-Package>
               javax.servlet,
               javax.servlet.http,
+              !javax.inject,
               !com.google.gwt.animation.client, 
               !com.google.gwt.core.client, 
               !com.google.gwt.dom.client, 
