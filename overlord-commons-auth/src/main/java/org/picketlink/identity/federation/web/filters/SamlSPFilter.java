@@ -159,7 +159,7 @@ public class SamlSPFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        boolean postMethod = "POST".equalsIgnoreCase(request.getMethod());
+        boolean postMethod = "POST".equalsIgnoreCase(request.getMethod()); //$NON-NLS-1$
 
         HttpSession session = request.getSession();
 
@@ -170,7 +170,7 @@ public class SamlSPFilter implements Filter {
 
         // Eagerly look for Global LogOut
         String gloStr = request.getParameter(GeneralConstants.GLOBAL_LOGOUT);
-        boolean logOutRequest = isNotNull(gloStr) && "true".equalsIgnoreCase(gloStr);
+        boolean logOutRequest = isNotNull(gloStr) && "true".equalsIgnoreCase(gloStr); //$NON-NLS-1$
 
         if (!postMethod && !logOutRequest) {
             // Check if we are already authenticated
@@ -238,8 +238,8 @@ public class SamlSPFilter implements Filter {
                                 saml2HandlerResponse.getSendRequest());
                     } catch (Exception e) {
                         if (trace)
-                            log.trace("Exception:", e);
-                        throw new ServletException(ErrorCodes.SERVICE_PROVIDER_SERVER_EXCEPTION + "Server Error");
+                            log.trace("Exception:", e); //$NON-NLS-1$
+                        throw new ServletException(ErrorCodes.SERVICE_PROVIDER_SERVER_EXCEPTION + "Server Error"); //$NON-NLS-1$
                     }
                     return;
                 }
@@ -254,7 +254,7 @@ public class SamlSPFilter implements Filter {
                     throw new ServletException(e);
                 }
                 if (!isValid)
-                    throw new ServletException(ErrorCodes.VALIDATION_CHECK_FAILED + "Validity check failed");
+                    throw new ServletException(ErrorCodes.VALIDATION_CHECK_FAILED + "Validity check failed"); //$NON-NLS-1$
 
                 // deal with SAML response from IDP
                 byte[] base64DecodedResponse = SamlPostBindingUtil.base64Decode(samlResponse);
@@ -271,7 +271,7 @@ public class SamlSPFilter implements Filter {
 
                     if (!ignoreSignatures) {
                         if (!verifySignature(documentHolder))
-                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender");
+                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender"); //$NON-NLS-1$
                     }
 
                     Set<SAML2Handler> handlers = chain.handlers();
@@ -316,14 +316,14 @@ public class SamlSPFilter implements Filter {
                         // we are invalidated.
                         RequestDispatcher dispatch = context.getRequestDispatcher(this.logOutPage);
                         if (dispatch == null)
-                            log.error("Cannot dispatch to the logout page: no request dispatcher:" + this.logOutPage);
+                            log.error("Cannot dispatch to the logout page: no request dispatcher:" + this.logOutPage); //$NON-NLS-1$
                         else
                             dispatch.forward(request, response);
                         return;
                     }
                     filterChain.doFilter(request, servletResponse);
                 } catch (Exception e) {
-                    log.error("Server Exception:", e);
+                    log.error("Server Exception:", e); //$NON-NLS-1$
                     throw new ServletException(ErrorCodes.SERVICE_PROVIDER_SERVER_EXCEPTION);
                 }
 
@@ -346,7 +346,7 @@ public class SamlSPFilter implements Filter {
 
                     if (!ignoreSignatures) {
                         if (!verifySignature(documentHolder))
-                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender");
+                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender"); //$NON-NLS-1$
                     }
 
                     Set<SAML2Handler> handlers = chain.handlers();
@@ -385,8 +385,8 @@ public class SamlSPFilter implements Filter {
                     }
                 } catch (Exception e) {
                     if (trace)
-                        log.trace("Server Exception:", e);
-                    throw new ServletException(ErrorCodes.SERVICE_PROVIDER_SERVER_EXCEPTION + "Server Exception");
+                        log.trace("Server Exception:", e); //$NON-NLS-1$
+                    throw new ServletException(ErrorCodes.SERVICE_PROVIDER_SERVER_EXCEPTION + "Server Exception"); //$NON-NLS-1$
                 }
             }
         }
@@ -406,7 +406,7 @@ public class SamlSPFilter implements Filter {
         } else {
             is = context.getResourceAsStream(GeneralConstants.DEPRECATED_CONFIG_FILE_LOCATION);
             if (is == null)
-                throw new RuntimeException(ErrorCodes.SERVICE_PROVIDER_CONF_FILE_MISSING + configFile + " missing");
+                throw new RuntimeException(ErrorCodes.SERVICE_PROVIDER_CONF_FILE_MISSING + configFile + " missing"); //$NON-NLS-1$
             try {
                 spConfiguration = ConfigurationUtil.getSPConfiguration(is);
             } catch (ParsingException e) {
@@ -419,17 +419,17 @@ public class SamlSPFilter implements Filter {
             this.serviceURL = spConfiguration.getServiceURL();
             this.canonicalizationMethod = spConfiguration.getCanonicalizationMethod();
 
-            log.info("SPFilter:: Setting the CanonicalizationMethod on XMLSignatureUtil::" + canonicalizationMethod);
+            log.info("SPFilter:: Setting the CanonicalizationMethod on XMLSignatureUtil::" + canonicalizationMethod); //$NON-NLS-1$
             XMLSignatureUtil.setCanonicalizationMethodType(canonicalizationMethod);
 
-            log.trace("Identity Provider URL=" + this.identityURL);
+            log.trace("Identity Provider URL=" + this.identityURL); //$NON-NLS-1$
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         // Get the Role Validator if configured
         String roleValidatorName = filterConfig.getInitParameter(GeneralConstants.ROLE_VALIDATOR);
-        if (roleValidatorName != null && !"".equals(roleValidatorName)) {
+        if (roleValidatorName != null && !"".equals(roleValidatorName)) { //$NON-NLS-1$
             try {
                 Class<?> clazz = SecurityActions.loadClass(getClass(), roleValidatorName);
                 this.roleValidator = (IRoleValidator) clazz.newInstance();
@@ -441,13 +441,13 @@ public class SamlSPFilter implements Filter {
         Map<String, String> options = new HashMap<String, String>();
         String roles = filterConfig.getInitParameter(GeneralConstants.ROLES);
         if (trace)
-            log.trace("Found Roles in SPFilter config=" + roles);
+            log.trace("Found Roles in SPFilter config=" + roles); //$NON-NLS-1$
         if (roles != null) {
-            options.put("ROLES", roles);
+            options.put("ROLES", roles); //$NON-NLS-1$
         }
         this.roleValidator.intialize(options);
 
-        String samlHandlerChainClass = filterConfig.getInitParameter("SAML_HANDLER_CHAIN_CLASS");
+        String samlHandlerChainClass = filterConfig.getInitParameter("SAML_HANDLER_CHAIN_CLASS"); //$NON-NLS-1$
 
         // Get the chain from config
         if (StringUtil.isNullOrEmpty(samlHandlerChainClass))
@@ -484,18 +484,18 @@ public class SamlSPFilter implements Filter {
         }
 
         String ignoreSigString = filterConfig.getInitParameter(GeneralConstants.IGNORE_SIGNATURES);
-        if (ignoreSigString != null && !"".equals(ignoreSigString)) {
+        if (ignoreSigString != null && !"".equals(ignoreSigString)) { //$NON-NLS-1$
             this.ignoreSignatures = Boolean.parseBoolean(ignoreSigString);
         }
 
         if (ignoreSignatures == false) {
             KeyProviderType keyProvider = this.spConfiguration.getKeyProvider();
             if (keyProvider == null)
-                throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyProvider");
+                throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyProvider"); //$NON-NLS-1$
             try {
                 String keyManagerClassName = keyProvider.getClassName();
                 if (keyManagerClassName == null)
-                    throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyManager class name");
+                    throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyManager class name"); //$NON-NLS-1$
 
                 Class<?> clazz = SecurityActions.loadClass(getClass(), keyManagerClassName);
                 this.keyManager = (TrustKeyManager) clazz.newInstance();
@@ -505,15 +505,15 @@ public class SamlSPFilter implements Filter {
 
                 keyManager.setValidatingAlias(keyProvider.getValidatingAlias());
             } catch (Exception e) {
-                log.error("Exception reading configuration:", e);
+                log.error("Exception reading configuration:", e); //$NON-NLS-1$
                 throw new RuntimeException(e.getLocalizedMessage());
             }
-            log.trace("Key Provider=" + keyProvider.getClassName());
+            log.trace("Key Provider=" + keyProvider.getClassName()); //$NON-NLS-1$
         }
 
         // see if a global logout page has been configured
         String gloPage = filterConfig.getInitParameter(GeneralConstants.LOGOUT_PAGE);
-        if (gloPage != null && !"".equals(gloPage))
+        if (gloPage != null && !"".equals(gloPage)) //$NON-NLS-1$
             this.logOutPage = gloPage;
     }
 
@@ -529,12 +529,12 @@ public class SamlSPFilter implements Filter {
      */
     private AuthnRequestType createSAMLRequest(String serviceURL, String identityURL) throws ConfigurationException {
         if (serviceURL == null)
-            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "serviceURL");
+            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "serviceURL"); //$NON-NLS-1$
         if (identityURL == null)
-            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "identityURL");
+            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "identityURL"); //$NON-NLS-1$
 
         SAML2Request saml2Request = new SAML2Request();
-        String id = IDGenerator.create("ID_");
+        String id = IDGenerator.create("ID_"); //$NON-NLS-1$
         return saml2Request.createAuthnRequestType(id, serviceURL, identityURL, serviceURL);
     }
 
@@ -566,7 +566,7 @@ public class SamlSPFilter implements Filter {
     }
 
     protected boolean validate(HttpServletRequest request) throws IOException, GeneralSecurityException {
-        return request.getParameter("SAMLResponse") != null;
+        return request.getParameter("SAMLResponse") != null; //$NON-NLS-1$
     }
 
     protected boolean verifySignature(SAMLDocumentHolder samlDocumentHolder) throws IssuerNotTrustedException {
@@ -581,7 +581,7 @@ public class SamlSPFilter implements Filter {
         }
 
         if (issuerID == null)
-            throw new IssuerNotTrustedException(ErrorCodes.NULL_VALUE + "IssuerID missing");
+            throw new IssuerNotTrustedException(ErrorCodes.NULL_VALUE + "IssuerID missing"); //$NON-NLS-1$
 
         URL issuerURL;
         try {
@@ -592,18 +592,18 @@ public class SamlSPFilter implements Filter {
 
         try {
             PublicKey publicKey = keyManager.getValidatingKey(issuerURL.getHost());
-            log.trace("Going to verify signature in the saml response from IDP");
+            log.trace("Going to verify signature in the saml response from IDP"); //$NON-NLS-1$
             boolean sigResult = XMLSignatureUtil.validate(samlResponse, publicKey);
-            log.trace("Signature verification=" + sigResult);
+            log.trace("Signature verification=" + sigResult); //$NON-NLS-1$
             return sigResult;
         } catch (TrustKeyConfigurationException e) {
-            log.error("Unable to verify signature", e);
+            log.error("Unable to verify signature", e); //$NON-NLS-1$
         } catch (TrustKeyProcessingException e) {
-            log.error("Unable to verify signature", e);
+            log.error("Unable to verify signature", e); //$NON-NLS-1$
         } catch (MarshalException e) {
-            log.error("Unable to verify signature", e);
+            log.error("Unable to verify signature", e); //$NON-NLS-1$
         } catch (XMLSignatureException e) {
-            log.error("Unable to verify signature", e);
+            log.error("Unable to verify signature", e); //$NON-NLS-1$
         }
         return false;
     }
@@ -624,7 +624,7 @@ public class SamlSPFilter implements Filter {
     }
 
     protected ResponseType decryptAssertion(ResponseType responseType) {
-        throw new RuntimeException(ErrorCodes.PROCESSING_EXCEPTION + "This filter does not handle encryption");
+        throw new RuntimeException(ErrorCodes.PROCESSING_EXCEPTION + "This filter does not handle encryption"); //$NON-NLS-1$
     }
 
     /**
@@ -641,22 +641,22 @@ public class SamlSPFilter implements Filter {
     public Principal handleSAMLResponse(HttpServletRequest request, ResponseType responseType) throws ConfigurationException,
             AssertionExpiredException {
         if (request == null)
-            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "request");
+            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "request"); //$NON-NLS-1$
         if (responseType == null)
-            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "response type");
+            throw new IllegalArgumentException(ErrorCodes.NULL_ARGUMENT + "response type"); //$NON-NLS-1$
 
         StatusType statusType = responseType.getStatus();
         if (statusType == null)
-            throw new IllegalArgumentException(ErrorCodes.NULL_VALUE + "Status Type from the IDP");
+            throw new IllegalArgumentException(ErrorCodes.NULL_VALUE + "Status Type from the IDP"); //$NON-NLS-1$
 
         String statusValue = statusType.getStatusCode().getValue().toASCIIString();
         if (JBossSAMLURIConstants.STATUS_SUCCESS.get().equals(statusValue) == false)
-            throw new SecurityException(ErrorCodes.IDP_AUTH_FAILED + "IDP forbid the user");
+            throw new SecurityException(ErrorCodes.IDP_AUTH_FAILED + "IDP forbid the user"); //$NON-NLS-1$
 
         List<org.picketlink.identity.federation.saml.v2.protocol.ResponseType.RTChoiceType> assertions = responseType
                 .getAssertions();
         if (assertions.size() == 0)
-            throw new IllegalStateException(ErrorCodes.NULL_VALUE + "No assertions in reply from IDP");
+            throw new IllegalStateException(ErrorCodes.NULL_VALUE + "No assertions in reply from IDP"); //$NON-NLS-1$
 
         AssertionType assertion = assertions.get(0).getAssertion();
         // Check for validity of assertion
@@ -693,7 +693,7 @@ public class SamlSPFilter implements Filter {
         boolean validRole = roleValidator.userInRole(principal, roles);
         if (!validRole) {
             if (trace)
-                log.trace("Invalid role:" + roles);
+                log.trace("Invalid role:" + roles); //$NON-NLS-1$
             principal = null;
         }
         return principal;
