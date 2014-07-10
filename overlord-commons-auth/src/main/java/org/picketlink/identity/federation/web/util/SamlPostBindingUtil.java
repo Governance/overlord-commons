@@ -54,7 +54,7 @@ public class SamlPostBindingUtil {
      * @return
      */
     public static String base64Encode(String stringToEncode) throws IOException {
-        return Base64.encodeBytes(stringToEncode.getBytes("UTF-8"), Base64.DONT_BREAK_LINES);
+        return Base64.encodeBytes(stringToEncode.getBytes("UTF-8"), Base64.DONT_BREAK_LINES); //$NON-NLS-1$
     }
 
     /**
@@ -66,7 +66,7 @@ public class SamlPostBindingUtil {
      */
     public static byte[] base64Decode(String encodedString) {
         if (encodedString == null)
-            throw logger.nullArgumentError("encodedString");
+            throw logger.nullArgumentError("encodedString"); //$NON-NLS-1$
 
         return Base64.decode(encodedString);
     }
@@ -80,7 +80,7 @@ public class SamlPostBindingUtil {
      */
     public static InputStream base64DecodeAsStream(String encodedString) {
         if (encodedString == null)
-            throw logger.nullArgumentError("encodedString");
+            throw logger.nullArgumentError("encodedString"); //$NON-NLS-1$
 
         return new ByteArrayInputStream(base64Decode(encodedString));
     }
@@ -103,37 +103,37 @@ public class SamlPostBindingUtil {
         String samlMessage = holder.getSamlMessage();
 
         if (destination == null) {
-            throw logger.nullValueError("Destination is null");
+            throw logger.nullValueError("Destination is null"); //$NON-NLS-1$
         }
 
-        response.setContentType("text/html");
+        response.setContentType("text/html"); //$NON-NLS-1$
         common(holder.getDestination(), response);
         StringBuilder builder = new StringBuilder();
 
-        builder.append("<HTML>");
-        builder.append("<HEAD>");
+        builder.append("<HTML>"); //$NON-NLS-1$
+        builder.append("<HEAD>"); //$NON-NLS-1$
 
         if (request)
-            builder.append("<TITLE>HTTP Post Binding (Request)</TITLE>");
+            builder.append("<TITLE>HTTP Post Binding (Request)</TITLE>"); //$NON-NLS-1$
         else
-            builder.append("<TITLE>HTTP Post Binding Response (Response)</TITLE>");
+            builder.append("<TITLE>HTTP Post Binding Response (Response)</TITLE>"); //$NON-NLS-1$
 
-        builder.append("</HEAD>");
-        builder.append("<BODY Onload=\"document.forms[0].submit()\">");
+        builder.append("</HEAD>"); //$NON-NLS-1$
+        builder.append("<BODY Onload=\"document.forms[0].submit()\">"); //$NON-NLS-1$
 
-        builder.append("<FORM METHOD=\"POST\" ACTION=\"" + destination + "\">");
-        builder.append("<INPUT TYPE=\"HIDDEN\" NAME=\"" + key + "\"" + " VALUE=\"" + samlMessage + "\"/>");
+        builder.append("<FORM METHOD=\"POST\" ACTION=\"" + destination + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        builder.append("<INPUT TYPE=\"HIDDEN\" NAME=\"" + key + "\"" + " VALUE=\"" + samlMessage + "\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         if (isNotNull(relayState)) {
-            builder.append("<INPUT TYPE=\"HIDDEN\" NAME=\"RelayState\" " + "VALUE=\"" + relayState + "\"/>");
+            builder.append("<INPUT TYPE=\"HIDDEN\" NAME=\"RelayState\" " + "VALUE=\"" + relayState + "\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
-        builder.append("<NOSCRIPT>");
-        builder.append("<P>JavaScript is disabled. We strongly recommend to enable it. Click the button below to continue.</P>");
-        builder.append("<INPUT TYPE=\"SUBMIT\" VALUE=\"CONTINUE\" />");
-        builder.append("</NOSCRIPT>");
+        builder.append("<NOSCRIPT>"); //$NON-NLS-1$
+        builder.append("<P>JavaScript is disabled. We strongly recommend to enable it. Click the button below to continue.</P>"); //$NON-NLS-1$
+        builder.append("<INPUT TYPE=\"SUBMIT\" VALUE=\"CONTINUE\" />"); //$NON-NLS-1$
+        builder.append("</NOSCRIPT>"); //$NON-NLS-1$
 
-        builder.append("</FORM></BODY></HTML>");
+        builder.append("</FORM></BODY></HTML>"); //$NON-NLS-1$
 
         String str = builder.toString();
 
@@ -150,8 +150,8 @@ public class SamlPostBindingUtil {
     }
 
     private static void common(String destination, HttpServletResponse response) {
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache, no-store");
+        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+        response.setHeader("Pragma", "no-cache"); //$NON-NLS-1$ //$NON-NLS-2$
+        response.setHeader("Cache-Control", "no-cache, no-store"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

@@ -169,7 +169,7 @@ public class SamlIDPFilter implements Filter {
 
     protected Timer timer = null;
 
-    protected String authMethod = "PASSWORD";
+    protected String authMethod = "PASSWORD"; //$NON-NLS-1$
 
     /**
      * <p>Specifies a different location for the configuration file.</p>
@@ -256,12 +256,12 @@ public class SamlIDPFilter implements Filter {
 
             if (logger.isTraceEnabled()) {
                 StringBuilder builder = new StringBuilder();
-                builder.append("Retrieved saml messages and relay state from session");
-                builder.append("saml Request message=").append(samlRequestMessage);
-                builder.append("::").append("SAMLResponseMessage=");
-                builder.append(samlResponseMessage).append(":").append("relay state=").append(relayState);
+                builder.append("Retrieved saml messages and relay state from session"); //$NON-NLS-1$
+                builder.append("saml Request message=").append(samlRequestMessage); //$NON-NLS-1$
+                builder.append("::").append("SAMLResponseMessage="); //$NON-NLS-1$ //$NON-NLS-2$
+                builder.append(samlResponseMessage).append(":").append("relay state=").append(relayState); //$NON-NLS-1$ //$NON-NLS-2$
 
-                builder.append("Signature=").append(signature).append("::sigAlg=").append(sigAlg);
+                builder.append("Signature=").append(signature).append("::sigAlg=").append(sigAlg); //$NON-NLS-1$ //$NON-NLS-2$
                 logger.trace(builder.toString());
             }
 
@@ -269,7 +269,7 @@ public class SamlIDPFilter implements Filter {
                 processSAMLRequestMessage(request, response);
             } else if (isNotNull(samlResponseMessage)) {
                 processSAMLResponseMessage(request, response);
-            } else if (request.getRequestURI().equals(request.getContextPath() + "/")) {
+            } else if (request.getRequestURI().equals(request.getContextPath() + "/")) { //$NON-NLS-1$
                 // no SAML processing and the request is asking for /.
                 forwardHosted(request, response);
             } else {
@@ -325,7 +325,7 @@ public class SamlIDPFilter implements Filter {
     }
 
     private void forwardHosted(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.trace("SAML 1.1::Proceeding to IDP index page");
+        logger.trace("SAML 1.1::Proceeding to IDP index page"); //$NON-NLS-1$
         RequestDispatcher dispatch = servletContext
                 .getRequestDispatcher(this.idpConfiguration.getHostedURI());
 
@@ -375,7 +375,7 @@ public class SamlIDPFilter implements Filter {
     private void handleUnauthorizedResponse(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         SamlIDPWebRequestUtil webRequestUtil = new SamlIDPWebRequestUtil(request, idpConfiguration, keyManager);
         Document samlErrorResponse = null;
-        String referer = request.getHeader("Referer");
+        String referer = request.getHeader("Referer"); //$NON-NLS-1$
         String relayState = request.getParameter(GeneralConstants.RELAY_STATE);
 
         try {
@@ -435,7 +435,7 @@ public class SamlIDPFilter implements Filter {
             String target = request.getParameter(JBossSAMLConstants.UNSOLICITED_RESPONSE_TARGET.get());
 
             HttpSession session = request.getSession();
-            SAML11AssertionType saml11Assertion = (SAML11AssertionType) session.getAttribute("SAML11");
+            SAML11AssertionType saml11Assertion = (SAML11AssertionType) session.getAttribute("SAML11"); //$NON-NLS-1$
             if (saml11Assertion == null) {
                 SAML11ProtocolContext saml11Protocol = new SAML11ProtocolContext();
                 saml11Protocol.setIssuerID(getIdentityURL());
@@ -447,13 +447,13 @@ public class SamlIDPFilter implements Filter {
 
                 PicketLinkCoreSTS.instance().issueToken(saml11Protocol);
                 saml11Assertion = saml11Protocol.getIssuedAssertion();
-                session.setAttribute("SAML11", saml11Assertion);
+                session.setAttribute("SAML11", saml11Assertion); //$NON-NLS-1$
 
                 if (AssertionUtil.hasExpired(saml11Assertion)) {
                     saml11Protocol.setIssuedAssertion(saml11Assertion);
                     PicketLinkCoreSTS.instance().renewToken(saml11Protocol);
                     saml11Assertion = saml11Protocol.getIssuedAssertion();
-                    session.setAttribute("SAML11", saml11Assertion);
+                    session.setAttribute("SAML11", saml11Assertion); //$NON-NLS-1$
                 }
             }
 
@@ -465,7 +465,7 @@ public class SamlIDPFilter implements Filter {
             }
 
             // Send it as SAMLResponse
-            String id = IDGenerator.create("ID_");
+            String id = IDGenerator.create("ID_"); //$NON-NLS-1$
             SAML11ResponseType saml11Response = new SAML11ResponseType(id, XMLTimeUtil.getIssueInstant());
             saml11Response.add(saml11Assertion);
             saml11Response.setStatus(SAML11StatusType.successType());
@@ -478,7 +478,7 @@ public class SamlIDPFilter implements Filter {
             Document samlResponse = org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil.getDocument(new ByteArrayInputStream(baos.toByteArray()));
             SamlIDPWebRequestUtil.WebRequestUtilHolder holder = webRequestUtil.getHolder();
 
-            holder.setResponseDoc(samlResponse).setDestination(target).setRelayState("").setAreWeSendingRequest(false)
+            holder.setResponseDoc(samlResponse).setDestination(target).setRelayState("").setAreWeSendingRequest(false) //$NON-NLS-1$
                     .setPrivateKey(null).setSupportSignature(false).setServletResponse(response);
 
             if (enableAudit) {
@@ -519,7 +519,7 @@ public class SamlIDPFilter implements Filter {
 
         boolean willSendRequest = false;
 
-        String referer = request.getHeader("Referer");
+        String referer = request.getHeader("Referer"); //$NON-NLS-1$
 
         //cleanUpSessionNote(request);
 
@@ -595,7 +595,7 @@ public class SamlIDPFilter implements Filter {
 
             Set<SAML2Handler> handlers = chain.handlers();
 
-            logger.trace("Handlers are=" + handlers);
+            logger.trace("Handlers are=" + handlers); //$NON-NLS-1$
 
             if (handlers != null) {
                 try {
@@ -677,7 +677,7 @@ public class SamlIDPFilter implements Filter {
             } catch (ParsingException e) {
                 logger.samlAssertionPasingFailed(e);
             } catch (GeneralSecurityException e) {
-                logger.trace("Security Exception:", e);
+                logger.trace("Security Exception:", e); //$NON-NLS-1$
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -702,25 +702,25 @@ public class SamlIDPFilter implements Filter {
         try {
             issuerHost = new URL(issuer).getHost();
         } catch (MalformedURLException e) {
-            logger.trace("Token issuer is not a valid URL: " + issuer, e);
+            logger.trace("Token issuer is not a valid URL: " + issuer, e); //$NON-NLS-1$
             issuerHost = issuer;
         }
 
-        logger.trace("Trying to find a PK for issuer: " + issuerHost);
+        logger.trace("Trying to find a PK for issuer: " + issuerHost); //$NON-NLS-1$
         try {
             issuerPublicKey = CoreConfigUtil.getValidatingKey(keyManager, issuerHost);
         } catch (IllegalStateException ise) {
-            logger.trace("Token issuer is not found for: " + issuer, ise);
+            logger.trace("Token issuer is not found for: " + issuer, ise); //$NON-NLS-1$
         }
 
         if (issuerPublicKey == null) {
             issuerHost = request.getRemoteAddr();
 
-            logger.trace("Trying to find a PK for issuer " + issuerHost);
+            logger.trace("Trying to find a PK for issuer " + issuerHost); //$NON-NLS-1$
             issuerPublicKey = CoreConfigUtil.getValidatingKey(keyManager, issuerHost);
         }
 
-        logger.trace("Using Validating Alias=" + issuerHost + " to check signatures.");
+        logger.trace("Using Validating Alias=" + issuerHost + " to check signatures."); //$NON-NLS-1$ //$NON-NLS-2$
 
         return issuerPublicKey;
     }
@@ -746,7 +746,7 @@ public class SamlIDPFilter implements Filter {
 
         boolean willSendRequest = false;
 
-        String referer = request.getHeader("Referer");
+        String referer = request.getHeader("Referer"); //$NON-NLS-1$
 
         //cleanUpSessionNote(request);
 
@@ -829,7 +829,7 @@ public class SamlIDPFilter implements Filter {
             try {
                 SamlIDPWebRequestUtil.WebRequestUtilHolder holder = webRequestUtil.getHolder();
                 if (destination == null)
-                    throw new ServletException(logger.nullValueError("Destination"));
+                    throw new ServletException(logger.nullValueError("Destination")); //$NON-NLS-1$
                 holder.setResponseDoc(samlResponse).setDestination(destination).setRelayState(relayState)
                         .setAreWeSendingRequest(willSendRequest).setPrivateKey(null).setSupportSignature(false)
                         .setErrorResponse(isErrorResponse).setServletResponse(response)
@@ -861,7 +861,7 @@ public class SamlIDPFilter implements Filter {
             } catch (ParsingException e) {
                 logger.samlAssertionPasingFailed(e);
             } catch (GeneralSecurityException e) {
-                logger.trace("Security Exception:", e);
+                logger.trace("Security Exception:", e); //$NON-NLS-1$
             }
         }
         return;
@@ -882,12 +882,12 @@ public class SamlIDPFilter implements Filter {
 
         if (logger.isTraceEnabled()) {
             StringBuilder builder = new StringBuilder();
-            builder.append("Retrieved saml messages and relay state from session");
-            builder.append("saml Request message=").append(samlRequestMessage);
-            builder.append("::").append("SAMLResponseMessage=");
-            builder.append(samlResponseMessage).append(":").append("relay state=").append(relayState);
+            builder.append("Retrieved saml messages and relay state from session"); //$NON-NLS-1$
+            builder.append("saml Request message=").append(samlRequestMessage); //$NON-NLS-1$
+            builder.append("::").append("SAMLResponseMessage="); //$NON-NLS-1$ //$NON-NLS-2$
+            builder.append(samlResponseMessage).append(":").append("relay state=").append(relayState); //$NON-NLS-1$ //$NON-NLS-2$
 
-            builder.append("Signature=").append(signature).append("::sigAlg=").append(sigAlg);
+            builder.append("Signature=").append(signature).append("::sigAlg=").append(sigAlg); //$NON-NLS-1$ //$NON-NLS-2$
             logger.trace(builder.toString());
         }
 
@@ -908,7 +908,7 @@ public class SamlIDPFilter implements Filter {
     protected void sendErrorResponseToSP(String referrer, HttpServletResponse response, String relayState, SamlIDPWebRequestUtil webRequestUtil)
             throws ServletException, IOException, ConfigurationException {
 
-        logger.trace("About to send error response to SP:" + referrer);
+        logger.trace("About to send error response to SP:" + referrer); //$NON-NLS-1$
 
         String contextPath = servletContext.getContextPath();
 
@@ -1028,7 +1028,7 @@ public class SamlIDPFilter implements Filter {
             KeyProviderType keyProvider = this.idpConfiguration.getKeyProvider();
             if (keyProvider == null)
                 throw new RuntimeException(
-                        logger.nullValueError("Key Provider is null for context=" + servletContext.getContextPath()));
+                        logger.nullValueError("Key Provider is null for context=" + servletContext.getContextPath())); //$NON-NLS-1$
 
             try {
                 this.keyManager = CoreConfigUtil.getTrustKeyManager(keyProvider);
@@ -1045,7 +1045,7 @@ public class SamlIDPFilter implements Filter {
 
             XMLSignatureUtil.setCanonicalizationMethodType(idpConfiguration.getCanonicalizationMethod());
 
-            logger.trace("Key Provider=" + keyProvider.getClassName());
+            logger.trace("Key Provider=" + keyProvider.getClassName()); //$NON-NLS-1$
         }
     }
 
@@ -1125,8 +1125,8 @@ public class SamlIDPFilter implements Filter {
 
                 // See if we have the system property enabled
                 if (!enableAudit) {
-                    String sysProp = SecurityActions.getSystemProperty(GeneralConstants.AUDIT_ENABLE, "NULL");
-                    if (!"NULL".equals(sysProp)) {
+                    String sysProp = SecurityActions.getSystemProperty(GeneralConstants.AUDIT_ENABLE, "NULL"); //$NON-NLS-1$
+                    if (!"NULL".equals(sysProp)) { //$NON-NLS-1$
                         enableAudit = Boolean.parseBoolean(sysProp);
                     }
                 }
@@ -1139,11 +1139,11 @@ public class SamlIDPFilter implements Filter {
                 }
             }
 
-            logger.trace("Identity Provider URL=" + getIdentityURL());
+            logger.trace("Identity Provider URL=" + getIdentityURL()); //$NON-NLS-1$
 
             // Get the attribute manager
             String attributeManager = idpConfiguration.getAttributeManager();
-            if (attributeManager != null && !"".equals(attributeManager)) {
+            if (attributeManager != null && !"".equals(attributeManager)) { //$NON-NLS-1$
                 Class<?> clazz = SecurityActions.loadClass(getClass(), attributeManager);
                 if (clazz == null)
                     throw new RuntimeException(logger.classNotLoadedError(attributeManager));
@@ -1154,7 +1154,7 @@ public class SamlIDPFilter implements Filter {
             // Get the role generator
             String roleGeneratorAttribute = idpConfiguration.getRoleGenerator();
 
-            if (roleGeneratorAttribute != null && !"".equals(roleGeneratorAttribute)) {
+            if (roleGeneratorAttribute != null && !"".equals(roleGeneratorAttribute)) { //$NON-NLS-1$
                 Class<?> clazz = SecurityActions.loadClass(getClass(), roleGeneratorAttribute);
                 if (clazz == null)
                     throw new RuntimeException(logger.classNotLoadedError(roleGeneratorAttribute));
@@ -1193,7 +1193,7 @@ public class SamlIDPFilter implements Filter {
             // Ensure that the Core STS has the SAML20 Token Provider
             PicketLinkCoreSTS sts = PicketLinkCoreSTS.instance();
             // Let us look for a file
-            String configPath = servletContext.getRealPath("/WEB-INF/picketlink-sts.xml");
+            String configPath = servletContext.getRealPath("/WEB-INF/picketlink-sts.xml"); //$NON-NLS-1$
             File stsTokenConfigFile = configPath != null ? new File(configPath) : null;
 
             if (stsTokenConfigFile == null || stsTokenConfigFile.exists() == false) {
@@ -1212,7 +1212,7 @@ public class SamlIDPFilter implements Filter {
         String result = JBossSAMLURIConstants.AC_PASSWORD.get();
         if (authMethod != null) {
             if (StringUtil.isNotNull(authMethod)) {
-                if ("CLIENT-CERT".equals(authMethod))
+                if ("CLIENT-CERT".equals(authMethod)) //$NON-NLS-1$
                     result = JBossSAMLURIConstants.AC_TLS_CLIENT.get();
                 else if (isSecure)
                     result = JBossSAMLURIConstants.AC_PASSWORD_PROTECTED_TRANSPORT.get();
@@ -1250,8 +1250,8 @@ public class SamlIDPFilter implements Filter {
         initIdentityServer();
 
         // Add some keys to the attibutes
-        String[] ak = new String[] { "mail", "cn", "commonname", "givenname", "surname", "employeeType", "employeeNumber",
-                "facsimileTelephoneNumber" };
+        String[] ak = new String[] { "mail", "cn", "commonname", "givenname", "surname", "employeeType", "employeeNumber", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+                "facsimileTelephoneNumber" }; //$NON-NLS-1$
 
         this.attributeKeys.addAll(Arrays.asList(ak));
 
@@ -1275,7 +1275,7 @@ public class SamlIDPFilter implements Filter {
             if (attrStatement == null) {
                 attrStatement = new SAML11AttributeStatementType();
             }
-            SAML11AttributeType attr = new SAML11AttributeType("Role", URI.create("urn:picketlink:role"));
+            SAML11AttributeType attr = new SAML11AttributeType("Role", URI.create("urn:picketlink:role")); //$NON-NLS-1$ //$NON-NLS-2$
             attr.add(role);
             attrStatement.add(attr);
         }
@@ -1301,7 +1301,7 @@ public class SamlIDPFilter implements Filter {
             isRequestSigned = Boolean.FALSE;
         }
 
-        logger.trace("Issuer: " + spIssuer + ", isRequestSigned: " + isRequestSigned);
+        logger.trace("Issuer: " + spIssuer + ", isRequestSigned: " + isRequestSigned); //$NON-NLS-1$ //$NON-NLS-2$
 
         return !isRequestSigned;
     }
@@ -1310,10 +1310,10 @@ public class SamlIDPFilter implements Filter {
         String hostedURI = this.idpConfiguration.getHostedURI();
 
         if (isNullOrEmpty(hostedURI)) {
-            hostedURI = "/hosted/";
-        } else if (!hostedURI.contains(".") && !hostedURI.endsWith("/")) {
+            hostedURI = "/hosted/"; //$NON-NLS-1$
+        } else if (!hostedURI.contains(".") && !hostedURI.endsWith("/")) { //$NON-NLS-1$ //$NON-NLS-2$
             // make sure the hosted uri have a slash at the end if it points to a directory
-            hostedURI = hostedURI + "/";
+            hostedURI = hostedURI + "/"; //$NON-NLS-1$
         }
 
         this.idpConfiguration.setHostedURI(hostedURI);
@@ -1350,7 +1350,7 @@ public class SamlIDPFilter implements Filter {
                     this.auditHelper = (PicketLinkAuditHelper) SecurityActions
                         .loadClass(Thread.currentThread().getContextClassLoader(), auditHelperType).newInstance();
                 } catch (Exception e) {
-                    throw new ServletException("Could not create audit helper [" + auditHelperType + "].", e);
+                    throw new ServletException("Could not create audit helper [" + auditHelperType + "].", e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
@@ -1367,7 +1367,7 @@ public class SamlIDPFilter implements Filter {
                     this.configProvider = (SAMLConfigurationProvider) SecurityActions
                         .loadClass(Thread.currentThread().getContextClassLoader(), configProviderType).newInstance();
                 } catch (Exception e) {
-                    throw new ServletException("Could not create config provider [" + configProviderType + "].", e);
+                    throw new ServletException("Could not create config provider [" + configProviderType + "].", e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
