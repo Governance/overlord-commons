@@ -32,9 +32,7 @@ public abstract class AbstractGetPassword extends Task {
 
 
     private String addproperty;
-
     private String message;
-
     private String confirmationMessage;
 
     public String getMessage() {
@@ -86,35 +84,39 @@ public abstract class AbstractGetPassword extends Task {
         if (confirmationMessage == null || confirmationMessage.equals("")) { //$NON-NLS-1$
             throw new BuildException("\tThe confirmationMessage property is required for this task."); //$NON-NLS-1$
         }
-
-        String password = ""; //$NON-NLS-1$
-        String repeatedPassword = ""; //$NON-NLS-1$
-        boolean validated = false;
-
-        do {
-            // Read the password
-            console.printf(message);
-            char[] readed = console.readPassword();
-            password = new String(readed);
-
-            validated = validatePassword(password) && validate(password);
-
-            if (validated) {
-                // Now confirm the password
-                console.printf(confirmationMessage);
-                readed = console.readPassword();
-                repeatedPassword = new String(readed);
-
-                if (!password.equals(repeatedPassword)) {
-                    log(""); //$NON-NLS-1$
-                    log(" * Error *\nThe passwords you entered do not match. Please try again."); //$NON-NLS-1$
-                    validated = false;
+        
+        // Only prompt for the password if it hasn't already been set.
+        String currentPropVal = getProject().getProperty(addproperty);
+        if (currentPropVal == null || currentPropVal.trim().isEmpty()) {
+            String password = ""; //$NON-NLS-1$
+            String repeatedPassword = ""; //$NON-NLS-1$
+            boolean validated = false;
+    
+            do {
+                // Read the password
+                console.printf(message);
+                char[] readed = console.readPassword();
+                password = new String(readed);
+    
+                validated = validatePassword(password) && validate(password);
+    
+                if (validated) {
+                    // Now confirm the password
+                    console.printf(confirmationMessage);
+                    readed = console.readPassword();
+                    repeatedPassword = new String(readed);
+    
+                    if (!password.equals(repeatedPassword)) {
+                        log(""); //$NON-NLS-1$
+                        log(" * Error *\nThe passwords you entered do not match. Please try again."); //$NON-NLS-1$
+                        validated = false;
+                    }
                 }
+            } while (!validated);
+    
+            if (addproperty != null && !addproperty.equals("")) { //$NON-NLS-1$
+                getProject().setProperty(addproperty, password);
             }
-        } while (!validated);
-
-        if (addproperty != null && !addproperty.equals("")) { //$NON-NLS-1$
-            getProject().setNewProperty(addproperty, password);
         }
 
     }
