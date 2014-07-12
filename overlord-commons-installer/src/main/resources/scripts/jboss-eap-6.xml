@@ -259,7 +259,7 @@
   	      <arg value="-r"/>
   	      <arg value="ApplicationRealm"/>
   	      <arg value="-ro"/>
-  	      <arg value="overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
+  	      <arg value="overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
   	 </java>
   	
   </target>
