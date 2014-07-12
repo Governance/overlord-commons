@@ -14,5 +14,5 @@
   <role rolename="prod"/>
   <role rolename="ba"/>
   <role rolename="arch"/>
-  <user username="admin" password="@ADMINPASSWORD@" roles="tomcat,overlorduser,admin.sramp,dev,qa,stage,prod,ba,arch"/>
+  <user username="admin" password="@ADMINPASSWORD@" roles="tomcat,overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
 </tomcat-users>
