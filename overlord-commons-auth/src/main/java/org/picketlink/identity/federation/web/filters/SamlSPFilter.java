@@ -273,7 +273,7 @@ public class SamlSPFilter implements Filter {
                     if (keyManager != null) {
                         saml2HandlerRequest.addOption(GeneralConstants.DECRYPTING_KEY, keyManager.getSigningKey());
                         // TODO get the issuer host?  we don't need it in Overlord because we only have one key - but picketlink would need it
-                        PublicKey publicKey = keyManager.getValidatingKey("");
+                        PublicKey publicKey = keyManager.getValidatingKey(""); //$NON-NLS-1$
                         saml2HandlerRequest.addOption(GeneralConstants.SENDER_PUBLIC_KEY, publicKey);
                     }
 

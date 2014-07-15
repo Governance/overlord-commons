@@ -63,7 +63,7 @@ public class ConfigurationFactory {
                 if (file.isFile()) {
                     compositeConfig.addConfiguration(new PropertiesConfiguration(file));
                 } else {
-                    throw new ConfigurationException("Failed to find config file: " + configFileOverride);
+                    throw new ConfigurationException("Failed to find config file: " + configFileOverride); //$NON-NLS-1$
                 }
             }
 

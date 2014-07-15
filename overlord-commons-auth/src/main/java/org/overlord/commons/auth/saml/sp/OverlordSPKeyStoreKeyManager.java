@@ -72,9 +72,9 @@ public class OverlordSPKeyStoreKeyManager extends KeyStoreKeyManager {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Configuration error: could not create 'ConfigProviderClass' specified in picketlink.xml", e);
+            throw new RuntimeException("Configuration error: could not create 'ConfigProviderClass' specified in picketlink.xml", e); //$NON-NLS-1$
         }
-        throw new RuntimeException("Configuration error: no 'ConfigProviderClass' specified in picketlink.xml");
+        throw new RuntimeException("Configuration error: no 'ConfigProviderClass' specified in picketlink.xml"); //$NON-NLS-1$
     }
 
     /**
@@ -94,7 +94,7 @@ public class OverlordSPKeyStoreKeyManager extends KeyStoreKeyManager {
             return getClass().getClassLoader().loadClass(classname);
         } catch (ClassNotFoundException e) {
         }
-        throw new RuntimeException("Failed to load config provider class: " + classname);
+        throw new RuntimeException("Failed to load config provider class: " + classname); //$NON-NLS-1$
     }
 
     /**
