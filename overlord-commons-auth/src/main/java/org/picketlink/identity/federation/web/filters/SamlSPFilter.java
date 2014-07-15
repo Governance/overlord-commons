@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.security.KeyPair;
 import java.security.Principal;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ import org.picketlink.config.federation.TrustType;
 import org.picketlink.config.federation.handler.Handlers;
 import org.picketlink.identity.federation.api.saml.v2.request.SAML2Request;
 import org.picketlink.identity.federation.api.saml.v2.response.SAML2Response;
-import org.picketlink.identity.federation.api.saml.v2.sig.SAML2Signature;
 import org.picketlink.identity.federation.core.interfaces.ProtocolContext;
 import org.picketlink.identity.federation.core.interfaces.TrustKeyManager;
 import org.picketlink.identity.federation.core.saml.v2.common.IDGenerator;
@@ -110,7 +108,6 @@ import org.picketlink.identity.federation.web.roles.DefaultRoleValidator;
 import org.picketlink.identity.federation.web.util.ConfigurationUtil;
 import org.picketlink.identity.federation.web.util.SamlPostBindingUtil;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -142,8 +139,6 @@ public class SamlSPFilter implements Filter {
     private ServletContext context = null;
 
     private transient SAML2HandlerChain chain = null;
-
-    protected boolean ignoreSignatures = false;
 
     private IRoleValidator roleValidator = new DefaultRoleValidator();
 
@@ -269,19 +264,18 @@ public class SamlSPFilter implements Filter {
                     SAML2Object samlObject = saml2Response.getSAML2ObjectFromStream(is);
                     SAMLDocumentHolder documentHolder = saml2Response.getSamlDocumentHolder();
 
-                    if (!ignoreSignatures) {
-                        if (!verifySignature(documentHolder))
-                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender"); //$NON-NLS-1$
-                    }
-
                     Set<SAML2Handler> handlers = chain.handlers();
                     IssuerInfoHolder holder = new IssuerInfoHolder(this.serviceURL);
                     ProtocolContext protocolContext = new HTTPContext(request, response, context);
                     // Create the request/response
                     SAML2HandlerRequest saml2HandlerRequest = new DefaultSAML2HandlerRequest(protocolContext,
                             holder.getIssuer(), documentHolder, HANDLER_TYPE.SP);
-                    if (keyManager != null)
+                    if (keyManager != null) {
                         saml2HandlerRequest.addOption(GeneralConstants.DECRYPTING_KEY, keyManager.getSigningKey());
+                        // TODO get the issuer host?  we don't need it in Overlord because we only have one key - but picketlink would need it
+                        PublicKey publicKey = keyManager.getValidatingKey("");
+                        saml2HandlerRequest.addOption(GeneralConstants.SENDER_PUBLIC_KEY, publicKey);
+                    }
 
                     SAML2HandlerResponse saml2HandlerResponse = new DefaultSAML2HandlerResponse();
 
@@ -344,19 +338,15 @@ public class SamlSPFilter implements Filter {
                     SAML2Object samlObject = saml2Request.getSAML2ObjectFromStream(is);
                     SAMLDocumentHolder documentHolder = saml2Request.getSamlDocumentHolder();
 
-                    if (!ignoreSignatures) {
-                        if (!verifySignature(documentHolder))
-                            throw new ServletException(ErrorCodes.INVALID_DIGITAL_SIGNATURE + "Cannot verify sender"); //$NON-NLS-1$
-                    }
-
                     Set<SAML2Handler> handlers = chain.handlers();
                     IssuerInfoHolder holder = new IssuerInfoHolder(this.serviceURL);
                     ProtocolContext protocolContext = new HTTPContext(request, response, context);
                     // Create the request/response
                     SAML2HandlerRequest saml2HandlerRequest = new DefaultSAML2HandlerRequest(protocolContext,
                             holder.getIssuer(), documentHolder, HANDLER_TYPE.SP);
-                    if (keyManager != null)
+                    if (keyManager != null) {
                         saml2HandlerRequest.addOption(GeneralConstants.DECRYPTING_KEY, keyManager.getSigningKey());
+                    }
 
                     SAML2HandlerResponse saml2HandlerResponse = new DefaultSAML2HandlerResponse();
 
@@ -483,26 +473,19 @@ public class SamlSPFilter implements Filter {
             throw new RuntimeException(e);
         }
 
-        String ignoreSigString = filterConfig.getInitParameter(GeneralConstants.IGNORE_SIGNATURES);
-        if (ignoreSigString != null && !"".equals(ignoreSigString)) { //$NON-NLS-1$
-            this.ignoreSignatures = Boolean.parseBoolean(ignoreSigString);
-        }
-
-        if (ignoreSignatures == false) {
-            KeyProviderType keyProvider = this.spConfiguration.getKeyProvider();
-            if (keyProvider == null)
-                throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyProvider"); //$NON-NLS-1$
+        KeyProviderType keyProvider = this.spConfiguration.getKeyProvider();
+        if (keyProvider != null) {
             try {
                 String keyManagerClassName = keyProvider.getClassName();
                 if (keyManagerClassName == null)
                     throw new RuntimeException(ErrorCodes.NULL_VALUE + "KeyManager class name"); //$NON-NLS-1$
-
+    
                 Class<?> clazz = SecurityActions.loadClass(getClass(), keyManagerClassName);
                 this.keyManager = (TrustKeyManager) clazz.newInstance();
-
+    
                 List<AuthPropertyType> authProperties = CoreConfigUtil.getKeyProviderProperties(keyProvider);
                 keyManager.setAuthProperties(authProperties);
-
+    
                 keyManager.setValidatingAlias(keyProvider.getValidatingAlias());
             } catch (Exception e) {
                 log.error("Exception reading configuration:", e); //$NON-NLS-1$
@@ -551,16 +534,16 @@ public class SamlSPFilter implements Filter {
 
     protected void sendToDestination(Document samlDocument, String relayState, String destination,
                                      HttpServletResponse response, boolean request) throws IOException, SAXException, GeneralSecurityException {
-        if (!ignoreSignatures) {
-            SAML2Signature samlSignature = new SAML2Signature();
-
-            Node nextSibling = samlSignature.getNextSiblingOfIssuer(samlDocument);
-            if (nextSibling != null) {
-                samlSignature.setNextSibling(nextSibling);
-            }
-            KeyPair keypair = keyManager.getSigningKeyPair();
-            samlSignature.signSAMLDocument(samlDocument, keypair);
-        }
+//        if (!ignoreSignatures) {
+//            SAML2Signature samlSignature = new SAML2Signature();
+//
+//            Node nextSibling = samlSignature.getNextSiblingOfIssuer(samlDocument);
+//            if (nextSibling != null) {
+//                samlSignature.setNextSibling(nextSibling);
+//            }
+//            KeyPair keypair = keyManager.getSigningKeyPair();
+//            samlSignature.signSAMLDocument(samlDocument, keypair);
+//        }
         String samlMessage = SamlPostBindingUtil.base64Encode(DocumentUtil.getDocumentAsString(samlDocument));
         SamlPostBindingUtil.sendPost(new DestinationInfoHolder(destination, samlMessage, relayState), response, request);
     }

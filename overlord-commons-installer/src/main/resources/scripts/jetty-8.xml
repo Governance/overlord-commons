@@ -68,9 +68,8 @@
     <antcall target="install-admin-user" />
 
     <!-- Configure overlord.properties -->
-    <makeurl file="${overlord-commons.jetty.config.dir}/overlord-saml.keystore" property="overlord-commons.keystore.url"/>
     <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${overlord-commons.keystore.url}" />
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
       <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
       <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />

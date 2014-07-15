@@ -65,7 +65,7 @@ public class OverlordSPKeyStoreKeyManager extends KeyStoreKeyManager {
     private KeyManagerConfigProvider createConfigProvider(List<AuthPropertyType> authList) {
         try {
             for (AuthPropertyType auth : authList) {
-                if (auth.getKey().equals("ConfigProviderClass")) {
+                if (auth.getKey().equals("ConfigProviderClass")) { //$NON-NLS-1$
                     String classname = auth.getValue();
                     Class<?> clazz = loadClass(classname);
                     return (KeyManagerConfigProvider) clazz.newInstance();

@@ -15,6 +15,7 @@
  */
 package org.overlord.commons.config;
 
+import java.io.File;
 import java.util.Set;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -51,21 +52,50 @@ public class ConfigurationFactory {
             Long refreshDelay, String defaultConfigPath, Class<?> defaultConfigLoader) {
         registerGlobalLookups();
         try {
-            CompositeConfiguration config = new CompositeConfiguration();
-            config.addConfiguration(new SystemPropertiesConfiguration());
+            CompositeConfiguration compositeConfig = new CompositeConfiguration();
+            
+            // System properties always win - add that first
+            compositeConfig.addConfiguration(new SystemPropertiesConfiguration());
 
-            Set<Configurator> configurators = ServiceRegistryUtil.getServices(Configurator.class);
-            if (!configurators.isEmpty()) {
-                for (Configurator configurator : configurators) {
-                    configurator.addConfiguration(config, configFileOverride, standardConfigFileName,
-                            refreshDelay);
+            // If an override file is provided, add that first.
+            if (configFileOverride != null) {
+                File file = new File(configFileOverride);
+                if (file.isFile()) {
+                    compositeConfig.addConfiguration(new PropertiesConfiguration(file));
+                } else {
+                    throw new ConfigurationException("Failed to find config file: " + configFileOverride);
                 }
             }
 
-            if (defaultConfigPath != null) {
-                config.addConfiguration(new PropertiesConfiguration(defaultConfigLoader.getResource(defaultConfigPath)));
+            // Now add platform specific properties file (e.g. EAP/standalone/configuration/${standardConfigFileName})
+            Set<Configurator> configurators = ServiceRegistryUtil.getServices(Configurator.class);
+            if (!configurators.isEmpty()) {
+                for (Configurator configurator : configurators) {
+                    if (configurator.accept()) {
+                        Configuration providedConfig = configurator.provideConfiguration(standardConfigFileName, refreshDelay);
+                        if (providedConfig != null) {
+                            compositeConfig.addConfiguration(providedConfig);
+                        }
+                    }
+                }
+                if (!standardConfigFileName.equals("overlord.properties")) { //$NON-NLS-1$
+                    for (Configurator configurator : configurators) {
+                        if (configurator.accept()) {
+                            Configuration providedConfig = configurator.provideConfiguration("overlord.properties", refreshDelay); //$NON-NLS-1$
+                            if (providedConfig != null) {
+                                compositeConfig.addConfiguration(providedConfig);
+                            }
+                        }
+                    }
+                }
             }
-            return config;
+
+            // Finally add the default config properties if provided
+            if (defaultConfigPath != null) {
+                compositeConfig.addConfiguration(new PropertiesConfiguration(defaultConfigLoader.getResource(defaultConfigPath)));
+            }
+            
+            return compositeConfig;
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }

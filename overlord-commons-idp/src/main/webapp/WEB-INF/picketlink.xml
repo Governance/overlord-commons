@@ -1,7 +1,7 @@
 <PicketLink xmlns="urn:picketlink:identity-federation:config:2.1">
   <PicketLinkIDP xmlns="urn:picketlink:identity-federation:config:2.1" RoleGenerator="org.overlord.commons.idp.IDPRoleGenerator"
     AttributeManager="org.picketlink.identity.federation.core.impl.EmptyAttributeManager" SupportsSignatures="true">
-    <IdentityURL>${overlord-idp.url::http://localhost:8080/overlord-idp/}</IdentityURL>
+    <IdentityURL>${overlord-idp.url::/overlord-idp/}</IdentityURL>
     <Trust>
       <Domains>localhost,jboss.com,jboss.org,amazonaws.com</Domains>
     </Trust>

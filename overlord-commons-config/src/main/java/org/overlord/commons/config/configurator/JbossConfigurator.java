@@ -16,7 +16,6 @@
 package org.overlord.commons.config.configurator;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -25,31 +24,43 @@ import java.net.URL;
  * @author David Virgil Naranjo
  */
 public class JbossConfigurator extends AbstractConfigurator {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#
-     * getServerConfigUrl(java.lang.String)
+    
+    /**
+     * Constructor.
+     */
+    public JbossConfigurator() {
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.Configurator#accept()
      */
     @Override
-    protected URL getServerConfigUrl(String standardConfigFileName) throws MalformedURLException {
+    public boolean accept() {
+        String jbossConfigDir = System.getProperty("jboss.server.config.dir"); //$NON-NLS-1$
+        String jbossConfigUrl = System.getProperty("jboss.server.config.url"); //$NON-NLS-1$
+        return jbossConfigDir != null || jbossConfigUrl != null;
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     */
+    @Override
+    protected URL findConfigUrl(String configName) {
+        URL rval = null;
         String jbossConfigDir = System.getProperty("jboss.server.config.dir"); //$NON-NLS-1$
         if (jbossConfigDir != null) {
             File dirFile = new File(jbossConfigDir);
-            if (dirFile.isDirectory()) {
-                File cfile = new File(dirFile, standardConfigFileName);
-                if (cfile.isFile())
-                    return cfile.toURI().toURL();
+            rval = findConfigUrlInDirectory(dirFile, configName);
+            if (rval != null) {
+                return rval;
             }
         }
         String jbossConfigUrl = System.getProperty("jboss.server.config.url"); //$NON-NLS-1$
         if (jbossConfigUrl != null) {
             File dirFile = new File(jbossConfigUrl);
-            if (dirFile.isDirectory()) {
-                File cfile = new File(dirFile, standardConfigFileName);
-                if (cfile.isFile())
-                    return cfile.toURI().toURL();
+            rval = findConfigUrlInDirectory(dirFile, configName);
+            if (rval != null) {
+                return rval;
             }
         }
         return null;

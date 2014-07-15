@@ -44,10 +44,10 @@ public class OverlordConfig {
                 null, null);
     }
 
-    protected static final String SAML_KEYSTORE_URL = "overlord.auth.saml-keystore-url";
-    protected static final String SAML_KEYSTORE_PASSWORD = "overlord.auth.saml-keystore-password";
-    protected static final String SAML_KEY_ALIAS = "overlord.auth.saml-key-alias";
-    protected static final String SAML_KEY_ALIAS_PASSWORD = "overlord.auth.saml-key-alias-password";
+    protected static final String SAML_KEYSTORE_URL = "overlord.auth.saml-keystore-url"; //$NON-NLS-1$
+    protected static final String SAML_KEYSTORE_PASSWORD = "overlord.auth.saml-keystore-password"; //$NON-NLS-1$
+    protected static final String SAML_KEY_ALIAS = "overlord.auth.saml-key-alias"; //$NON-NLS-1$
+    protected static final String SAML_KEY_ALIAS_PASSWORD = "overlord.auth.saml-key-alias-password"; //$NON-NLS-1$
 
     /**
      * @return the SAML keystore url
