@@ -19,7 +19,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -34,97 +33,53 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
  * @author David Virgil Naranjo
  */
 public abstract class AbstractConfigurator implements Configurator {
+    
+    /**
+     * Constructor.
+     */
+    public AbstractConfigurator() {
+    }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.overlord.commons.config.configurator.Configurator#addConfiguration
-     * (org.apache.commons.configuration.CompositeConfiguration,
-     * java.lang.String, java.lang.String, java.lang.Long)
+    /**
+     * @see org.overlord.commons.config.configurator.Configurator#provideConfiguration(java.lang.String, java.lang.Long)
      */
     @Override
-    public void addConfiguration(CompositeConfiguration config, String configFileOverride,
-            String standardConfigFileName,
-            Long refreshDelay) throws ConfigurationException {
-
-        if (!setConfigurationFromServerApi(config, configFileOverride, standardConfigFileName)) {
-            URL url = findConfig(configFileOverride, standardConfigFileName);
-            if (url != null) {
-                PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(url);
-                config.addConfiguration(propertiesConfiguration);
-                FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
-                fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);
-                propertiesConfiguration.setReloadingStrategy(fileChangedReloadingStrategy);
-            }
+    public Configuration provideConfiguration(String configName, Long refreshDelay)
+            throws ConfigurationException {
+        URL url = findConfigUrl(configName);
+        if (url != null) {
+            PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration(url);
+            FileChangedReloadingStrategy fileChangedReloadingStrategy = new FileChangedReloadingStrategy();
+            fileChangedReloadingStrategy.setRefreshDelay(refreshDelay);
+            propertiesConfiguration.setReloadingStrategy(fileChangedReloadingStrategy);
+            return propertiesConfiguration;
+        } else {
+            return null;
         }
-
-    }
-
-
-
-    /**
-     * Gets the server config url.
-     *
-     * @param standardConfigFileName
-     *            the standard config file name
-     * @return the server config url
-     * @throws MalformedURLException
-     *             the malformed url exception
-     */
-    protected abstract URL getServerConfigUrl(String standardConfigFileName) throws MalformedURLException;
-
-    /**
-     * Sets the configuration from server api.
-     *
-     * @param config
-     *            the config
-     * @param configFileOverride
-     *            the config file override
-     * @param standardConfigFileName
-     *            the standard config file name
-     * @return true, if successful
-     */
-    protected boolean setConfigurationFromServerApi(Configuration config, String configFileOverride,
-            String standardConfigFileName) {
-        return false;
     }
 
     /**
-     * Try to find the configuration file. This will look for the config file in
-     * a number of places.
-     *
-     * @param configFileOverride
-     *            the config file override
-     * @param standardConfigFileName
-     *            the standard config file name
-     * @return the url
+     * Locates the config file and returns a URL to it.
+     * @param configName
      */
-    protected URL findConfig(String configFileOverride, String standardConfigFileName) {
-        try {
-            if (configFileOverride != null) {
-                // Check on the classpath
-                URL fromClasspath = Thread.currentThread().getContextClassLoader()
-                        .getResource(configFileOverride);
-                if (fromClasspath != null)
-                    return fromClasspath;
+    protected abstract URL findConfigUrl(String configName);
 
-                // Check on the file system
-                File file = new File(configFileOverride);
-                if (file.isFile())
-                    return file.toURI().toURL();
-
+    /**
+     * Returns a URL to a file with the given name inside the given directory.
+     * @param directory
+     */
+    protected URL findConfigUrlInDirectory(File directory, String configName) {
+        if (directory.isDirectory()) {
+            File cfile = new File(directory, configName);
+            if (cfile.isFile()) {
+                try {
+                    return cfile.toURI().toURL();
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            else{
-                return getServerConfigUrl(standardConfigFileName);
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
         }
         return null;
     }
-
-
-
 
 }

@@ -11,6 +11,12 @@
   <description>An identity provider using PicketLink SAML.</description>
 
   <dependencies>
+    <!-- Overlord Commons -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-config</artifactId>
+    </dependency>
+    
     <!-- Third Party Dependencies -->
     <dependency>
       <groupId>org.picketlink</groupId>

@@ -15,7 +15,7 @@
  */
 package org.overlord.commons.config.configurator;
 
-import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 
 /**
@@ -26,20 +26,21 @@ import org.apache.commons.configuration.ConfigurationException;
 public interface Configurator {
 
     /**
-     * Adds the configuration.
-     *
-     * @param config
-     *            the config
-     * @param configFileOverride
-     *            the config file override
-     * @param standardConfigFileName
-     *            the standard config file name
-     * @param refreshDelay
-     *            the refresh delay
-     * @throws ConfigurationException
-     *             the configuration exception
+     * Returns true if this configurator accepts the responsiblity of providing
+     * configuration information for the application.  Implementations of this
+     * interface are, generally, created for each supported runtime platform.  
+     * The implementation of 'accept' should return true only if the current 
+     * runtime platform matches the one supported by the impl.
      */
-    public void addConfiguration(CompositeConfiguration config, String configFileOverride,
-            String standardConfigFileName,
-            Long refreshDelay) throws ConfigurationException;
+    public boolean accept();
+
+    /**
+     * Provides the actual application configuration.  Typically this means 
+     * locating the configuration file for the supported runtime platform.
+     *
+     * @param configName the name of the config - e.g. used to lookup a properties file
+     * @param refreshDelay how often the properties are reloaded
+     * @throws ConfigurationException
+     */
+    public Configuration provideConfiguration(String configName, Long refreshDelay) throws ConfigurationException;
 }

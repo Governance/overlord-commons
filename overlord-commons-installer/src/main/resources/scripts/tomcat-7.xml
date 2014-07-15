@@ -65,6 +65,14 @@
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
 
     <antcall target="install-admin-user" />
+
+    <!-- Configure overlord.properties -->
+    <propertyfile file="${overlord-commons.tomcat.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:catalina.home}/conf/overlord-saml.keystore" />
+      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+    </propertyfile>
   </target>
 
   <!-- Installs the overlord admin user -->

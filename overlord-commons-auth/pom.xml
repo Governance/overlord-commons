@@ -61,7 +61,8 @@
             <Export-Package>
               org.overlord.commons.auth.util,
               org.overlord.commons.auth.filters,
-              org.overlord.commons.auth.handlers
+              org.overlord.commons.auth.handlers,
+              org.overlord.commons.auth.saml.sp
             </Export-Package>
           </instructions>
         </configuration>

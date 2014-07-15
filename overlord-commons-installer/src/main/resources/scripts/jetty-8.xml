@@ -66,7 +66,15 @@
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
 
     <antcall target="install-admin-user" />
-    
+
+    <!-- Configure overlord.properties -->
+    <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
+      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+    </propertyfile>
+
     <echo>Adding Overlord realm to jetty.xml</echo>
     <property name="overlord-commons.addRealm.xslt" value="xslt/addRealm-jetty-8.xslt" />
     <copy file="${overlord-commons.jetty.config.dir}/jetty.xml" tofile="${overlord-commons.jetty.config.dir}/jetty-overlord-backup.xml" overwrite="true" />

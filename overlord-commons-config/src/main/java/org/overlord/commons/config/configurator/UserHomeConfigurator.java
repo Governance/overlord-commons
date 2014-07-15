@@ -24,23 +24,39 @@ import java.net.URL;
  * 
  * @author David Virgil Naranjo
  */
-public class UserHomeConfigurator extends AbstractConfigurator{
+public class UserHomeConfigurator extends AbstractConfigurator {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#
-     * getServerConfigUrl(java.lang.String)
+    /**
+     * Constructor.
+     */
+    public UserHomeConfigurator() {
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.Configurator#accept()
      */
     @Override
-    protected URL getServerConfigUrl(String standardConfigFileName) throws MalformedURLException {
+    public boolean accept() {
+        return true;
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     */
+    @Override
+    protected URL findConfigUrl(String configName) {
         String userHomeDir = System.getProperty("user.home"); //$NON-NLS-1$
         if (userHomeDir != null) {
             File dirFile = new File(userHomeDir);
             if (dirFile.isDirectory()) {
-                File cfile = new File(dirFile, standardConfigFileName);
-                if (cfile.isFile())
-                    return cfile.toURI().toURL();
+                File cfile = new File(dirFile, configName);
+                if (cfile.isFile()) {
+                    try {
+                        return cfile.toURI().toURL();
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
         return null;

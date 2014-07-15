@@ -16,7 +16,6 @@
 package org.overlord.commons.config.configurator;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -25,23 +24,31 @@ import java.net.URL;
  * @author David Virgil Naranjo
  */
 public class TomcatConfigurator extends AbstractConfigurator {
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#
-     * getServerConfigUrl(java.lang.String)
+    
+    /**
+     * Constructor.
+     */
+    public TomcatConfigurator() {
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.Configurator#accept()
      */
     @Override
-    protected URL getServerConfigUrl(String standardConfigFileName) throws MalformedURLException {
+    public boolean accept() {
+        String tomcatDir = System.getProperty("catalina.home"); //$NON-NLS-1$
+        return tomcatDir != null;
+    }
+    
+    /**
+     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     */
+    @Override
+    protected URL findConfigUrl(String configName) {
         String tomcatDir = System.getProperty("catalina.home"); //$NON-NLS-1$
         if (tomcatDir != null) {
             File dirFile = new File(tomcatDir, "conf"); //$NON-NLS-1$
-            if (dirFile.isDirectory()) {
-                File cfile = new File(dirFile, standardConfigFileName);
-                if (cfile.isFile())
-                    return cfile.toURI().toURL();
-            }
+            return findConfigUrlInDirectory(dirFile, configName);
         }
         return null;
     }

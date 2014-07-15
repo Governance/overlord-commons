@@ -78,7 +78,7 @@
     <antcall target="install-jboss" />
     <antcall target="configure-standalone-osgi" />
   </target>
-    
+
   <target name="configure-standalone-osgi" if="standalone-osgi-exists">
     <copy file="${overlord-commons.jboss.config.dir}/standalone-osgi.xml" todir="${overlord-commons.jboss.config.dir}/.overlord_backup" overwrite="true" />
     <!-- standalone-osgi.xml -->
@@ -188,6 +188,15 @@
     <propertyfile file="${overlord-commons.jboss.config.dir}/overlord-vault-keys.properties">
       <entry key="overlord-commons.saml-keystore.password.hash" value="${overlord-commons.saml-keystore.password.hash}" />
       <entry key="overlord-commons.overlord-alias.password.hash" value="${overlord-commons.overlord-alias.password.hash}" />
+    </propertyfile>
+
+    <!-- Configure overlord.properties -->
+    <makeurl file="${overlord-commons.jboss.config.dir}/overlord-saml.keystore" property="overlord-commons.keystore.url"/>
+    <propertyfile file="${overlord-commons.jboss.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${overlord-commons.keystore.url}" />
+      <entry key="overlord.auth.saml-keystore-password" value="$${vault:${overlord-commons.saml-keystore.password.hash}}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="$${vault:${overlord-commons.overlord-alias.password.hash}}" />
     </propertyfile>
 
     <echo>Configuring standalone.xml with Overlord login-modules.</echo>
