@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Jetty 8" default="install">
-  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JettyGetPassword" classpath="${overlord-commons.ant.jar}">
-  </taskdef>
-
-  <property file="overlord-commons-installer.properties" />
+  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JettyGetPassword" classpath="${overlord-commons.ant.jar}"/>
+	<property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
   <property name="appserver.id" value="jetty-8" />
@@ -26,6 +24,16 @@
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
   </target>
 
+  <target name="generate-properties" depends="all-properties">
+    <!-- Configure overlord.properties -->
+    <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
+      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+    </propertyfile>
+  </target>
+  
   <!-- Do some config -->
   <target name="config">
     <mkdir dir="${overlord-commons.install.dir}" />
@@ -41,6 +49,14 @@
     <fail message="install-vault not supported for Jetty 8" />
   </target>
 
+ <!-- Generate the authentication keystore -->
+  <target name="generate_keystore" depends="all-properties">
+    <echo>Creating SAML authentication keystore</echo>
+   <genkey keystore="${overlord-commons.jetty.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.admin.password}"
+            keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.admin.password}"
+            dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
+  </target>
+
   <!-- Install Overlord Commons -->
   <target name="install-jetty-8" depends="overlord-commons.check" unless="overlord-commons.already.installed">
     <echo message=" " />
@@ -48,6 +64,10 @@
     <echo message="# Installing into Jetty 8          #" />
     <echo message="####################################" />
     <echo message=" " />
+
+    <antcall target="install-admin-user"></antcall>
+    <antcall target="generate_keystore"></antcall>
+    <antcall target="generate-properties"></antcall>
 
     <echo>Downloading Overlord Commons IDP + Libs</echo>
     <condition property="overlord-commons.idp.file.exists">
@@ -57,23 +77,6 @@
     
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.jetty.deploy.dir}/overlord-idp.war" overwrite="true" />
-    
-    <echo>Creating SAML authentication keystore</echo>
-    <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
-    <property name="overlord-commons.overlord-alias.password" value="overlord99" />
-    <genkey keystore="${overlord-commons.jetty.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
-            keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
-            dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
-
-    <antcall target="install-admin-user" />
-
-    <!-- Configure overlord.properties -->
-    <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
-      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
-      <entry key="overlord.auth.saml-key-alias" value="overlord" />
-      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
-    </propertyfile>
 
     <echo>Adding Overlord realm to jetty.xml</echo>
     <property name="overlord-commons.addRealm.xslt" value="xslt/addRealm-jetty-8.xslt" />
@@ -89,18 +92,23 @@
   </target>
 
   <!-- Installs the overlord admin user -->
-  <target name="install-admin-user">
+  <target name="install-admin-user" depends="password-prompt">
+    <echo>Configuring Overlord admin user in jetty/etc/users.properties</echo>
+    <copy file="config/fuse-users.properties" tofile="${overlord-commons.jetty.config.dir}/realm.properties" overwrite="true" />
+    <replace file="${overlord-commons.jetty.config.dir}/realm.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+	<property name="overlord-commons.saml-keystore.password" value="${overlord-commons.admin.password}"/>
+    <property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}"/>  
+  </target>
 
+	  
+  <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
+  <target name="password-prompt" unless="overlord-commons.admin.password">
     <!-- Ask the user for the admin password -->
     <inputPassword message="Please enter a password for the Overlord 'admin' user: "
       confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
     <echo message="" />
-    
-    <echo>Configuring Overlord admin user in jetty/etc/users.properties</echo>
-    <copy file="config/fuse-users.properties" tofile="${overlord-commons.jetty.config.dir}/realm.properties" overwrite="true" />
-    <replace file="${overlord-commons.jetty.config.dir}/realm.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
-  </target>
-
+  </target>	
+	
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">

@@ -12,7 +12,6 @@
   <property name="overlord-commons.install.dir" location="target" />
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
   <!-- ****************************************************** -->
-
   
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="overlord-commons.version" value="" />
@@ -26,7 +25,6 @@
     <echo message="# its dependencies) into an app server.               #" />
     <echo message="#######################################################" />
     <echo message=" " />
-    
     <property name="overlord-commons.script.dir" location="${basedir}/scripts" />
     <ant antfile="${overlord-commons.script.dir}/${appserver.id}.xml" inheritall="true" target="install" /> 
 
