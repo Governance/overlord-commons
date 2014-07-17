@@ -264,17 +264,27 @@
 
       <!-- Fabric 8 api library -->
       <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric-api</artifactId>
-        <version>${fabric8.version}</version>
-      </dependency>
-
-      <!-- Declarative Service Annotations -->
-      <dependency>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>org.apache.felix.scr.annotations</artifactId>
-        <version>1.7.0</version>
-      </dependency>
+		<groupId>io.fabric8</groupId>
+      	<artifactId>fabric-api</artifactId>
+      	<version>${fabric8.version}</version>
+      </dependency>      
+      
+      <!-- Declarative Service Annotations -->   
+	  <dependency>
+	    <groupId>org.apache.felix</groupId>
+	  	<artifactId>org.apache.felix.scr.annotations</artifactId>
+	  	<version>1.7.0</version>
+	  </dependency>
+    <dependency>
+      <groupId>org.apache.karaf.shell</groupId>
+      <artifactId>org.apache.karaf.shell.console</artifactId>
+      <version>2.3.5</version>
+    </dependency>
+	<dependency>
+		<groupId>org.bouncycastle</groupId>
+		<artifactId>bcprov-jdk15on</artifactId>
+		<version>1.49</version>
+	</dependency>
 
       <!-- Integration Platform Imports -->
       <dependency>
@@ -382,6 +392,12 @@
         <artifactId>overlord-commons-auth-jetty8</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>overlord-commons-karaf-commands</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-osgi</artifactId>
