@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Fuse 6.1" default="install">
-  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.FuseGetPassword" classpath="${overlord-commons.ant.jar}">
-  </taskdef>
+  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.FuseGetPassword" classpath="${overlord-commons.ant.jar}"/>
+
   <property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
@@ -25,8 +25,24 @@
     <mkdir dir="${overlord-commons.install.dir}" />
   </target>
 
+  <target name="generate-properties" depends="all-properties">
+    <!-- Configure overlord.properties -->
+    <propertyfile file="${overlord-commons.fuse.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:karaf.home}/etc/overlord-saml.keystore" />
+      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+    </propertyfile>
+  </target>
+
+
   <!-- Install Everything -->
   <target name="install" depends="all-properties, config">
+    <echo message=" " />
+    <echo message="#####################################" />
+    <echo message="# Installing into Fuse 6.1          #" />
+    <echo message="#####################################" />
+    <echo message=" " />
     <antcall target="install-fuse-6.1" />
   </target>
   
@@ -39,8 +55,6 @@
   <!-- Generate the authentication keystore -->
   <target name="generate_keystore" depends="all-properties">
     <echo>Creating SAML authentication keystore</echo>
-    <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
-    <property name="overlord-commons.overlord-alias.password" value="overlord99" />
     <genkey keystore="${overlord-commons.fuse.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
             keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
@@ -49,24 +63,10 @@
   
   <!-- Install Overlord Commons -->
   <target name="install-fuse-6.1" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <echo message=" " />
-    <echo message="#####################################" />
-    <echo message="# Installing into Fuse 6.1          #" />
-    <echo message="#####################################" />
-    <echo message=" " />
-
-	<antcall target="generate_keystore"/>
-    <antcall target="install-admin-user" />
-
-    <!-- Configure overlord.properties -->
-    <propertyfile file="${overlord-commons.fuse.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${sys:karaf.home}/etc/overlord-saml.keystore" />
-      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
-      <entry key="overlord.auth.saml-key-alias" value="overlord" />
-      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
-    </propertyfile>
-
-    <!-- Make some changes to Fuse 6.1!! (hopefully temporary) -->
+    <antcall target="install-admin-user"></antcall>
+    <antcall target="generate_keystore"></antcall>
+    <antcall target="generate-properties"></antcall>
+	<!-- Make some changes to Fuse 6.1!! (hopefully temporary) -->
     <property name="overlord-commons.modules-dir" location="modules" />
     <property name="overlord-commons.config-dir" location="config" />
     <copy file="${overlord-commons.config-dir}/jre.properties" todir="${overlord-commons.fuse.config.dir}" overwrite="true" />
@@ -99,6 +99,8 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
     <echo>Configuring Overlord admin user in fuse/etc/users.properties</echo>
     <copy file="config/fuse-users.properties" tofile="${overlord-commons.fuse.config.dir}/users.properties" overwrite="true" />
     <replace file="${overlord-commons.fuse.config.dir}/users.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+  	<property name="overlord-commons.saml-keystore.password" value="${overlord-commons.admin.password}"/>
+  	<property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}"/>  	
   </target>
   
   <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
@@ -109,7 +111,7 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
     <echo message="" />
   </target>
 
-  
+	
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Tomcat 7" default="install">
-  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.TomcatGetPassword" classpath="${overlord-commons.ant.jar}">
-  </taskdef>
+  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.TomcatGetPassword" classpath="${overlord-commons.ant.jar}"/>
   <property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
@@ -11,11 +10,9 @@
 
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="overlord-commons.version" value="" />
-
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
-
     <property name="overlord-commons.lib.download.url" value="https://repository.jboss.org/nexus/content/groups/public" />
 
     <property name="overlord-commons.tomcat.deploy.dir" location="${overlord-commons.appserver.dir}/webapps" />
@@ -32,6 +29,11 @@
   
   <!-- Install Everything -->
   <target name="install" depends="all-properties, config">
+    <echo message=" " />
+    <echo message="#####################################" />
+    <echo message="# Installing into Tomcat 7          #" />
+    <echo message="#####################################" />
+    <echo message=" " />
     <antcall target="install-tomcat-7" />
   </target>
   
@@ -40,14 +42,37 @@
     <fail message="install-vault not supported for Tomcat 7" />
   </target>
 
+  <!-- Install auth + vault only (not supported for Tomcat 7) -->
+  <target name="set-saml-properties" >
+    <condition property="overlord-commons.saml-keystore.password">
+    	
+    </condition>
+  </target>
+
+  <!-- Generate the authentication keystore -->
+  <target name="generate_keystore" depends="all-properties">
+    <echo>Creating SAML authentication keystore</echo>
+   <genkey keystore="${overlord-commons.tomcat.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
+            keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
+            dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
+  </target>
+  
+  <target name="generate-properties" depends="all-properties">
+    <!-- Configure overlord.properties -->
+    <propertyfile file="${overlord-commons.tomcat.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+      <entry key="overlord.auth.saml-keystore-url" value="${sys:catalina.home}/conf/overlord-saml.keystore" />
+      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-key-alias" value="overlord" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+    </propertyfile>
+  
+  </target>
+  
   <!-- Install Overlord Commons -->
   <target name="install-tomcat-7" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <echo message=" " />
-    <echo message="#####################################" />
-    <echo message="# Installing into Tomcat 7          #" />
-    <echo message="#####################################" />
-    <echo message=" " />
-
+    <antcall target="install-admin-user"></antcall>
+    <antcall target="generate_keystore"></antcall>
+    <antcall target="generate-properties"></antcall>
     <echo>Downloading Overlord Commons IDP + Libs</echo>
     <condition property="overlord-commons.idp.file.exists">
       <available file="${overlord-commons.idp.file}" />
@@ -56,23 +81,6 @@
     
     <echo>Deploying the Overlord IDP</echo>
     <copy file="${overlord-commons.idp.file}" tofile="${overlord-commons.tomcat.deploy.dir}/overlord-idp.war" overwrite="true" />
-    
-    <echo>Creating SAML authentication keystore</echo>
-    <property name="overlord-commons.saml-keystore.password" value="samlkeystore77" />
-    <property name="overlord-commons.overlord-alias.password" value="overlord99" />
-    <genkey keystore="${overlord-commons.tomcat.config.dir}/overlord-saml.keystore" storepass="${overlord-commons.saml-keystore.password}"
-            keyalg="RSA" keysize="2048" alias="overlord" storetype="jks" keypass="${overlord-commons.overlord-alias.password}"
-            dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
-
-    <antcall target="install-admin-user" />
-
-    <!-- Configure overlord.properties -->
-    <propertyfile file="${overlord-commons.tomcat.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${sys:catalina.home}/conf/overlord-saml.keystore" />
-      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
-      <entry key="overlord.auth.saml-key-alias" value="overlord" />
-      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
-    </propertyfile>
   </target>
 
   <!-- Installs the overlord admin user -->
@@ -80,6 +88,8 @@
     <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
     <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
     <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+    <property name="overlord-commons.saml-keystore.password" value="${overlord-commons.admin.password}"/>
+    <property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}"/>
   </target>
   
   <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
@@ -96,7 +106,7 @@
       <available file="${overlord-commons.tomcat.config.dir}/overlord-saml.keystore" type="file" />
     </condition>
   </target>
-  
+ 
   <!-- Download the IDP WAR -->
   <target name="download-idp" unless="overlord-commons.idp.file.exists">
     <get src="${overlord-commons.idp.download.url}" dest="${overlord-commons.idp.file}" usetimestamp="true" />
