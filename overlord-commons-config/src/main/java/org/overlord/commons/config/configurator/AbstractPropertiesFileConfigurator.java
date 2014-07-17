@@ -32,12 +32,12 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
  * 
  * @author David Virgil Naranjo
  */
-public abstract class AbstractConfigurator implements Configurator {
+public abstract class AbstractPropertiesFileConfigurator implements Configurator {
     
     /**
      * Constructor.
      */
-    public AbstractConfigurator() {
+    public AbstractPropertiesFileConfigurator() {
     }
 
     /**

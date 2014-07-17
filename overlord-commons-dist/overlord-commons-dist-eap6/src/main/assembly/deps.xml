@@ -1,0 +1,30 @@
+<assembly>
+  <id>bin</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <!-- configuration extension -->
+    <dependencySet>
+      <outputDirectory>/modules/org/overlord/commons/eap/extensions/config/main</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.overlord:overlord-commons-eap-config-extension</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/modules/org/overlord/commons/eap/extensions/config/main</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.overlord:overlord-commons-eap-config-extension</include>
+      </includes>
+      <unpack>true</unpack>
+      <unpackOptions>
+        <includes>
+          <include>module.xml</include>
+        </includes>
+      </unpackOptions>
+    </dependencySet>
+  </dependencySets>
+</assembly>

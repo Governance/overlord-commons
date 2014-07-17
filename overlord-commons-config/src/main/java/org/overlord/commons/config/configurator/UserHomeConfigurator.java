@@ -24,7 +24,7 @@ import java.net.URL;
  * 
  * @author David Virgil Naranjo
  */
-public class UserHomeConfigurator extends AbstractConfigurator {
+public class UserHomeConfigurator extends AbstractPropertiesFileConfigurator {
 
     /**
      * Constructor.
@@ -41,7 +41,7 @@ public class UserHomeConfigurator extends AbstractConfigurator {
     }
     
     /**
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     * @see org.overlord.commons.config.configurator.AbstractPropertiesFileConfigurator#findConfigUrl(java.lang.String)
      */
     @Override
     protected URL findConfigUrl(String configName) {

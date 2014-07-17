@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -100,12 +101,14 @@
     <servlet-api.version>2.5</servlet-api.version>
     <jetty.version>8.1.9.v20130131</jetty.version>
     <tomcat.version>7.0.47</tomcat.version>
-    
+
+    <version.jboss.dmr>1.2.0.Final</version.jboss.dmr>
+    <version.jboss.as.controller>7.2.0.Final</version.jboss.as.controller>
     <fabric8.version>1.0.0.redhat-379</fabric8.version>
   </properties>
 
   <modules>
-    <module>overlord-commons-ant</module> 
+    <module>overlord-commons-ant</module>
     <module>overlord-commons-auth</module>
     <module>overlord-commons-auth-jboss7</module>
     <module>overlord-commons-auth-jetty8</module>
@@ -129,6 +132,7 @@
     <module>overlord-commons-uiheader</module>
     <module>overlord-commons-dist</module>
     <module>overlord-commons-solder-impl</module>
+    <module>overlord-commons-eap-config-extension</module>
   </modules>
 
   <build>
@@ -182,12 +186,12 @@
           <artifactId>properties-maven-plugin</artifactId>
           <version>1.0-alpha-2</version>
         </plugin>
-		<plugin>
-		  <groupId>org.apache.felix</groupId>
-		  <artifactId>maven-scr-plugin</artifactId>
-		  <version>1.9.0</version>
-		</plugin>
-        
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-scr-plugin</artifactId>
+          <version>1.9.0</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -259,58 +263,70 @@
           </archive>
         </configuration>
       </plugin>
-	  <plugin>
-		  <groupId>org.apache.felix</groupId>
-		  <artifactId>maven-scr-plugin</artifactId>
-		  <executions>
-		    <execution>
-		      <id>generate-scr-scrdescriptor</id>
-		      <goals>
-		        <goal>scr</goal>
-		      </goals>
-		    </execution>
-	  </executions>
-	  </plugin>
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-victims-rule</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <rule implementation="com.redhat.victims.VictimsRule">
-                                   <metadata>warning</metadata>
-                                    <fingerprint>fatal</fingerprint>
-                                    <updates>${victims.updates}</updates>
-                                </rule>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-scr-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-scr-scrdescriptor</id>
+            <goals>
+              <goal>scr</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-victims-rule</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule implementation="com.redhat.victims.VictimsRule">
+                  <metadata>warning</metadata>
+                  <fingerprint>fatal</fingerprint>
+                  <updates>${victims.updates}</updates>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
   <dependencyManagement>
     <dependencies>
-      
+
+      <!-- JBoss Libs -->
+      <dependency>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-dmr</artifactId>
+        <version>${version.jboss.dmr}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-controller</artifactId>
+        <version>${version.jboss.as.controller}</version>
+      </dependency>
+
       <!-- Fabric 8 api library -->
       <dependency>
-		<groupId>io.fabric8</groupId>
-      	<artifactId>fabric-api</artifactId>
-      	<version>${fabric8.version}</version>
-      </dependency>      
-      
-      <!-- Declarative Service Annotations -->   
-	  <dependency>
-	    <groupId>org.apache.felix</groupId>
-	  	<artifactId>org.apache.felix.scr.annotations</artifactId>
-	  	<version>1.7.0</version>
-	  </dependency>
-    
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric-api</artifactId>
+        <version>${fabric8.version}</version>
+      </dependency>
+
+      <!-- Declarative Service Annotations -->
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.scr.annotations</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+
       <!-- Integration Platform Imports -->
       <dependency>
         <groupId>org.jboss.integration-platform</groupId>
@@ -348,7 +364,7 @@
         <artifactId>tomcat-coyote</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
-      
+
       <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
@@ -380,7 +396,7 @@
         <artifactId>reflections</artifactId>
         <version>${version.org.jboss.errai}</version>
       </dependency>
-      
+
       <!-- Internal dependencies -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -424,6 +440,11 @@
       </dependency>
       <dependency>
         <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-eap-config-extension</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.overlord</groupId>
         <artifactId>overlord-commons-idp</artifactId>
         <version>${project.version}</version>
         <type>war</type>
@@ -434,7 +455,7 @@
         <version>${project.version}</version>
         <type>war</type>
       </dependency>
-   
+
     </dependencies>
   </dependencyManagement>
 
@@ -477,7 +498,7 @@
         <updatePolicy>daily</updatePolicy>
       </snapshots>
     </repository>
-    
+
   </repositories>
 
   <pluginRepositories>

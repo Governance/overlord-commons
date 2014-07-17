@@ -76,6 +76,7 @@
               org.overlord.commons.config.saml.sp
             </Export-Package>
             <Import-Package>
+              javax.naming,
               org.overlord.commons.auth.saml.sp,
               org.apache.commons.configuration,
               org.apache.commons.configuration.interpol,
