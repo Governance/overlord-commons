@@ -6,13 +6,15 @@
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
 
-    <property name="overlord-commons.jboss.deploy.dir" value="${overlord-commons.appserver.dir}/standalone/deployments" />
-    <property name="overlord-commons.jboss.config.dir" value="${overlord-commons.appserver.dir}/standalone/configuration" />
+    <property name="overlord-commons.jboss.deploy.dir" location="${overlord-commons.appserver.dir}/standalone/deployments" />
+    <property name="overlord-commons.jboss.config.dir" location="${overlord-commons.appserver.dir}/standalone/configuration" />
+    <property name="overlord-commons.jboss.module-path" location="${overlord-commons.appserver.dir}/modules" />
     
     <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap6/${overlord-commons.version}/overlord-commons-idp-eap6-${overlord-commons.version}.war" />
     <property name="overlord-commons.auth.jboss7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-jboss7/${overlord-commons.version}/overlord-commons-auth-jboss7-${overlord-commons.version}.war" />
 
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap6.war" />
+    <property name="overlord-commons.eap-dist.file" value="${overlord-commons.install.dir}/overlord-commons-dist-eap6.zip" />
     <property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.install.dir}/overlord-commons-auth-jboss7.jar" />
     <condition property="standalone-osgi-exists">
       <available file="${overlord-commons.jboss.config.dir}/standalone-osgi.xml" />
@@ -102,6 +104,9 @@
     <property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}" />
     <property name="overlord-commons.tmp.file" location="${overlord-commons.install.dir}/_tmp_vault.properties" />
 
+    <!-- Install the overlord commons EAP extension modules -->
+    <unzip src="${overlord-commons.eap-dist.file}" dest="${overlord-commons.appserver.dir}" overwrite="true" />
+    
     <!-- Create the password vault keystore -->
     <genkey keystore="${overlord-commons.jboss.config.dir}/vault.keystore" storepass="${overlord-commons.vault.password}"
             keyalg="RSA" keysize="1024" alias="vault" storetype="jks"
@@ -113,12 +118,11 @@
             dname="CN=Overlord, OU=JBoss, O=RedHat, L=Westford, ST=Mass, C=US"/>
 
     <!-- Store SAML signature keystore password in vault -->
-    <property name="overlord-commons.appserver.module-path" location="${overlord-commons.appserver.dir}/modules" />
     <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
           fork="true" dir="${overlord-commons.appserver.dir}"
           failonerror="true" maxmemory="128m">
       <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
+      <arg value="${overlord-commons.jboss.module-path}"/>
       <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
       <arg value="storepassword"/>
       <arg value="-vaultdir"/>
@@ -149,12 +153,11 @@
     <echo message="Vault key for saml signature keystore password: ${overlord-commons.saml-keystore.password.hash}" />
 
     <!-- Store overlord saml keypair alias password in vault -->
-    <property name="overlord-commons.appserver.module-path" location="${overlord-commons.appserver.dir}/modules" />
     <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
           fork="true" dir="${overlord-commons.appserver.dir}"
           failonerror="true" maxmemory="128m">
       <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
+      <arg value="${overlord-commons.jboss.module-path}"/>
       <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
       <arg value="storepassword"/>
       <arg value="-vaultdir"/>
@@ -248,24 +251,24 @@
   <!-- Installs the overlord admin user -->
   <target name="install-admin-user" unless="overlord-commons.vault-only">
     <!-- Create Overlord admin user -->
-    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
+  	<java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
           fork="true" dir="${overlord-commons.appserver.dir}"
-          failonerror="true" maxmemory="128m">
-      <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
-      <arg value="-mp"/>
-      <arg value="${overlord-commons.appserver.module-path}"/>
-      <arg value="org.jboss.as.domain-add-user"/>
-      <arg value="-a"/>
-      <arg value="-s"/>
-      <arg value="-u"/>
-      <arg value="admin"/>
-      <arg value="-p"/>
-      <arg value="${overlord-commons.admin.password}"/>
-      <arg value="-r"/>
-      <arg value="ApplicationRealm"/>
-      <arg value="-ro"/>
-      <arg value="overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
-    </java>
+  	      failonerror="true" maxmemory="128m">
+  	  <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
+  	  <arg value="-mp"/>
+  	  <arg value="${overlord-commons.jboss.module-path}"/>
+  	  <arg value="org.jboss.as.domain-add-user"/>
+  	  <arg value="-a"/>
+  	  <arg value="-s"/>
+  	  <arg value="-u"/>
+  	  <arg value="admin"/>
+  	  <arg value="-p"/>
+  	  <arg value="${overlord-commons.admin.password}"/>
+  	  <arg value="-r"/>
+  	  <arg value="ApplicationRealm"/>
+  	  <arg value="-ro"/>
+  	  <arg value="overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
+  	</java>
   </target>
 
   <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
