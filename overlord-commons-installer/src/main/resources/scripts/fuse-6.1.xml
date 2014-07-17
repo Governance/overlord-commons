@@ -28,7 +28,9 @@
   <target name="generate-properties" depends="all-properties">
     <!-- Configure overlord.properties -->
     <propertyfile file="${overlord-commons.fuse.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${sys:karaf.home}/etc/overlord-saml.keystore" />
+      <entry key="overlord.port" value="8181" />
+      <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
+      <entry key="overlord.auth.saml-keystore" value="${sys:karaf.home}/etc/overlord-saml.keystore" />
       <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
       <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />

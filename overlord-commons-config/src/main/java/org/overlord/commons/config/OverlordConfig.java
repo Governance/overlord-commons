@@ -16,6 +16,9 @@
 
 package org.overlord.commons.config;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import org.apache.commons.configuration.Configuration;
 
 /**
@@ -44,16 +47,32 @@ public class OverlordConfig {
                 null, null);
     }
 
-    protected static final String SAML_KEYSTORE_URL = "overlord.auth.saml-keystore-url"; //$NON-NLS-1$
+    protected static final String SAML_KEYSTORE = "overlord.auth.saml-keystore"; //$NON-NLS-1$
     protected static final String SAML_KEYSTORE_PASSWORD = "overlord.auth.saml-keystore-password"; //$NON-NLS-1$
     protected static final String SAML_KEY_ALIAS = "overlord.auth.saml-key-alias"; //$NON-NLS-1$
     protected static final String SAML_KEY_ALIAS_PASSWORD = "overlord.auth.saml-key-alias-password"; //$NON-NLS-1$
 
+    private String keystore;
+    
     /**
      * @return the SAML keystore url
      */
     public String getSamlKeystoreUrl() {
-        return overlordConfig.getString(SAML_KEYSTORE_URL);
+        if (keystore == null) {
+            String ks = overlordConfig.getString(SAML_KEYSTORE);
+            File ksFile = new File(ks);
+            try {
+                if (ksFile.isFile()) {
+                    ks = ksFile.toURI().toURL().toString();
+                } else {
+                    throw new FileNotFoundException(ks);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            keystore = ks;
+        }
+        return keystore;
     }
     
     /**

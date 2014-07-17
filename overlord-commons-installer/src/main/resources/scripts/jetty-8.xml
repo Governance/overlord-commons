@@ -27,7 +27,9 @@
   <target name="generate-properties" depends="all-properties">
     <!-- Configure overlord.properties -->
     <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
+      <entry key="overlord.port" value="8080" />
+      <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
+      <entry key="overlord.auth.saml-keystore" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
       <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
       <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />

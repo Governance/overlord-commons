@@ -5,7 +5,7 @@ import java.io.Console;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
-public class PromptTask extends Task {
+public class InputPassword extends Task {
     private String addproperty;
     private String message;
     private String confirmationMessage;
@@ -148,7 +148,7 @@ public class PromptTask extends Task {
     private boolean validate(String value) {
         if (minimumLength != null && minimumLength > 0) {
             if (value.length() < minimumLength) {
-                log(" * Error *\nThe length of the password should be at least " + minimumLength + " characters."); //$NON-NLS-1$
+                log(" * Error *\nThe length of the password should be at least " + minimumLength + " characters."); //$NON-NLS-1$ //$NON-NLS-2$
                 return false;
             }
         }

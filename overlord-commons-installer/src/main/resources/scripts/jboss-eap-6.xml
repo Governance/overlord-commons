@@ -61,7 +61,7 @@
   <target name="install-jboss-eap-6">
     <echo message=" " />
     <echo message="########################################" />
-    <echo message="# Installing into JBoss EAP 6 #" />
+    <echo message="# Installing into JBoss EAP 6          #" />
     <echo message="########################################" />
     <echo message=" " />
     
@@ -184,16 +184,12 @@
     <delete file="${overlord-commons.tmp.file}" />
     <echo message="Vault key for Overlord SAML alias password: ${overlord-commons.overlord-alias.password.hash}" />
 
-    <!-- Save the password hashes for future installers to use -->
-    <propertyfile file="${overlord-commons.jboss.config.dir}/overlord-vault-keys.properties">
-      <entry key="overlord-commons.saml-keystore.password.hash" value="${overlord-commons.saml-keystore.password.hash}" />
-      <entry key="overlord-commons.overlord-alias.password.hash" value="${overlord-commons.overlord-alias.password.hash}" />
-    </propertyfile>
-
     <!-- Configure overlord.properties -->
     <makeurl file="${overlord-commons.jboss.config.dir}/overlord-saml.keystore" property="overlord-commons.keystore.url"/>
     <propertyfile file="${overlord-commons.jboss.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
-      <entry key="overlord.auth.saml-keystore-url" value="${overlord-commons.keystore.url}" />
+      <entry key="overlord.port" value="8080" />
+      <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
+      <entry key="overlord.auth.saml-keystore" value="${sys:jboss.server.config.dir}/overlord-saml.keystore" />
       <entry key="overlord.auth.saml-keystore-password" value="$${vault:${overlord-commons.saml-keystore.password.hash}}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
       <entry key="overlord.auth.saml-key-alias-password" value="$${vault:${overlord-commons.overlord-alias.password.hash}}" />
@@ -252,27 +248,26 @@
   <!-- Installs the overlord admin user -->
   <target name="install-admin-user" unless="overlord-commons.vault-only">
     <!-- Create Overlord admin user -->
-   <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
-   fork="true" dir="${overlord-commons.appserver.dir}"
-   failonerror="true" maxmemory="128m">
-   <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
-   <arg value="-mp"/>
-   <arg value="${overlord-commons.appserver.module-path}"/>
-   <arg value="org.jboss.as.domain-add-user"/>
-   <arg value="-a"/>
-   <arg value="-s"/>
-   <arg value="-u"/>
-   <arg value="admin"/>
-   <arg value="-p"/>
-   <arg value="${overlord-commons.admin.password}"/>
-   <arg value="-r"/>
-   <arg value="ApplicationRealm"/>
-   <arg value="-ro"/>
-   <arg value="overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
-   </java>
-  
+    <java jar="${overlord-commons.appserver.dir}/jboss-modules.jar"
+          fork="true" dir="${overlord-commons.appserver.dir}"
+          failonerror="true" maxmemory="128m">
+      <env key="JBOSS_HOME" value="${overlord-commons.appserver.dir}" />
+      <arg value="-mp"/>
+      <arg value="${overlord-commons.appserver.module-path}"/>
+      <arg value="org.jboss.as.domain-add-user"/>
+      <arg value="-a"/>
+      <arg value="-s"/>
+      <arg value="-u"/>
+      <arg value="admin"/>
+      <arg value="-p"/>
+      <arg value="${overlord-commons.admin.password}"/>
+      <arg value="-r"/>
+      <arg value="ApplicationRealm"/>
+      <arg value="-ro"/>
+      <arg value="overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch"/>
+    </java>
   </target>
-  
+
   <!-- Unless overlord-commons.admin.password was set externally, prompt for the password -->
   <target name="password-prompt" unless="overlord-commons.admin.password">
     <!-- Ask the user for the admin password -->
@@ -294,7 +289,7 @@
   <!-- Check if already installed -->
   <target name="overlord-commons.check">
     <condition property="overlord-commons.already.installed">
-      <available file="${overlord-commons.jboss.config.dir}/overlord-vault-keys.properties" type="file" />
+      <available file="${overlord-commons.jboss.config.dir}/overlord-saml.keystore" type="file" />
     </condition>
   </target>
 
