@@ -16,6 +16,7 @@
 package org.overlord.commons.config;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Set;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -63,7 +64,16 @@ public class ConfigurationFactory {
                 if (file.isFile()) {
                     compositeConfig.addConfiguration(new PropertiesConfiguration(file));
                 } else {
-                    throw new ConfigurationException("Failed to find config file: " + configFileOverride); //$NON-NLS-1$
+                    // Check for a file on the classpath
+                    URL resource = Thread.currentThread().getContextClassLoader().getResource(configFileOverride);
+                    if (resource == null && defaultConfigLoader != null) {
+                        resource = defaultConfigLoader.getResource(configFileOverride);
+                    }
+                    if (resource != null) {
+                        compositeConfig.addConfiguration(new PropertiesConfiguration(resource));
+                    } else {
+                        throw new ConfigurationException("Failed to find config file: " + configFileOverride); //$NON-NLS-1$
+                    }
                 }
             }
 
