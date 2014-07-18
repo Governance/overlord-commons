@@ -27,7 +27,7 @@
 
   <target name="generate-properties" depends="all-properties">
     <!-- Configure overlord.properties -->
-    <propertyfile file="${overlord-commons.fuse.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
+    <propertyfile  file="${overlord-commons.fuse.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
       <entry key="overlord.port" value="8181" />
       <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
       <entry key="overlord.auth.saml-keystore" value="${sys:karaf.home}/etc/overlord-saml.keystore" />
@@ -39,7 +39,7 @@
 
 
   <!-- Install Everything -->
-  <target name="install" depends="all-properties, config">
+  <target name="install" depends="all-properties, config , overlord-commons.check">
     <echo message=" " />
     <echo message="#####################################" />
     <echo message="# Installing into Fuse 6.1          #" />
@@ -49,7 +49,7 @@
   </target>
   
   <!-- Install auth + vault only (not supported for Fuse 6.1) -->
-  <target name="install-vault" depends="all-properties, config">
+  <target name="install-vault" depends="all-properties, config, overlord-commons.check" unless="overlord-commons.already.installed"> 
     <fail message="install-vault not supported for Fuse 6.1" />
   </target>
 
@@ -64,10 +64,7 @@
 
   
   <!-- Install Overlord Commons -->
-  <target name="install-fuse-6.1" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <antcall target="install-admin-user"></antcall>
-    <antcall target="generate_keystore"></antcall>
-    <antcall target="generate-properties"></antcall>
+  <target name="install-fuse-6.1" depends="install-admin-user , generate_keystore, generate-properties">
 	<!-- Make some changes to Fuse 6.1!! (hopefully temporary) -->
     <property name="overlord-commons.modules-dir" location="modules" />
     <property name="overlord-commons.config-dir" location="config" />

@@ -28,7 +28,7 @@
   </target>
   
   <!-- Install Everything -->
-  <target name="install" depends="all-properties, config">
+  <target name="install" depends="all-properties, config, overlord-commons.check" unless="overlord-commons.already.installed">
     <echo message=" " />
     <echo message="#####################################" />
     <echo message="# Installing into Tomcat 7          #" />
@@ -71,10 +71,7 @@
   </target>
   
   <!-- Install Overlord Commons -->
-  <target name="install-tomcat-7" depends="overlord-commons.check" unless="overlord-commons.already.installed">
-    <antcall target="install-admin-user"></antcall>
-    <antcall target="generate_keystore"></antcall>
-    <antcall target="generate-properties"></antcall>
+  <target name="install-tomcat-7" depends="install-admin-user, generate_keystore, generate-properties">
     <echo>Downloading Overlord Commons IDP + Libs</echo>
     <condition property="overlord-commons.idp.file.exists">
       <available file="${overlord-commons.idp.file}" />
