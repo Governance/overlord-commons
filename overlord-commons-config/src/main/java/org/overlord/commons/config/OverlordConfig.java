@@ -18,6 +18,9 @@ package org.overlord.commons.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 
@@ -52,7 +55,10 @@ public class OverlordConfig {
     protected static final String SAML_KEY_ALIAS = "overlord.auth.saml-key-alias"; //$NON-NLS-1$
     protected static final String SAML_KEY_ALIAS_PASSWORD = "overlord.auth.saml-key-alias-password"; //$NON-NLS-1$
 
+    protected static final String HEADERUI_PREFIX = "overlord.headerui.apps"; //$NON-NLS-1$
+
     private String keystore;
+    private Map<String, Map<String, String>> uiHeaderApps;
     
     /**
      * @return the SAML keystore url
@@ -94,6 +100,42 @@ public class OverlordConfig {
      */
     public String getSamlSigningKeyPassword() {
         return overlordConfig.getString(SAML_KEY_ALIAS_PASSWORD);
+    }
+    
+    /**
+     * Gets all of the configured UI header apps.
+     */
+    public Map<String, Map<String, String>> getUiHeaders() {
+        if (uiHeaderApps == null) {
+            uiHeaderApps = new HashMap<String, Map<String, String>>();
+            @SuppressWarnings("unchecked")
+            Iterator<String> keys = overlordConfig.getKeys(HEADERUI_PREFIX);
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String appId = getAppIdFromKey(key);
+                Map<String, String> app = uiHeaderApps.get(appId);
+                if (app == null) {
+                    app = new HashMap<String, String>();
+                    uiHeaderApps.put(appId, app);
+                }
+                String appKey = key.substring(HEADERUI_PREFIX.length() + appId.length() + 2);
+                String appVal = overlordConfig.getString(key);
+                app.put(appKey, appVal);
+            }
+        }
+        return uiHeaderApps;
+    }
+
+    /**
+     * @param key
+     */
+    private String getAppIdFromKey(String key) {
+        int startIdx = HEADERUI_PREFIX.length() + 1;
+        int endIdx = key.indexOf('.', startIdx);
+        if (endIdx == -1) {
+            endIdx = key.length();
+        }
+        return key.substring(startIdx, endIdx);
     }
 
 }

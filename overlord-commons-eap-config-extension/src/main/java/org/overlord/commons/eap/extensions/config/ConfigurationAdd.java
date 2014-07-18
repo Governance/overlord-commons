@@ -21,10 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.naming.InitialContext;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NamingException;
-
 import org.jboss.as.controller.AbstractAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
@@ -33,8 +29,16 @@ import org.jboss.as.controller.ServiceVerificationHandler;
 import org.jboss.as.controller.SimpleAttributeDefinition;
 import org.jboss.as.controller.registry.Resource;
 import org.jboss.as.controller.registry.Resource.ResourceEntry;
+import org.jboss.as.naming.ManagedReferenceFactory;
+import org.jboss.as.naming.ServiceBasedNamingStore;
+import org.jboss.as.naming.ValueManagedReferenceFactory;
+import org.jboss.as.naming.deployment.ContextNames;
+import org.jboss.as.naming.service.BinderService;
 import org.jboss.dmr.ModelNode;
+import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
+import org.jboss.msc.service.ServiceTarget;
+import org.jboss.msc.value.ImmediateValue;
 
 /**
  * Add a configuration
@@ -96,38 +100,27 @@ public class ConfigurationAdd extends AbstractAddStepHandler {
         
         SubsystemLogger.ROOT_LOGGER.configurationInformation(name, propertyMap);
         
-        saveConfiguration(name, propertyMap);
+        saveConfiguration(context, name, propertyMap);
     }
 
     /**
      * Saves the configuration {@link Map} so it can be consumed later on by Overlord
      * applications.
+     * @param context
      * @param name
      * @param propertyMap
      */
-    private void saveConfiguration(final String name, final Map<String, String> propertyMap) {
-        try {
-            InitialContext ctx = new InitialContext();
-            ensureCtx(ctx, "java:comp/env"); //$NON-NLS-1$
-            ensureCtx(ctx, "java:comp/env/overlord-config"); //$NON-NLS-1$
-            ctx.bind("java:/comp/env/overlord-config/" + name, propertyMap); //$NON-NLS-1$
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private void saveConfiguration(final OperationContext context, final String name, final Map<String, String> propertyMap) {
+        String jndiLoc = "java:/global/overlord-config/" + name; //$NON-NLS-1$
+        
+        final ServiceTarget serviceTarget = context.getServiceTarget();
+        final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(jndiLoc);
+        final BinderService binderService = new BinderService(name, propertyMap);
+        binderService.getManagedObjectInjector().inject(new ValueManagedReferenceFactory(new ImmediateValue<Object>(propertyMap)));
 
-    /**
-     * Ensure that the given name is bound to a context.
-     * @param ctx
-     * @param name
-     * @throws NamingException
-     */
-    private void ensureCtx(InitialContext ctx, String name) throws NamingException {
-        try {
-            ctx.bind(name, new InitialContext());
-        } catch (NameAlreadyBoundException e) {
-            // this is ok
-        }
+        ServiceBuilder<ManagedReferenceFactory> builder = serviceTarget.addService(bindInfo.getBinderServiceName(), binderService)
+                .addDependency(bindInfo.getParentContextServiceName(), ServiceBasedNamingStore.class, binderService.getNamingStoreInjector());
+        builder.install();
     }
     
     /**

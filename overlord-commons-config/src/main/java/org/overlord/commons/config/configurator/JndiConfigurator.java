@@ -20,7 +20,6 @@ import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -47,7 +46,7 @@ public class JndiConfigurator implements Configurator {
         try {
             new InitialContext();
             return true;
-        } catch (NamingException e) {
+        } catch (Throwable e) {
             return false;
         }
     }
@@ -65,10 +64,9 @@ public class JndiConfigurator implements Configurator {
         try {
             Context ctx = new InitialContext();
             @SuppressWarnings("unchecked")
-            Map<String, String> properties = (Map<String, String>) ctx.lookup("java:/comp/env/overlord-config/" + configName); //$NON-NLS-1$
+            Map<String, String> properties = (Map<String, String>) ctx.lookup("java:/global/overlord-config/" + configName); //$NON-NLS-1$
             return new MapConfiguration(properties);
         } catch (Exception e) {
-            // This is usually OK.  TODO log this exception
             return null;
         }
     }
