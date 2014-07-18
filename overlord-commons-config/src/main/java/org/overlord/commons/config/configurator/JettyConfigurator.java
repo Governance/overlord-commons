@@ -23,7 +23,7 @@ import java.net.URL;
  * 
  * @author David Virgil Naranjo
  */
-public class JettyConfigurator extends AbstractConfigurator {
+public class JettyConfigurator extends AbstractPropertiesFileConfigurator {
     
     /**
      * Constructor.
@@ -42,7 +42,7 @@ public class JettyConfigurator extends AbstractConfigurator {
     }
     
     /**
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     * @see org.overlord.commons.config.configurator.AbstractPropertiesFileConfigurator#findConfigUrl(java.lang.String)
      */
     @Override
     protected URL findConfigUrl(String configName) {

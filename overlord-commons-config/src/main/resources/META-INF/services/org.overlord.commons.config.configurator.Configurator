@@ -1,4 +1,5 @@
 org.overlord.commons.config.configurator.UserHomeConfigurator
+org.overlord.commons.config.configurator.JndiConfigurator
 org.overlord.commons.config.configurator.JbossConfigurator
 org.overlord.commons.config.configurator.FuseConfigurator
 org.overlord.commons.config.configurator.TomcatConfigurator

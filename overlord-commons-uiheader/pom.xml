@@ -10,6 +10,12 @@
   <name>Overlord Commons: UI Header</name>
 
   <dependencies>
+    <!-- Overlord Commons Config -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-config</artifactId>
+    </dependency>
+
     <!-- Jackson (JSON) -->
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
@@ -56,7 +62,8 @@
               javax.servlet,
               javax.servlet.http,
               org.apache.commons.io,
-              org.codehaus.jackson
+              org.codehaus.jackson,
+              org.overlord.commons.config
             </Import-Package>
           </instructions>
         </configuration>

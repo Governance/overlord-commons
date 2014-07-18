@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TreeSet;
 
@@ -39,6 +41,7 @@ import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.overlord.commons.config.OverlordConfig;
 
 /**
  * This is a simple servlet that generates the javascript data used by the Overlord Header javascript.
@@ -48,6 +51,8 @@ import org.codehaus.jackson.JsonGenerator;
 public class OverlordHeaderDataJS extends HttpServlet {
 
     private static final long serialVersionUID = -4982770016769892713L;
+    
+    private static final OverlordConfig config = new OverlordConfig();
 
     private String appId;
     private String logoutUrl;
@@ -183,36 +188,62 @@ public class OverlordHeaderDataJS extends HttpServlet {
      * @param tabs
      */
     private void getConfiguredTabs(List<TabInfo> tabs) throws Exception {
-        File configDir = getConfigDir();
-        if (configDir == null)
-            return;
 
+        // Get UI tab info from the overlord configuration
+        Map<String, Map<String, String>> uiHeaders = config.getUiHeaders();
+        if (uiHeaders == null) {
+            uiHeaders = new HashMap<String, Map<String, String>>();
+        }
+        
         TreeSet<TabInfo> sortedTabs = new TreeSet<TabInfo>(new Comparator<TabInfo>() {
             @Override
             public int compare(TabInfo o1, TabInfo o2) {
                 return o1.appId.compareTo(o2.appId);
             }
         });
-        Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false); //$NON-NLS-1$
-        for (File configFile : configFiles) {
-            if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties")) //$NON-NLS-1$
-                continue;
-            FileReader reader = new FileReader(configFile);
-            try {
-                Properties configProps = new Properties();
-                configProps.load(new FileReader(configFile));
-                String appId = configProps.getProperty("overlordapp.app-id"); //$NON-NLS-1$
-                String href = configProps.getProperty("overlordapp.href"); //$NON-NLS-1$
-                // TODO need i18n support here - need different versions of the config files for each lang?
-                String primaryBrand = configProps.getProperty("overlordapp.primary-brand"); //$NON-NLS-1$
-                String secondaryBrand = configProps.getProperty("overlordapp.secondary-brand"); //$NON-NLS-1$
-                String label = configProps.getProperty("overlordapp.label"); //$NON-NLS-1$
-                sortedTabs.add(new TabInfo(appId, primaryBrand, secondaryBrand, href, label, appId.equals(this.appId)));
-            } finally {
-                IOUtils.closeQuietly(reader);
+        
+        // Also check the (legacy?) overlord apps file system location
+        File configDir = getConfigDir();
+        if (configDir != null) {
+            Collection<File> configFiles = FileUtils.listFiles(configDir, new String[] { "properties" } , false); //$NON-NLS-1$
+            for (File configFile : configFiles) {
+                if (!configFile.getCanonicalPath().endsWith("-overlordapp.properties")) //$NON-NLS-1$
+                    continue;
+                FileReader reader = new FileReader(configFile);
+                try {
+                    Properties configProps = new Properties();
+                    configProps.load(new FileReader(configFile));
+                    String appId = configProps.getProperty("overlordapp.app-id"); //$NON-NLS-1$
+                    // Already have an entry for this appId?  Then skip it.
+                    if (uiHeaders.containsKey(appId)) {
+                        continue;
+                    }
+                    String href = configProps.getProperty("overlordapp.href"); //$NON-NLS-1$
+                    // TODO need i18n support here - need different versions of the config files for each lang?
+                    String primaryBrand = configProps.getProperty("overlordapp.primary-brand"); //$NON-NLS-1$
+                    String secondaryBrand = configProps.getProperty("overlordapp.secondary-brand"); //$NON-NLS-1$
+                    String label = configProps.getProperty("overlordapp.label"); //$NON-NLS-1$
+                    Map<String, String> app = new HashMap<String, String>();
+                    app.put("href", href); //$NON-NLS-1$
+                    app.put("primary-brand", primaryBrand); //$NON-NLS-1$
+                    app.put("secondary-brand", secondaryBrand); //$NON-NLS-1$
+                    app.put("label", label); //$NON-NLS-1$
+                    uiHeaders.put(appId, app);
+                } finally {
+                    IOUtils.closeQuietly(reader);
+                }
             }
         }
 
+        // Now put all the discovered info together into a list.
+        for (String appId : uiHeaders.keySet()) {
+            Map<String, String> app = uiHeaders.get(appId);
+            String href = app.get("href"); //$NON-NLS-1$
+            String primaryBrand = app.get("primary-brand"); //$NON-NLS-1$
+            String secondaryBrand = app.get("secondary-brand"); //$NON-NLS-1$
+            String label = app.get("label"); //$NON-NLS-1$
+            sortedTabs.add(new TabInfo(appId, primaryBrand, secondaryBrand, href, label, appId.equals(this.appId)));
+        }
         tabs.addAll(sortedTabs);
     }
 

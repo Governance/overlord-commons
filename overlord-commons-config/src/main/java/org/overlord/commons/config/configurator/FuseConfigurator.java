@@ -37,7 +37,7 @@ import org.overlord.commons.services.ServiceRegistryUtil;
  */
 @Component(name = "Fuse Configurator", immediate = true)
 @Service(value = org.overlord.commons.config.configurator.Configurator.class)
-public class FuseConfigurator extends AbstractConfigurator {
+public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
 
     private FabricService fabricService;
 
@@ -70,7 +70,7 @@ public class FuseConfigurator extends AbstractConfigurator {
     }
     
     /**
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#provideConfiguration(java.lang.String, java.lang.Long)
+     * @see org.overlord.commons.config.configurator.AbstractPropertiesFileConfigurator#provideConfiguration(java.lang.String, java.lang.Long)
      */
     @Override
     public Configuration provideConfiguration(String configName, Long refreshDelay)
@@ -107,7 +107,7 @@ public class FuseConfigurator extends AbstractConfigurator {
     }
 
     /**
-     * @see org.overlord.commons.config.configurator.AbstractConfigurator#findConfigUrl(java.lang.String)
+     * @see org.overlord.commons.config.configurator.AbstractPropertiesFileConfigurator#findConfigUrl(java.lang.String)
      */
     @Override
     protected URL findConfigUrl(String configName) {
