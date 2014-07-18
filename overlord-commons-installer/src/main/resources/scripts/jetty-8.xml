@@ -42,7 +42,7 @@
   </target>
   
   <!-- Install Everything -->
-  <target name="install" depends="all-properties, config">
+  <target name="install" depends="all-properties, config, overlord-commons.check" unless="overlord-commons.already.installed">
     <antcall target="install-jetty-8" />
   </target>
   
@@ -60,16 +60,13 @@
   </target>
 
   <!-- Install Overlord Commons -->
-  <target name="install-jetty-8" depends="overlord-commons.check" unless="overlord-commons.already.installed">
+  <target name="install-jetty-8" depends="install-admin-user, generate_keystore, generate-properties">
     <echo message=" " />
     <echo message="####################################" />
     <echo message="# Installing into Jetty 8          #" />
     <echo message="####################################" />
     <echo message=" " />
 
-    <antcall target="install-admin-user"></antcall>
-    <antcall target="generate_keystore"></antcall>
-    <antcall target="generate-properties"></antcall>
 
     <echo>Downloading Overlord Commons IDP + Libs</echo>
     <condition property="overlord-commons.idp.file.exists">
