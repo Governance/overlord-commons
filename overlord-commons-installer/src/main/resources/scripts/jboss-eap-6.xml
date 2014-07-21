@@ -6,7 +6,6 @@
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
 
-    <property name="overlord-commons.jboss.deploy.dir" location="${overlord-commons.appserver.dir}/standalone/deployments" />
     <property name="overlord-commons.jboss.deployments.dir" location="${overlord-commons.appserver.dir}/modules/org/overlord/commons/eap/deployments/main" />
     <property name="overlord-commons.jboss.config.dir" location="${overlord-commons.appserver.dir}/standalone/configuration" />
     <property name="overlord-commons.jboss.module-path" location="${overlord-commons.appserver.dir}/modules" />
@@ -187,6 +186,8 @@
     <transformConfig config="${overlord-commons.jboss.config.dir}/standalone-full-ha.xml" />
     <transformConfig config="${overlord-commons.jboss.config.dir}/standalone-ha.xml" />
     
+    <transformXmlsecConfig />
+    
     <antcall target="install-admin-user" />
   </target>
 
@@ -277,4 +278,20 @@
     </sequential>
   </macrodef>
 
+  <!-- Temporary fix for EAP 6.1.  See https://bugzilla.redhat.com/show_bug.cgi?id=979334.  Placing it in a
+    separate macro so that it's easier to remove in the future. -->
+  <macrodef name="transformXmlsecConfig">
+    <sequential>
+      <xslt 
+          style="xslt/xmlsec-jboss-eap-61.xslt"
+          in="${overlord-commons.jboss.module-path}/system/layers/base/org/apache/santuario/xmlsec/main/module.xml" 
+          out="${overlord-commons.jboss.module-path}/system/layers/base/org/apache/santuario/xmlsec/main/_tmp_module.xml" />
+      <copy 
+          file="${overlord-commons.jboss.module-path}/system/layers/base/org/apache/santuario/xmlsec/main/_tmp_module.xml" 
+          tofile="${overlord-commons.jboss.module-path}/system/layers/base/org/apache/santuario/xmlsec/main/module.xml" 
+          overwrite="true" />
+      <delete 
+          file="${overlord-commons.jboss.module-path}/system/layers/base/org/apache/santuario/xmlsec/main/_tmp_module.xml" />
+    </sequential>
+  </macrodef>
 </project>
