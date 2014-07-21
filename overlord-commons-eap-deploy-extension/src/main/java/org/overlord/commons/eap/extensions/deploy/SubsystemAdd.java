@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
 import org.jboss.as.controller.AbstractAddStepHandler;
 import org.jboss.dmr.ModelNode;
 
 /**
- * The Overlord configuration subsystem add update handler.
+ * The Overlord deployment subsystem add update handler.
  *
  * @author Kevin Conner
  */
@@ -30,7 +30,7 @@ public class SubsystemAdd extends AbstractAddStepHandler {
 
     @Override
     protected void populateModel(ModelNode operation, ModelNode model) {
-        model.get(Constants.MODEL_CONFIGURATION).setEmptyObject();
+        model.get(Constants.MODEL_DEPLOYMENT).setEmptyObject();
     }
 
     protected boolean requiresRuntimeVerification() {

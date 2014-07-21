@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
-
-import org.jboss.as.controller.AbstractAddStepHandler;
-import org.jboss.dmr.ModelNode;
+package org.overlord.commons.eap.extensions.deploy;
 
 /**
- * The Overlord configuration subsystem add update handler.
- *
  * @author Kevin Conner
  */
-public class SubsystemAdd extends AbstractAddStepHandler {
+public interface Constants {
+    // Element names
+    String ELEMENT_DEPLOYMENTS = "deployments"; //$NON-NLS-1$
+    String ELEMENT_DEPLOYMENT = "deployment"; //$NON-NLS-1$
+    
+    // Attribute names
+    String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
+    String ATTRIBUTE_MODULE = "module"; //$NON-NLS-1$
+    String ATTRIBUTE_VERSION = "version"; //$NON-NLS-1$
+    
+    // Model values
+    String MODEL_DEPLOYMENT = "deployment"; //$NON-NLS-1$
 
-    static final SubsystemAdd INSTANCE = new SubsystemAdd();
-
-    @Override
-    protected void populateModel(ModelNode operation, ModelNode model) {
-        model.get(Constants.MODEL_CONFIGURATION).setEmptyObject();
-    }
-
-    protected boolean requiresRuntimeVerification() {
-        return false;
-    }
 }

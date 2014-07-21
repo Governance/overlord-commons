@@ -59,14 +59,14 @@ public class ConfigurationAdd extends AbstractAddStepHandler {
      * @see org.jboss.as.controller.AbstractAddStepHandler#populateModel(org.jboss.dmr.ModelNode, org.jboss.dmr.ModelNode)
      */
     @Override
-    protected void populateModel(ModelNode arg0, ModelNode arg1) throws OperationFailedException {
+    protected void populateModel(final ModelNode operation, final ModelNode model) throws OperationFailedException {
     }
 
     /**
      * @see org.jboss.as.controller.AbstractAddStepHandler#populateModel(org.jboss.dmr.ModelNode, org.jboss.as.controller.registry.Resource)
      */
     @Override
-    protected void populateModel(ModelNode operation, Resource resource) throws OperationFailedException {
+    protected void populateModel(final ModelNode operation, final Resource resource) throws OperationFailedException {
         final ModelNode model = resource.getModel();
         
         model.setEmptyObject();

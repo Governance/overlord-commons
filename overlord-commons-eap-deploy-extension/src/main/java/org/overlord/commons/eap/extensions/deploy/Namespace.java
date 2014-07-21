@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +25,12 @@ import java.util.Map;
 public enum Namespace {
     UNKNOWN(null),
 
-    OVERLORD_CONFIGURATION_1_0("urn:jboss:domain:overlord-configuration:1.0"); //$NON-NLS-1$
+    OVERLORD_DEPLOYMENT_1_0("urn:jboss:domain:overlord-deployment:1.0"); //$NON-NLS-1$
 
     /**
      * The current namespace version.
      */
-    public static final Namespace CURRENT = OVERLORD_CONFIGURATION_1_0;
+    public static final Namespace CURRENT = OVERLORD_DEPLOYMENT_1_0;
 
     private final String name;
 

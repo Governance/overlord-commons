@@ -15,6 +15,14 @@
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-eap-config-extension</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-eap-deploy-extension</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-eap-deploy-module</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

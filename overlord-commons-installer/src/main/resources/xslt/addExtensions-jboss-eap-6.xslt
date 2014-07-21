@@ -15,6 +15,9 @@
       <xsl:element name="extension" namespace="{$currentNS}">
         <xsl:attribute name="module">org.overlord.commons.eap.extensions.config</xsl:attribute>
       </xsl:element>
+      <xsl:element name="extension" namespace="{$currentNS}">
+        <xsl:attribute name="module">org.overlord.commons.eap.extensions.deploy</xsl:attribute>
+      </xsl:element>
     </xsl:element>
   </xsl:template>
 
@@ -22,6 +25,7 @@
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:element name="profile" namespace="{$currentNS}">
       <xsl:apply-templates select="./node()|./text()" />
+      <!-- Add the config subsystem (and some overlord global config) -->
       <xsl:element name="subsystem" namespace="urn:jboss:domain:overlord-configuration:1.0">
         <xsl:element name="configurations" namespace="urn:jboss:domain:overlord-configuration:1.0">
           <xsl:element name="configuration" namespace="urn:jboss:domain:overlord-configuration:1.0">
@@ -61,6 +65,11 @@
               </xsl:element>
             </xsl:element>
           </xsl:element>
+        </xsl:element>
+      </xsl:element>
+      <!-- Add the deploy subsystem -->
+      <xsl:element name="subsystem" namespace="urn:jboss:domain:overlord-deployment:1.0">
+        <xsl:element name="deployments" namespace="urn:jboss:domain:overlord-deployment:1.0">
         </xsl:element>
       </xsl:element>
     </xsl:element>

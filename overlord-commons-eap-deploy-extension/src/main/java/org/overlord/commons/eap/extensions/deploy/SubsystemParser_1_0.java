@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
 import org.jboss.as.controller.parsing.ParseUtils;
@@ -64,11 +64,11 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         // elements
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
-                case OVERLORD_CONFIGURATION_1_0: {
+                case OVERLORD_DEPLOYMENT_1_0: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
-                        case CONFIGURATIONS: {
-                            parseConfigurations(reader, address, list);
+                        case DEPLOYMENTS: {
+                            parseDeployments(reader, address, list);
                             break;
                         }
                         default:
@@ -82,16 +82,16 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         }
     }
 
-    public void parseConfigurations(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
+    public void parseDeployments(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
         requireNoAttributes(reader);
         
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
             switch (Namespace.forUri(reader.getNamespaceURI())) {
-                case OVERLORD_CONFIGURATION_1_0: {
+                case OVERLORD_DEPLOYMENT_1_0: {
                     final Element element = Element.forName(reader.getLocalName());
                     switch (element) {
-                        case CONFIGURATION: {
-                            parseConfiguration(reader, parentAddress, list);
+                        case DEPLOYMENT: {
+                            parseDeployment(reader, parentAddress, list);
                             break;
                         }
                         default:
@@ -105,8 +105,9 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         }
     }
     
-    public void parseConfiguration(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
+    public void parseDeployment(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
         String name = null;
+        String module = null;
 
         final ModelNode operation = new ModelNode();
         operation.get(OP).set(ADD);
@@ -118,7 +119,16 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
             switch (attribute) {
                 case NAME: {
                     name = value;
-                    ConfigurationDefinition.NAME.parseAndSetParameter(value, operation, reader);
+                    DeploymentDefinition.NAME.parseAndSetParameter(value, operation, reader);
+                    break;
+                }
+                case MODULE: {
+                    module = value;
+                    DeploymentDefinition.MODULE.parseAndSetParameter(value, operation, reader);
+                    break;
+                }
+                case VERSION: {
+                    DeploymentDefinition.VERSION.parseAndSetParameter(value, operation, reader);
                     break;
                 }
                 default:
@@ -128,98 +138,18 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         if (name == null) {
             ParseUtils.missingRequired(reader, Collections.singleton(Constants.ATTRIBUTE_NAME));
         }
+        if (module == null) {
+            ParseUtils.missingRequired(reader, Collections.singleton(Constants.ATTRIBUTE_MODULE));
+        }
         final ModelNode address = parentAddress.clone();
-        address.add(Constants.MODEL_CONFIGURATION, name);
+        address.add(Constants.MODEL_DEPLOYMENT, name);
         address.protect();
         
         operation.get(OP_ADDR).set(address);
         list.add(operation);
-
-        while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-            switch (Namespace.forUri(reader.getNamespaceURI())) {
-                case OVERLORD_CONFIGURATION_1_0: {
-                    final Element element = Element.forName(reader.getLocalName());
-                    switch (element) {
-                        case PROPERTIES: {
-                            parseProperties(reader, address, list);
-                            break;
-                        }
-                        default:
-                            throw unexpectedElement(reader);
-                    }
-                    break;
-                }
-                default:
-                    throw unexpectedElement(reader);
-            }
-        }
-    }
-
-    public void parseProperties(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
-        requireNoAttributes(reader);
-        
-        while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-            switch (Namespace.forUri(reader.getNamespaceURI())) {
-                case OVERLORD_CONFIGURATION_1_0: {
-                    final Element element = Element.forName(reader.getLocalName());
-                    switch (element) {
-                        case PROPERTY: {
-                            parseProperty(reader, parentAddress, list);
-                            break;
-                        }
-                        default:
-                            throw unexpectedElement(reader);
-                    }
-                    break;
-                }
-                default:
-                    throw unexpectedElement(reader);
-            }
-        }
-    }
-    
-    public void parseProperty(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
-        String propertyName = null;
-        String propertyValue = null;
-
-        final ModelNode operation = new ModelNode();
-        operation.get(OP).set(ADD);
-        final int attrCount = reader.getAttributeCount();
-        for (int i = 0; i < attrCount; i++) {
-            requireNoNamespaceAttribute(reader, i);
-            final String value = reader.getAttributeValue(i);
-            final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
-            switch (attribute) {
-                case NAME: {
-                    propertyName = value;
-                    ConfigurationPropertyDefinition.NAME.parseAndSetParameter(value, operation, reader);
-                    break;
-                }
-                case VALUE: {
-                    propertyValue = value;
-                    ConfigurationPropertyDefinition.VALUE.parseAndSetParameter(value, operation, reader);
-                    break;
-                }
-                default:
-                    throw ParseUtils.unexpectedAttribute(reader, i);
-            }
-        }
-        if (propertyName == null) {
-            ParseUtils.missingRequired(reader, Collections.singleton(Constants.ATTRIBUTE_NAME));
-        }
-        if (propertyValue == null) {
-            ParseUtils.missingRequired(reader, Collections.singleton(Constants.ATTRIBUTE_VALUE));
-        }
-        final ModelNode address = parentAddress.clone();
-        address.add(Constants.MODEL_PROPERTY, propertyName);
-        address.protect();
-        
-        operation.get(OP_ADDR).set(address);
-        list.add(operation);
-
         requireNoContent(reader);
     }
-
+    
     /**
      * {@inheritDoc}
      * */
@@ -228,27 +158,17 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         context.startSubsystemElement(Namespace.CURRENT.getUriString(), false);
         
         final ModelNode node = context.getModelNode();
-        streamWriter.writeStartElement(Constants.ELEMENT_CONFIGURATIONS);
+        streamWriter.writeStartElement(Constants.ELEMENT_DEPLOYMENTS);
         
-        if (node.hasDefined(Constants.MODEL_CONFIGURATION)) {
-            final List<ModelNode> configurations = node.get(Constants.MODEL_CONFIGURATION).asList();
-            for (ModelNode configuration: configurations) {
-                streamWriter.writeStartElement(Constants.ELEMENT_CONFIGURATION);
+        if (node.hasDefined(Constants.MODEL_DEPLOYMENT)) {
+            final List<ModelNode> deployments = node.get(Constants.MODEL_DEPLOYMENT).asList();
+            for (ModelNode deployment: deployments) {
+                streamWriter.writeStartElement(Constants.ELEMENT_DEPLOYMENT);
                 
-                writeAttributeIfDefined(streamWriter, configuration, Constants.ATTRIBUTE_NAME);
+                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_NAME);
+                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_MODULE);
+                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_VERSION);
                 
-                if (node.hasDefined(Constants.MODEL_PROPERTY)) {
-                    final List<ModelNode> properties = node.get(Constants.MODEL_PROPERTY).asList();
-                    for (ModelNode property: properties) {
-                        streamWriter.writeStartElement(Constants.ELEMENT_PROPERTY);
-                        
-                        writeAttributeIfDefined(streamWriter, property, Constants.ATTRIBUTE_NAME);
-                        writeAttributeIfDefined(streamWriter, property, Constants.ATTRIBUTE_VALUE);
-                        
-                        streamWriter.writeEndElement();
-                    }
-                    
-                }
                 streamWriter.writeEndElement();
             }
         }

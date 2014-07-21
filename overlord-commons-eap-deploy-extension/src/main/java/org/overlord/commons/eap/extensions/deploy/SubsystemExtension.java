@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
 
@@ -31,11 +31,10 @@ import org.jboss.as.controller.registry.ManagementResourceRegistration;
  * Extension for a subsystem that can deploy other artifacts through the module hierarchy.
  */
 public class SubsystemExtension implements Extension {
-    public static final String SUBSYSTEM_NAME = "overlord-configuration"; //$NON-NLS-1$
+    public static final String SUBSYSTEM_NAME = "overlord-deployment"; //$NON-NLS-1$
 
     public static final PathElement PATH_SUBSYSTEM = PathElement.pathElement(SUBSYSTEM, SUBSYSTEM_NAME);
-    public static final PathElement PATH_CONFIGURATION = PathElement.pathElement(Constants.MODEL_CONFIGURATION);
-    public static final PathElement PATH_PROPERTY = PathElement.pathElement(Constants.MODEL_PROPERTY);
+    public static final PathElement PATH_DEPLOYMENT = PathElement.pathElement(Constants.MODEL_DEPLOYMENT);
 
     private static final String RESOURCE_NAME = SubsystemExtension.class.getPackage().getName() + ".LocalDescriptions"; //$NON-NLS-1$
 
@@ -58,7 +57,7 @@ public class SubsystemExtension implements Extension {
         final SubsystemRegistration subsystem = context.registerSubsystem(SUBSYSTEM_NAME, MAJOR_VERSION, MINOR_VERSION, MICRO_VERSION);
         final ManagementResourceRegistration registration = subsystem.registerSubsystemModel(new SubsystemDefinition());
         registration.registerOperationHandler(GenericSubsystemDescribeHandler.DEFINITION, GenericSubsystemDescribeHandler.INSTANCE);
-        registration.registerSubModel(new ConfigurationDefinition());
+        registration.registerSubModel(new DeploymentDefinition());
         
         subsystem.registerXMLElementWriter(SubsystemParser_1_0.INSTANCE);
     }
@@ -66,6 +65,6 @@ public class SubsystemExtension implements Extension {
     /** {@inheritDoc} */
     @Override
     public void initializeParsers(final ExtensionParsingContext context) {
-        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.OVERLORD_CONFIGURATION_1_0.getUriString(), SubsystemParser_1_0.INSTANCE);
+        context.setSubsystemXmlMapping(SUBSYSTEM_NAME, Namespace.OVERLORD_DEPLOYMENT_1_0.getUriString(), SubsystemParser_1_0.INSTANCE);
     }
 }

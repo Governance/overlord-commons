@@ -5,7 +5,8 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <dependencySets>
-    <!-- configuration extension -->
+  
+    <!-- Config Extension -->
     <dependencySet>
       <outputDirectory>/modules/org/overlord/commons/eap/extensions/config/main</outputDirectory>
       <useProjectArtifact>false</useProjectArtifact>
@@ -26,5 +27,43 @@
         </includes>
       </unpackOptions>
     </dependencySet>
+
+    <!-- Deploy Extension -->
+    <dependencySet>
+      <outputDirectory>/modules/org/overlord/commons/eap/extensions/deploy/main</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.overlord:overlord-commons-eap-deploy-extension</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/modules/org/overlord/commons/eap/extensions/deploy/main</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.overlord:overlord-commons-eap-deploy-extension</include>
+      </includes>
+      <unpack>true</unpack>
+      <unpackOptions>
+        <includes>
+          <include>module.xml</include>
+        </includes>
+      </unpackOptions>
+    </dependencySet>
+    
+    <!-- Deploy Module -->
+    <dependencySet>
+      <outputDirectory>/modules/org/overlord/commons/eap/deployments/main</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.overlord:overlord-commons-eap-deploy-module</include>
+      </includes>
+      <unpack>true</unpack>
+      <unpackOptions>
+        <includes>
+          <include>module.xml</include>
+        </includes>
+      </unpackOptions>
+    </dependencySet>
+    
   </dependencySets>
 </assembly>
