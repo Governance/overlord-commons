@@ -5,7 +5,12 @@
     <Trust>
       <Domains>localhost,jboss.com,jboss.org,amazonaws.com</Domains>
     </Trust>
-    <KeyProvider ClassName="org.overlord.commons.idp.OverlordIdpKeyStoreKeyManager" />
+    <KeyProvider ClassName="org.overlord.commons.idp.OverlordIdpKeyStoreKeyManager">
+      <Auth Key="KeyStoreURL" Value="" />
+      <Auth Key="KeyStorePass" Value="" />
+      <Auth Key="SigningKeyAlias" Value="" />
+      <Auth Key="SigningKeyPass" Value="" />
+    </KeyProvider>
   </PicketLinkIDP>
   <Handlers xmlns="urn:picketlink:identity-federation:handler:config:2.1">
     <Handler class="org.picketlink.identity.federation.web.handlers.saml2.SAML2IssuerTrustHandler" />

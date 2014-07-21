@@ -3,7 +3,9 @@
   <deployment>
     <dependencies>
       <module name="org.picketlink" />
-      <module name="org.picketlink.config" />
     </dependencies>
+    <exclude-subsystems>
+      <subsystem name="webservices" />
+    </exclude-subsystems>
   </deployment>
 </jboss-deployment-structure>

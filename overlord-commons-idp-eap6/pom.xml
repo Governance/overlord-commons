@@ -32,7 +32,7 @@
               <excludes>
                 <exclude>WEB-INF/lib/picketbox*.jar</exclude>
                 <exclude>WEB-INF/lib/picketlink*.jar</exclude>
-                </excludes>
+              </excludes>
             </overlay>
           </overlays>
         </configuration>

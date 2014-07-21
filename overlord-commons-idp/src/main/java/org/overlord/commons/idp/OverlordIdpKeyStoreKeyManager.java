@@ -17,13 +17,11 @@
 package org.overlord.commons.idp;
 
 import java.security.PublicKey;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.overlord.commons.config.OverlordConfig;
 import org.picketlink.common.exceptions.TrustKeyConfigurationException;
 import org.picketlink.common.exceptions.TrustKeyProcessingException;
-import org.picketlink.config.federation.AuthPropertyType;
 import org.picketlink.identity.federation.core.impl.KeyStoreKeyManager;
 import org.picketlink.identity.federation.core.interfaces.TrustKeyManager;
 
@@ -47,27 +45,35 @@ public class OverlordIdpKeyStoreKeyManager extends KeyStoreKeyManager {
     /**
      * @see org.picketlink.identity.federation.core.impl.KeyStoreKeyManager#setAuthProperties(java.util.List)
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    public void setAuthProperties(List<AuthPropertyType> authList) throws TrustKeyConfigurationException,
+    public void setAuthProperties(List authList) throws TrustKeyConfigurationException,
             TrustKeyProcessingException {
-        List<AuthPropertyType> auths = new ArrayList<AuthPropertyType>();
-        auths.add(create(KEYSTORE_URL, overlord.getSamlKeystoreUrl()));
-        auths.add(create(KEYSTORE_PASS, overlord.getSamlKeystorePassword()));
-        auths.add(create(SIGNING_KEY_ALIAS, overlord.getSamlSigningKeyAlias()));
-        auths.add(create(SIGNING_KEY_PASS, overlord.getSamlSigningKeyPassword()));
-        super.setAuthProperties(auths);
+        updateAuthKey(authList, KEYSTORE_URL, overlord.getSamlKeystoreUrl());
+        updateAuthKey(authList, KEYSTORE_PASS, overlord.getSamlKeystorePassword());
+        updateAuthKey(authList, SIGNING_KEY_ALIAS, overlord.getSamlSigningKeyAlias());
+        updateAuthKey(authList, SIGNING_KEY_PASS, overlord.getSamlSigningKeyPassword());
+        super.setAuthProperties(authList);
     }
     
     /**
-     * Creates an {@link AuthPropertyType} object given a key/value pair.
-     * @param key
-     * @param value
+     * Updates the value of one of the keys in the auth list.
+     * @param authList
+     * @param keyToModify
+     * @param newValue
      */
-    private AuthPropertyType create(String key, String value) {
-        AuthPropertyType rval = new AuthPropertyType();
-        rval.setKey(key);
-        rval.setValue(value);
-        return rval;
+    @SuppressWarnings("rawtypes")
+    private void updateAuthKey(List authList, String keyToModify, String newValue) {
+        for (Object authKey : authList) {
+            try {
+                String key = (String) authKey.getClass().getMethod("getKey").invoke(authKey); //$NON-NLS-1$
+                if (keyToModify.equals(key)) {
+                    authKey.getClass().getMethod("setValue", String.class).invoke(authKey, newValue); //$NON-NLS-1$
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
