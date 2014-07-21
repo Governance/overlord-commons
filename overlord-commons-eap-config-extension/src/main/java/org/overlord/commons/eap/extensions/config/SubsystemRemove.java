@@ -20,7 +20,7 @@ import org.jboss.as.controller.AbstractRemoveStepHandler;
 import org.jboss.as.controller.OperationContext;
 
 /**
- * The FSW configuration subsystem remove update handler.
+ * The Overlord configuration subsystem remove update handler.
  *
  * @author Kevin Conner
  */

@@ -133,6 +133,8 @@
     <module>overlord-commons-dist</module>
     <module>overlord-commons-solder-impl</module>
     <module>overlord-commons-eap-config-extension</module>
+    <module>overlord-commons-eap-deploy-extension</module>
+    <module>overlord-commons-eap-deploy-module</module>
   </modules>
 
   <build>
@@ -441,6 +443,16 @@
       <dependency>
         <groupId>org.overlord</groupId>
         <artifactId>overlord-commons-eap-config-extension</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-eap-deploy-extension</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-eap-deploy-module</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

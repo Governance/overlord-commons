@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
-import org.jboss.as.controller.AbstractAddStepHandler;
-import org.jboss.dmr.ModelNode;
+import org.jboss.as.controller.AbstractRemoveStepHandler;
+import org.jboss.as.controller.OperationContext;
 
 /**
- * The Overlord configuration subsystem add update handler.
+ * The Overlord deployment subsystem remove update handler.
  *
  * @author Kevin Conner
  */
-public class SubsystemAdd extends AbstractAddStepHandler {
+public class SubsystemRemove extends AbstractRemoveStepHandler {
 
-    static final SubsystemAdd INSTANCE = new SubsystemAdd();
+    static final SubsystemRemove INSTANCE = new SubsystemRemove();
 
     @Override
-    protected void populateModel(ModelNode operation, ModelNode model) {
-        model.get(Constants.MODEL_CONFIGURATION).setEmptyObject();
+    protected boolean requireNoChildResources() {
+        return true;
     }
 
-    protected boolean requiresRuntimeVerification() {
+    @Override
+    protected boolean requiresRuntime(OperationContext context) {
         return false;
     }
 }

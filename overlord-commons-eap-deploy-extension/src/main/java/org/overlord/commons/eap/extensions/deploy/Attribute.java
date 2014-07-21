@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.overlord.commons.eap.extensions.config;
+package org.overlord.commons.eap.extensions.deploy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,44 +22,42 @@ import java.util.Map;
 /**
  * @author Kevin Conner
  */
-public enum Namespace {
+public enum Attribute {
     UNKNOWN(null),
 
-    OVERLORD_CONFIGURATION_1_0("urn:jboss:domain:overlord-configuration:1.0"); //$NON-NLS-1$
-
-    /**
-     * The current namespace version.
-     */
-    public static final Namespace CURRENT = OVERLORD_CONFIGURATION_1_0;
+    NAME(Constants.ATTRIBUTE_NAME),
+    MODULE(Constants.ATTRIBUTE_MODULE),
+    VERSION(Constants.ATTRIBUTE_VERSION);
 
     private final String name;
 
-    Namespace(final String name) {
+    Attribute(final String name) {
         this.name = name;
     }
 
     /**
-     * Get the URI of this namespace.
+     * Get the local name of this element.
      *
-     * @return the URI
+     * @return the local name
      */
-    public String getUriString() {
+    public String getLocalName() {
         return name;
     }
 
-    private static final Map<String, Namespace> MAP;
+    private static final Map<String, Attribute> MAP;
 
     static {
-        final Map<String, Namespace> map = new HashMap<String, Namespace>();
-        for (Namespace namespace : values()) {
-            final String name = namespace.getUriString();
-            if (name != null) map.put(name, namespace);
+        final Map<String, Attribute> map = new HashMap<String, Attribute>();
+        for (Attribute element : values()) {
+            final String name = element.getLocalName();
+            if (name != null) map.put(name, element);
         }
         MAP = map;
     }
 
-    public static Namespace forUri(String uri) {
-        final Namespace element = MAP.get(uri);
+    public static Attribute forName(String localName) {
+        final Attribute element = MAP.get(localName);
         return element == null ? UNKNOWN : element;
     }
 }
+

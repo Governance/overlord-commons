@@ -28,13 +28,13 @@ import org.jboss.logging.annotations.MessageLogger;
 /**
  * This file is using the subset 2000-2100 for logger messages.
  */
-@MessageLogger(projectCode = "FSW")
+@MessageLogger(projectCode = "OVERLORD")
 public interface SubsystemLogger extends BasicLogger {
 
     /**
      * A logger with a category of the package name.
      */
-    public SubsystemLogger ROOT_LOGGER = Logger.getMessageLogger(SubsystemLogger.class, "org.jboss.integrationplatform.fsw.extension.configuration"); //$NON-NLS-1$
+    public SubsystemLogger ROOT_LOGGER = Logger.getMessageLogger(SubsystemLogger.class, "org.overlord.commons.eap.extensions.config"); //$NON-NLS-1$
 
     /**
      * Logs a debug message with details of the current configuration.
@@ -50,7 +50,7 @@ public interface SubsystemLogger extends BasicLogger {
      * Info message documenting the start of the extension.
      */
     @LogMessage(level = Level.INFO)
-    @Message(id = 2001, value = "Activating FSW Configuration Extension")
+    @Message(id = 2001, value = "Activating Overlord Configuration Extension")
     public void activatingExtension();
 
     /**
