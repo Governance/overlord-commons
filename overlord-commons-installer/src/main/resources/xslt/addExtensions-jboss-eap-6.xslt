@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- XSLT file to add the security domains to the standalone.xml -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:param name="keystore-password" />
@@ -8,7 +7,7 @@
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes"
     xalan:indent-amount="2" />
 
-  <xsl:template match="/*[name()='server']/*[name()='extensions']">
+  <xsl:template match="/*[name()='server' or name()='domain']/*[name()='extensions']">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:element name="extensions" namespace="{$currentNS}">
       <xsl:apply-templates select="./node()|./text()" />
@@ -21,10 +20,10 @@
     </xsl:element>
   </xsl:template>
 
-  <xsl:template match="/*[name()='server']/*[name()='profile']">
+  <xsl:template match="/*[name()='server' or name()='domain']//*[name()='profile']">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:element name="profile" namespace="{$currentNS}">
-      <xsl:apply-templates select="./node()|./text()" />
+      <xsl:apply-templates select="./node()|./text()|@*" />
       <!-- Add the config subsystem (and some overlord global config) -->
       <xsl:element name="subsystem" namespace="urn:jboss:domain:overlord-configuration:1.0">
         <xsl:element name="configurations" namespace="urn:jboss:domain:overlord-configuration:1.0">
