@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- XSLT file to add the security domains to the standalone.xml -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 
   <xsl:param name="keystore-password" />
@@ -7,11 +6,8 @@
 
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes" xalan:indent-amount="2" />
 
-  <xsl:template match="/*[name()='server']/*[name()='extensions']">
+  <xsl:template match="/*[name()='server' or name()='host']/*[name()='management']">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
-    <xsl:copy>
-      <xsl:apply-templates select="@*|node()|text()" />
-    </xsl:copy>
     <xsl:element name="vault" namespace="{$currentNS}">
       <xsl:element name="vault-option" namespace="{$currentNS}">
         <xsl:attribute name="name">KEYSTORE_URL</xsl:attribute>
@@ -38,6 +34,9 @@
         <xsl:attribute name="value">${jboss.home.dir}/vault/</xsl:attribute>
       </xsl:element>
     </xsl:element>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()|text()" />
+    </xsl:copy>
   </xsl:template>
 
   <xsl:template match="*[name()='profile']/*[name()='subsystem']/*[name()='security-domains']">
