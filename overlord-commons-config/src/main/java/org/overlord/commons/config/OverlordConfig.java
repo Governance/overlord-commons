@@ -66,8 +66,11 @@ public class OverlordConfig {
     public String getSamlKeystoreUrl() {
         if (keystore == null) {
             String ks = overlordConfig.getString(SAML_KEYSTORE);
-            File ksFile = new File(ks);
+            if (ks == null) {
+                throw new RuntimeException("Overlord configuration missing: " + SAML_KEYSTORE); //$NON-NLS-1$
+            }
             try {
+                File ksFile = new File(ks);
                 if (ksFile.isFile()) {
                     ks = ksFile.toURI().toURL().toString();
                 } else {
