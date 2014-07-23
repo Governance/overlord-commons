@@ -16,6 +16,20 @@
 
 package org.overlord.commons.eap.extensions.deploy;
 
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
+import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
+import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
+import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
+import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
 import org.jboss.as.controller.parsing.ParseUtils;
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
@@ -25,28 +39,21 @@ import org.jboss.staxmapper.XMLElementWriter;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
 import org.jboss.staxmapper.XMLExtendedStreamWriter;
 
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoAttributes;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoContent;
-import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
-import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
-
 /**
+ * Parses the XML for the overlord-deployment subsystem in the JBoss EAP standalone.xml.
  */
 public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader<List<ModelNode>>, XMLElementWriter<SubsystemMarshallingContext> {
 
     public static final SubsystemParser_1_0 INSTANCE = new SubsystemParser_1_0();
     
     /**
-     * {@inheritDoc}
+     * Constructor.
+     */
+    public SubsystemParser_1_0() {
+    }
+    
+    /**
+     * @see org.jboss.staxmapper.XMLElementReader#readElement(org.jboss.staxmapper.XMLExtendedStreamReader, java.lang.Object)
      */
     @Override
     public void readElement(final XMLExtendedStreamReader reader, final List<ModelNode> list) throws XMLStreamException {
@@ -82,7 +89,15 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         }
     }
 
-    public void parseDeployments(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
+    /**
+     * Parses the deployments element.
+     * @param reader
+     * @param parentAddress
+     * @param list
+     * @throws XMLStreamException
+     */
+    public void parseDeployments(final XMLExtendedStreamReader reader, final ModelNode parentAddress,
+            final List<ModelNode> list) throws XMLStreamException {
         requireNoAttributes(reader);
         
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
@@ -105,7 +120,15 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         }
     }
     
-    public void parseDeployment(final XMLExtendedStreamReader reader, final ModelNode parentAddress, final List<ModelNode> list) throws XMLStreamException {
+    /**
+     * Parses the deployment element.
+     * @param reader
+     * @param parentAddress
+     * @param list
+     * @throws XMLStreamException
+     */
+    public void parseDeployment(final XMLExtendedStreamReader reader, final ModelNode parentAddress,
+            final List<ModelNode> list) throws XMLStreamException {
         String name = null;
         String module = null;
 
@@ -151,10 +174,11 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
     }
     
     /**
-     * {@inheritDoc}
-     * */
+     * @see org.jboss.staxmapper.XMLElementWriter#writeContent(org.jboss.staxmapper.XMLExtendedStreamWriter, java.lang.Object)
+     */
     @Override
-    public void writeContent(final XMLExtendedStreamWriter streamWriter, final SubsystemMarshallingContext context) throws XMLStreamException {
+    public void writeContent(final XMLExtendedStreamWriter streamWriter,
+            final SubsystemMarshallingContext context) throws XMLStreamException {
         context.startSubsystemElement(Namespace.CURRENT.getUriString(), false);
         
         final ModelNode node = context.getModelNode();
@@ -165,9 +189,10 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
             for (ModelNode deployment: deployments) {
                 streamWriter.writeStartElement(Constants.ELEMENT_DEPLOYMENT);
                 
-                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_NAME);
-                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_MODULE);
-                writeAttributeIfDefined(streamWriter, deployment, Constants.ATTRIBUTE_VERSION);
+                ModelNode deploymentChild = deployment.get(0);
+                writeAttributeIfDefined(streamWriter, deploymentChild, Constants.ATTRIBUTE_NAME);
+                writeAttributeIfDefined(streamWriter, deploymentChild, Constants.ATTRIBUTE_MODULE);
+                writeAttributeIfDefined(streamWriter, deploymentChild, Constants.ATTRIBUTE_VERSION);
                 
                 streamWriter.writeEndElement();
             }
@@ -177,9 +202,15 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
         streamWriter.writeEndElement();
     }
 
-    private void writeAttributeIfDefined(final XMLExtendedStreamWriter streamWriter,
-        final ModelNode node, final String name)
-        throws XMLStreamException {
+    /**
+     * Writes an attribute to the output stream, but only if it should.
+     * @param streamWriter
+     * @param node
+     * @param name
+     * @throws XMLStreamException
+     */
+    private void writeAttributeIfDefined(final XMLExtendedStreamWriter streamWriter, final ModelNode node,
+            final String name) throws XMLStreamException {
         if (node.has(name)) {
             final ModelNode attr = node.get(name);
             if (attr.isDefined()) {
