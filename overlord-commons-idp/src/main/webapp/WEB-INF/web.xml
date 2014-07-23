@@ -30,7 +30,7 @@
 
   <filter>
     <filter-name>IDPFilter</filter-name>
-    <filter-class>org.picketlink.identity.federation.web.filters.SamlIDPFilter</filter-class>
+    <filter-class>org.overlord.commons.auth.filters.SamlIDPFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>IDPFilter</filter-name>

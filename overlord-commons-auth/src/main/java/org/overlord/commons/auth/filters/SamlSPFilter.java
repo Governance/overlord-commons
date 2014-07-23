@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.picketlink.identity.federation.web.filters;
+package org.overlord.commons.auth.filters;
 
 import static org.picketlink.common.util.StringUtil.isNotNull;
 
@@ -49,6 +49,7 @@ import javax.xml.crypto.dsig.CanonicalizationMethod;
 import javax.xml.crypto.dsig.XMLSignatureException;
 
 import org.jboss.logging.Logger;
+import org.overlord.commons.auth.util.SamlPostBindingUtil;
 import org.picketlink.common.ErrorCodes;
 import org.picketlink.common.constants.GeneralConstants;
 import org.picketlink.common.constants.JBossSAMLURIConstants;
@@ -106,7 +107,6 @@ import org.picketlink.identity.federation.web.core.HTTPContext;
 import org.picketlink.identity.federation.web.interfaces.IRoleValidator;
 import org.picketlink.identity.federation.web.roles.DefaultRoleValidator;
 import org.picketlink.identity.federation.web.util.ConfigurationUtil;
-import org.picketlink.identity.federation.web.util.SamlPostBindingUtil;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 

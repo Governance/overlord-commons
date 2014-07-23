@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.picketlink.identity.federation.web.filters;
+package org.overlord.commons.auth.filters;
 
 import static org.picketlink.common.constants.GeneralConstants.AUDIT_HELPER;
 import static org.picketlink.common.constants.GeneralConstants.CONFIG_FILE_LOCATION;
@@ -61,6 +61,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.security.audit.AuditLevel;
+import org.overlord.commons.auth.util.SamlIDPWebRequestUtil;
 import org.picketlink.common.PicketLinkLogger;
 import org.picketlink.common.PicketLinkLoggerFactory;
 import org.picketlink.common.constants.GeneralConstants;
@@ -125,7 +126,6 @@ import org.picketlink.identity.federation.web.core.HTTPContext;
 import org.picketlink.identity.federation.web.core.IdentityParticipantStack;
 import org.picketlink.identity.federation.web.core.IdentityServer;
 import org.picketlink.identity.federation.web.util.ConfigurationUtil;
-import org.picketlink.identity.federation.web.util.SamlIDPWebRequestUtil;
 import org.picketlink.identity.federation.web.util.SAMLConfigurationProvider;
 import org.w3c.dom.Document;
 
