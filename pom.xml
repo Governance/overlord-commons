@@ -83,17 +83,6 @@
     <jboss.releases.repo.url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</jboss.releases.repo.url>
     <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
 
-    <!-- Maven plugin versions -->
-    <maven.surefire.report.plugin.version>2.4.3</maven.surefire.report.plugin.version>
-    <maven.surefire.plugin.version>2.7.1</maven.surefire.plugin.version>
-    <maven.assembly.plugin.version>2.2</maven.assembly.plugin.version>
-    <maven.jar.plugin.version>2.3.1</maven.jar.plugin.version>
-    <maven.war.plugin.version>2.1.1</maven.war.plugin.version>
-    <maven.bundle.plugin.version>2.2.0</maven.bundle.plugin.version>
-    <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
-    <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
-    <build-helper-maven-plugin.version>1.8</build-helper-maven-plugin.version>
-
     <!-- Third party libraries -->
     <picketbox.version>4.0.19.SP4</picketbox.version>
     <picketlink.version>2.5.3.SP4</picketlink.version>
@@ -141,48 +130,6 @@
     <!-- This section defines the default plugin settings inherited by child projects. -->
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven.compiler.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${maven.source.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${maven.jar.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>${maven.war.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>${maven.assembly.plugin.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>${maven.bundle.plugin.version}</version>
-          <extensions>true</extensions>
-          <configuration>
-            <supportedProjectTypes>
-              <supportedProjectType>bundle</supportedProjectType>
-              <supportedProjectType>war</supportedProjectType>
-            </supportedProjectTypes>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${build-helper-maven-plugin.version}</version>
-        </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>
