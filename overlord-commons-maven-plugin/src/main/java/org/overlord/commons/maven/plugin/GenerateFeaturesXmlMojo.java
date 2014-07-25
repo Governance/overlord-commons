@@ -213,7 +213,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * 
      * @param artifact
      */
-    private String formatArtifactAsBundle(Artifact artifact) throws Exception {
+    protected String formatArtifactAsBundle(Artifact artifact) throws Exception {
         StringBuilder builder = new StringBuilder();
         // If it's a bundle already, awesome.  If not, we need to wrap it
         // and include some useful meta-data.
@@ -265,7 +265,9 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append(artifact.getArtifactId());
             builder.append("&Bundle-Version="); //$NON-NLS-1$
             builder.append(sanitizeVersionForOsgi(artifact.getBaseVersion()));
-            if (project.getName() != null && project.getName().trim().length() > 0) {
+            // Under certain circumstances, the project name may include unresolved variables.  If so, skip Bundle-Name
+            if (project.getName() != null && project.getName().trim().length() > 0
+                    && ! project.getName().contains("${")) {
                 builder.append("&Bundle-Name="); //$NON-NLS-1$
                 builder.append(project.getName());
             }
@@ -329,7 +331,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * @param artifact
      * @throws Exception 
      */
-    private boolean isBundle(Artifact artifact) throws Exception {
+    protected boolean isBundle(Artifact artifact) throws Exception {
         // Resolve the artifact.
         ArtifactResolutionRequest request = new ArtifactResolutionRequest().setArtifact(artifact);
         ArtifactResolutionResult result = repositorySystem.resolve(request);
@@ -371,7 +373,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
      * @param artifact
      * @throws Exception
      */
-    private MavenProject resolveProject(Artifact artifact) throws Exception {
+    protected MavenProject resolveProject(Artifact artifact) throws Exception {
         Artifact pomArtifact = repositorySystem.createArtifact(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "", "pom"); //$NON-NLS-1$ //$NON-NLS-2$
         ArtifactResolutionRequest request = new ArtifactResolutionRequest();
         request.setArtifact(pomArtifact);
