@@ -11,5 +11,6 @@
   <modules>
     <module>overlord-commons-dist-fuse6</module>
     <module>overlord-commons-dist-eap6</module>
+    <module>overlord-commons-karaf-commands</module>
   </modules>
 </project>

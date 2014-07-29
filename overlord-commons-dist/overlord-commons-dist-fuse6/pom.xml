@@ -30,7 +30,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>overlord-commons-services</artifactId>
     </dependency>
-  
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>overlord-commons-karaf-commands</artifactId>
+    </dependency>
     <!-- The IDP WAR -->
     <dependency>
       <groupId>${project.groupId}</groupId>
