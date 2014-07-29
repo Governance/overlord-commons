@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Fuse 6.1" default="install">
   <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.FuseGetPassword" classpath="${overlord-commons.ant.jar}"/>
-
+  <taskdef name="md5Encrypter" classname="org.overlord.commons.ant.jaas.MD5PasswordEncrypter" classpath="${overlord-commons.ant.jar}"/>
   <property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
@@ -105,10 +105,16 @@ DTD Configure//EN" location="${overlord-commons.configure.dtd}" />
     <inputPassword message="Please enter a password for the Overlord 'admin' user: "
       confirmationMessage="Please re-enter the password: " addProperty="overlord-commons.admin.password"/>
     <echo message="" />
-
+	<md5Encrypter password="${overlord-commons.admin.password}" addProperty="overlord-commons.admin.password.encrypted"/>
     <echo>Configuring Overlord admin user in fuse/etc/users.properties</echo>
-    <copy file="config/fuse-users.properties" tofile="${overlord-commons.fuse.config.dir}/users.properties" overwrite="true" />
-    <replace file="${overlord-commons.fuse.config.dir}/users.properties" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+    <propertyfile file="${overlord-commons.fuse.config.dir}/users.properties">
+      <entry key="admin" value="{CRYPT}${overlord-commons.admin.password.encrypted}{CRYPT},overlorduser,overlordadmin,admin.sramp,dev,qa,stage,prod,ba,arch" />
+    </propertyfile>
+  	
+  	<propertyfile file="${overlord-commons.fuse.config.dir}/org.apache.karaf.jaas.cfg">
+  		 <entry key="encryption.enabled" value="true" />
+    </propertyfile>  		
+  	
     <property name="overlord-commons.saml-keystore.password" value="${overlord-commons.admin.password}"/>
     <property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}"/>
   </target>
