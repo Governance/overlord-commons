@@ -267,7 +267,7 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
             builder.append(sanitizeVersionForOsgi(artifact.getBaseVersion()));
             // Under certain circumstances, the project name may include unresolved variables.  If so, skip Bundle-Name
             if (project.getName() != null && project.getName().trim().length() > 0
-                    && ! project.getName().contains("${")) {
+                    && ! project.getName().contains("${")) { //$NON-NLS-1$
                 builder.append("&Bundle-Name="); //$NON-NLS-1$
                 builder.append(project.getName());
             }

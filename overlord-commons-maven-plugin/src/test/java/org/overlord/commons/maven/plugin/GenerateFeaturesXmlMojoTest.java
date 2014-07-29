@@ -44,29 +44,29 @@ public class GenerateFeaturesXmlMojoTest {
         
         // isBundle == true
         doReturn(true).when(mojo).isBundle(any(Artifact.class));
-        Artifact artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null);
+        Artifact artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
         mojo.formatArtifactAsBundle(artifact);
         String bundle = mojo.formatArtifactAsBundle(artifact);
-        assertEquals("mvn:org.overlord.commons/test-artifact/0.0.1", bundle);
+        assertEquals("mvn:org.overlord.commons/test-artifact/0.0.1", bundle); //$NON-NLS-1$
         
         // isBundle == false (normal project name)
         doReturn(false).when(mojo).isBundle(any(Artifact.class));
         MavenProject project = mock(MavenProject.class);
         doReturn(project).when(mojo).resolveProject(any(Artifact.class));
-        when(project.getName()).thenReturn("Test Artifact");
-        artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null);
+        when(project.getName()).thenReturn("Test Artifact"); //$NON-NLS-1$
+        artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
         mojo.formatArtifactAsBundle(artifact);
         bundle = mojo.formatArtifactAsBundle(artifact);
-        assertEquals("wrap:mvn:org.overlord.commons/test-artifact/0.0.1$Bundle-SymbolicName=org.overlord.commons.test-artifact&Bundle-Version=0.0.1&Bundle-Name=Test Artifact", bundle);
+        assertEquals("wrap:mvn:org.overlord.commons/test-artifact/0.0.1$Bundle-SymbolicName=org.overlord.commons.test-artifact&Bundle-Version=0.0.1&Bundle-Name=Test Artifact", bundle); //$NON-NLS-1$
         
         // isBundle == false (project name with unresolved variables)
         doReturn(false).when(mojo).isBundle(any(Artifact.class));
         doReturn(project).when(mojo).resolveProject(any(Artifact.class));
-        when(project.getName()).thenReturn("${extension.name} API v.${spec.version}");
-        artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null);
+        when(project.getName()).thenReturn("${extension.name} API v.${spec.version}"); //$NON-NLS-1$
+        artifact = new DefaultArtifact("org.overlord.commons", "test-artifact", "0.0.1", "", "jar", "", null); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
         mojo.formatArtifactAsBundle(artifact);
         bundle = mojo.formatArtifactAsBundle(artifact);
         // Bundle-Name should be skipped
-        assertEquals("wrap:mvn:org.overlord.commons/test-artifact/0.0.1$Bundle-SymbolicName=org.overlord.commons.test-artifact&Bundle-Version=0.0.1", bundle);
+        assertEquals("wrap:mvn:org.overlord.commons/test-artifact/0.0.1$Bundle-SymbolicName=org.overlord.commons.test-artifact&Bundle-Version=0.0.1", bundle); //$NON-NLS-1$
     }
 }

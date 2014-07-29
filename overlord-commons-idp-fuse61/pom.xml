@@ -49,6 +49,9 @@
             <overlay>
               <groupId>${project.groupId}</groupId>
               <artifactId>overlord-commons-idp</artifactId>
+              <excludes>
+                <exclude>WEB-INF/lib/*.jar</exclude>
+              </excludes>
             </overlay>
           </overlays>
           <archive>
@@ -62,21 +65,6 @@
               <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
             </manifestEntries>
           </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <overlays>
-            <overlay>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>overlord-commons-idp</artifactId>
-              <excludes>
-                <exclude>WEB-INF/lib/*.jar</exclude>
-              </excludes>
-            </overlay>
-          </overlays>
         </configuration>
       </plugin>
     </plugins>
