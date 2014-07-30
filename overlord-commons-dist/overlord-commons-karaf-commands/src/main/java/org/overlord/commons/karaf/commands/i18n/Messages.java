@@ -1,4 +1,4 @@
-package org.overlord.commons.karaf.commands;
+package org.overlord.commons.karaf.commands.i18n;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

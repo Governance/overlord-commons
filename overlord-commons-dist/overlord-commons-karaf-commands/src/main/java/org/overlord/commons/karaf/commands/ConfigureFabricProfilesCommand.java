@@ -1,18 +1,3 @@
-/*
- * Copyright 2014 JBoss Inc
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.overlord.commons.karaf.commands;
 
 import java.io.File;
@@ -37,17 +22,29 @@ import org.slf4j.LoggerFactory;
  *
  * @author David Virgil Naranjo
  */
-@Command(scope = "overlord", name = "generateSamlKeystore", description = "Generates a keystore file and update the etc folder and the overlord profiles")
-public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
+@Command(scope = "overlord", name = "configureFabric", description = "Generates a keystore file and the overlord.properties in the overlord.commons profile.")
+public class ConfigureFabricProfilesCommand extends OsgiCommandSupport {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenerateSamlKeystoreCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConfigureFabricProfilesCommand.class);
 
     @Argument(index = 0, name = "password", description = "The command argument", required = true, multiValued = false)
     String password = null;
 
-    public static final String FUSE_CONFIG_DIR = "etc";
+    public static final String FABRIC_PROFILES_WINDOWS_DIR = "fabric\\import\\fabric\\configs\\versions\\1.0\\profiles";
+    public static final String FABRIC_PROFILES_UNIX_DIR = "fabric/import/fabric/configs/versions/1.0/profiles";
 
+    public static String FABRIC_PROFILES_DIR;
+    public static String OVERLORD_COMMONS_PROFILE_PATH;
 
+    static {
+        if (File.separator.equals("/")) {
+            FABRIC_PROFILES_DIR = FABRIC_PROFILES_UNIX_DIR;
+            OVERLORD_COMMONS_PROFILE_PATH = "overlord/commons.profile";
+        } else {
+            FABRIC_PROFILES_DIR = FABRIC_PROFILES_WINDOWS_DIR;
+            OVERLORD_COMMONS_PROFILE_PATH = "overlord\\commons.profile";
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -56,7 +53,7 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
      */
     @Override
     protected Object doExecute() throws Exception {
-        String fuse_config_path = getFuseConfigPath();
+        String fuse_config_path = getOverlordCommonsProfilesPath();
         String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
         logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin"));
         // This 3 lines generate/overwrite the keystore file.
@@ -75,14 +72,14 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
      *
      * @return the fuse config path
      */
-    private String getFuseConfigPath() {
+    private String getOverlordCommonsProfilesPath() {
         String karaf_home = System.getProperty("karaf.home");
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(karaf_home);
         if (!karaf_home.endsWith(File.separator)) {
             fuse_config_path.append(File.separator);
         }
-        fuse_config_path.append(FUSE_CONFIG_DIR).append(File.separator);
+        fuse_config_path.append(FABRIC_PROFILES_DIR).append(File.separator).append(OVERLORD_COMMONS_PROFILE_PATH).append(File.separator);
         return fuse_config_path.toString();
     }
 
@@ -92,13 +89,9 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
      * @return the overlord properties file path
      */
     private String getOverlordPropertiesFilePath() {
-        String karaf_home = System.getProperty("karaf.home");
         StringBuilder fuse_config_path = new StringBuilder();
-        fuse_config_path.append(karaf_home);
-        if (!karaf_home.endsWith(File.separator)) {
-            fuse_config_path.append(File.separator);
-        }
-        fuse_config_path.append(FUSE_CONFIG_DIR).append(File.separator).append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
+        fuse_config_path.append(getOverlordCommonsProfilesPath())
+                .append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
         return fuse_config_path.toString();
     }
 
@@ -139,8 +132,10 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(filePath);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_BASE_URL,
+                            CommandConstants.OverlordProperties.OVERLORD_BASE_URL_VALUE);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE,
-                            CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_VALUE);
+                            CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_FABRIC_VALUE);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS,
                             CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
