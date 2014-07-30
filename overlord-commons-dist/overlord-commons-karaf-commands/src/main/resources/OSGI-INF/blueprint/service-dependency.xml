@@ -3,7 +3,11 @@
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
         <command name="overlord/generateSamlKeystore">
             <action class="org.overlord.commons.karaf.commands.GenerateSamlKeystoreCommand"/>
-        </command>
+        </command>    
     </command-bundle>
-
+    <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
+        <command name="overlord/configureFabric">
+            <action class="org.overlord.commons.karaf.commands.ConfigureFabricProfilesCommand"/>
+        </command>        
+    </command-bundle>
 </blueprint>

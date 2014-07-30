@@ -16,13 +16,20 @@
 
 package org.overlord.commons.config;
 
+import io.fabric8.api.FabricService;
+import io.fabric8.api.Profile;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
+import org.overlord.commons.services.ServiceRegistryUtil;
 
 /**
  * Core/shared overlord configuration.
@@ -31,10 +38,13 @@ import org.apache.commons.configuration.Configuration;
  */
 public class OverlordConfig {
 
-    public static final String OVERLORD_CONFIG_FILE_NAME     = "overlord.config.file.name"; //$NON-NLS-1$
-    public static final String OVERLORD_CONFIG_FILE_REFRESH  = "overlord.config.file.refresh"; //$NON-NLS-1$
+    public static final String OVERLORD_CONFIG_FILE_NAME = "overlord.config.file.name"; //$NON-NLS-1$
+    public static final String OVERLORD_CONFIG_FILE_REFRESH = "overlord.config.file.refresh"; //$NON-NLS-1$
 
     public static Configuration overlordConfig;
+
+    private static FabricService fabricService;
+
     static {
         String configFile = System.getProperty(OVERLORD_CONFIG_FILE_NAME);
         String refreshDelayStr = System.getProperty(OVERLORD_CONFIG_FILE_REFRESH);
@@ -43,11 +53,12 @@ public class OverlordConfig {
             refreshDelay = new Long(refreshDelayStr);
         }
 
-        overlordConfig = ConfigurationFactory.createConfig(
-                configFile,
-                "overlord.properties", //$NON-NLS-1$
-                refreshDelay,
-                null, null);
+        overlordConfig = ConfigurationFactory.createConfig(configFile, "overlord.properties", //$NON-NLS-1$
+                refreshDelay, null, null);
+        try {
+            fabricService = ServiceRegistryUtil.getSingleService(FabricService.class);
+        } catch (Throwable t) {
+        }
     }
 
     protected static final String SAML_KEYSTORE = "overlord.auth.saml-keystore"; //$NON-NLS-1$
@@ -59,7 +70,7 @@ public class OverlordConfig {
 
     private String keystore;
     private Map<String, Map<String, String>> uiHeaderApps;
-    
+
     /**
      * @return the SAML keystore url
      */
@@ -69,42 +80,89 @@ public class OverlordConfig {
             if (ks == null) {
                 throw new RuntimeException("Overlord configuration missing: " + SAML_KEYSTORE); //$NON-NLS-1$
             }
-            try {
-                File ksFile = new File(ks);
-                if (ksFile.isFile()) {
-                    ks = ksFile.toURI().toURL().toString();
-                } else {
-                    throw new FileNotFoundException(ks);
+            if (!ks.startsWith("profile:")) {
+                try {
+
+                    File ksFile = new File(ks);
+                    if (ksFile.isFile()) {
+                        ks = ksFile.toURI().toURL().toString();
+                    } else {
+                        throw new FileNotFoundException(ks);
+                    }
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+                keystore = ks;
+            } else {
+                keystore = ks.substring("profile:".length());
+                StringBuilder builder = new StringBuilder();
+
+                File temp = null;
+                try {
+                    temp = File.createTempFile(keystore, null);
+                    temp.deleteOnExit();
+                } catch (IOException e1) {
+                    throw new RuntimeException(e1);
+                }
+
+                OutputStream os = null;
+                try {
+
+                    os = new FileOutputStream(temp);
+
+                    byte[] keystoreContent = null;
+
+                    if (fabricService != null && fabricService.getCurrentContainer() != null
+                            && fabricService.getCurrentContainer().getOverlayProfile() != null) {
+
+                        Profile profile = fabricService.getCurrentContainer().getOverlayProfile();
+                        keystoreContent = profile.getFileConfiguration(keystore);
+
+                    }
+                    if (keystoreContent != null) {
+                        os.write(keystoreContent);
+                    }
+                    keystore = temp.toURI().toURL().toString();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    if (os != null) {
+                        try {
+                            os.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+
             }
-            keystore = ks;
+
         }
         return keystore;
     }
-    
+
     /**
      * @return the SAML keystore password
      */
     public String getSamlKeystorePassword() {
         return overlordConfig.getString(SAML_KEYSTORE_PASSWORD);
     }
-    
+
     /**
      * @return the SAML signing key alias
      */
     public String getSamlSigningKeyAlias() {
         return overlordConfig.getString(SAML_KEY_ALIAS);
     }
-    
+
     /**
      * @return the SAML signing key password
      */
     public String getSamlSigningKeyPassword() {
         return overlordConfig.getString(SAML_KEY_ALIAS_PASSWORD);
     }
-    
+
     /**
      * Gets all of the configured UI header apps.
      */

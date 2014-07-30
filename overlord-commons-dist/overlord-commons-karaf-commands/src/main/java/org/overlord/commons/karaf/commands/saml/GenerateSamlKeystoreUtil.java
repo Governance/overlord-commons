@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.commons.karaf.commands;
+package org.overlord.commons.karaf.commands.saml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,6 +34,7 @@ import javax.security.auth.x500.X500Principal;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
+import org.overlord.commons.karaf.commands.i18n.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
