@@ -11,8 +11,8 @@
     <property name="overlord-commons.jboss.domain-config.dir" location="${overlord-commons.appserver.dir}/domain/configuration" />
     <property name="overlord-commons.jboss.module-path" location="${overlord-commons.appserver.dir}/modules" />
     
-    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap6/${overlord-commons.version}/overlord-commons-idp-eap6-${overlord-commons.version}.war" />
-    <property name="overlord-commons.auth.jboss7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-jboss7/${overlord-commons.version}/overlord-commons-auth-jboss7-${overlord-commons.version}.war" />
+    <property name="overlord-commons.idp.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-idp-eap6/${version.org.overlord.overlord-commons}/overlord-commons-idp-eap6-${version.org.overlord.overlord-commons}.war" />
+    <property name="overlord-commons.auth.jboss7.download.url" value="https://repository.jboss.org/nexus/content/groups/public/org/overlord/overlord-commons-auth-jboss7/${version.org.overlord.overlord-commons}/overlord-commons-auth-jboss7-${version.org.overlord.overlord-commons}.war" />
 
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp-eap6.war" />
     <property name="overlord-commons.eap-dist.file" value="${overlord-commons.install.dir}/overlord-commons-dist-eap6.zip" />
@@ -76,11 +76,11 @@
     <mkdir dir="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main" />
     <copy file="modules/overlord-commons-auth-tool-module.xml" tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/module.xml">
       <filterset>
-        <filter token="VERSION" value="${overlord-commons.version}"/>
+        <filter token="VERSION" value="${version.org.overlord.overlord-commons}"/>
       </filterset>
     </copy>
     <copy file="${overlord-commons.auth.jboss7.file}"
-          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/overlord-commons-auth-jboss7-${overlord-commons.version}.jar" overwrite="false" />
+          tofile="${overlord-commons.appserver.dir}/modules/org/overlord/commons/overlord-commons-auth-tool/main/overlord-commons-auth-jboss7-${version.org.overlord.overlord-commons}.jar" overwrite="false" />
 
     <antcall target="install-jboss" />
   </target>

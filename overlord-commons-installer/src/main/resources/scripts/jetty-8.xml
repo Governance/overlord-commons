@@ -9,7 +9,7 @@
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
 
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
-  <property name="overlord-commons.version" value="" />
+  <property name="version.org.overlord.overlord-commons" value="" />
 
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
@@ -20,7 +20,7 @@
     <property name="overlord-commons.jetty.deploy.dir" location="${overlord-commons.appserver.dir}/webapps" />
     <property name="overlord-commons.jetty.config.dir" location="${overlord-commons.appserver.dir}/etc" />
     <property name="overlord-commons.jetty.lib.dir" location="${overlord-commons.appserver.dir}/lib/ext" />
-    <property name="overlord-commons.idp.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-idp-jetty8/${overlord-commons.version}/overlord-commons-idp-jetty8-${overlord-commons.version}.war" />
+    <property name="overlord-commons.idp.download.url" value="${overlord-commons.lib.download.url}/org/overlord/overlord-commons-idp-jetty8/${version.org.overlord.overlord-commons}/overlord-commons-idp-jetty8-${version.org.overlord.overlord-commons}.war" />
     <property name="overlord-commons.idp.file" value="${overlord-commons.install.dir}/overlord-commons-idp.war" />
   </target>
 

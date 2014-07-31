@@ -9,7 +9,7 @@
   <name>Overlord Commons: Dev Servers</name>
   
   <properties>
-    <jetty.version>8.1.9.v20130131</jetty.version>
+    <version.org.eclipse.jetty>8.1.9.v20130131</version.org.eclipse.jetty>
   </properties>
 
   <dependencies>

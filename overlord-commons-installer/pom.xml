@@ -9,7 +9,7 @@
   <name>Overlord Commons: Installer</name>
 
   <properties>
-    <overlord-commons.version>${project.version}</overlord-commons.version>
+    <version.org.overlord.overlord-commons>${project.version}</version.org.overlord.overlord-commons>
   </properties>
   <dependencies>
     <dependency>

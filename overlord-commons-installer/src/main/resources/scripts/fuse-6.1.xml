@@ -15,7 +15,7 @@
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
 
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
-  <property name="overlord-commons.version" value="" />
+  <property name="version.org.overlord.overlord-commons" value="" />
 
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">

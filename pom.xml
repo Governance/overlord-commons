@@ -83,16 +83,15 @@
     <jboss.snapshots.repo.url>https://repository.jboss.org/nexus/content/repositories/snapshots/</jboss.snapshots.repo.url>
 
     <!-- Third party libraries -->
-    <picketbox.version>4.0.19.SP4</picketbox.version>
-    <picketlink.version>2.5.3.SP4</picketlink.version>
-    <jboss-as-security.version>7.2.0.Final</jboss-as-security.version>
-    <servlet-api.version>2.5</servlet-api.version>
-    <jetty.version>8.1.9.v20130131</jetty.version>
-    <tomcat.version>7.0.47</tomcat.version>
+    <version.org.picketbox>4.0.19.SP4</version.org.picketbox>
+    <version.org.picketlink>2.5.3.SP4</version.org.picketlink>
+    <version.org.jboss.as.jboss-as-security>7.2.0.Final</version.org.jboss.as.jboss-as-security>
+    <version.org.eclipse.jetty>8.1.9.v20130131</version.org.eclipse.jetty>
+    <version.org.apache.tomcat>7.0.47</version.org.apache.tomcat>
 
     <version.jboss.dmr>1.2.0.Final</version.jboss.dmr>
     <version.jboss.as.controller>7.2.0.Final</version.jboss.as.controller>
-    <fabric8.version>1.0.0.redhat-379</fabric8.version>
+    <version.io.fabric8>1.0.0.redhat-379</version.io.fabric8>
   </properties>
 
   <modules>
@@ -265,7 +264,7 @@
       <dependency>
 		<groupId>io.fabric8</groupId>
       	<artifactId>fabric-api</artifactId>
-      	<version>${fabric8.version}</version>
+      	<version>${version.io.fabric8}</version>
       </dependency>      
       
       <!-- Declarative Service Annotations -->   
@@ -298,56 +297,56 @@
       <dependency>
         <groupId>org.picketbox</groupId>
         <artifactId>picketbox</artifactId>
-        <version>${picketbox.version}</version>
+        <version>${version.org.picketbox}</version>
       </dependency>
       <dependency>
         <groupId>org.picketlink</groupId>
         <artifactId>picketlink-federation</artifactId>
-        <version>${picketlink.version}</version>
+        <version>${version.org.picketlink}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-security</artifactId>
-        <version>${jboss-as-security.version}</version>
+        <version>${version.org.jboss.as.jboss-as-security}</version>
       </dependency>
 
       <!-- Tomcat -->
       <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-catalina</artifactId>
-        <version>${tomcat.version}</version>
+        <version>${version.org.apache.tomcat}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.tomcat</groupId>
         <artifactId>tomcat-coyote</artifactId>
-        <version>${tomcat.version}</version>
+        <version>${version.org.apache.tomcat}</version>
       </dependency>
 
       <!-- Jetty -->
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
-        <version>${jetty.version}</version>
+        <version>${version.org.eclipse.jetty}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-plus</artifactId>
-        <version>${jetty.version}</version>
+        <version>${version.org.eclipse.jetty}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-servlet</artifactId>
-        <version>${jetty.version}</version>
+        <version>${version.org.eclipse.jetty}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-jsp</artifactId>
-        <version>${jetty.version}</version>
+        <version>${version.org.eclipse.jetty}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-jndi</artifactId>
-        <version>${jetty.version}</version>
+        <version>${version.org.eclipse.jetty}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.errai.reflections</groupId>
@@ -438,7 +437,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>${maven.surefire.report.plugin.version}</version>
+        <version>${version.org.apache.maven.plugins}</version>
       </plugin>
     </plugins>
   </reporting>
