@@ -25,6 +25,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.overlord.commons.config.configurator.Configurator;
+import org.overlord.commons.config.crypt.CryptLookup;
 import org.overlord.commons.config.vault.VaultLookup;
 import org.overlord.commons.services.ServiceRegistryUtil;
 
@@ -37,6 +38,8 @@ import org.overlord.commons.services.ServiceRegistryUtil;
 public class ConfigurationFactory {
 
     private static boolean globalLookupsRegistered = false;
+
+
 
 
     /**
@@ -54,7 +57,7 @@ public class ConfigurationFactory {
         registerGlobalLookups();
         try {
             CompositeConfiguration compositeConfig = new CompositeConfiguration();
-            
+
             // System properties always win - add that first
             compositeConfig.addConfiguration(new SystemPropertiesConfiguration());
 
@@ -104,7 +107,7 @@ public class ConfigurationFactory {
             if (defaultConfigPath != null) {
                 compositeConfig.addConfiguration(new PropertiesConfiguration(defaultConfigLoader.getResource(defaultConfigPath)));
             }
-            
+
             return compositeConfig;
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
@@ -118,6 +121,7 @@ public class ConfigurationFactory {
     private synchronized static void registerGlobalLookups() {
         if (!globalLookupsRegistered) {
             ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup()); //$NON-NLS-1$
+            ConfigurationInterpolator.registerGlobalLookup("crypt", new CryptLookup()); //$NON-NLS-1$
             globalLookupsRegistered = true;
         }
     }

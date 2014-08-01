@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Tomcat 7" default="install">
   <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.TomcatGetPassword" classpath="${overlord-commons.ant.jar}"/>
+  <taskdef name="aesEncrypter" classname="org.overlord.commons.ant.crypt.AesEncrypterTask">
+	<classpath>
+	  	<pathelement location="${overlord-commons.ant.jar}"/>
+	  	<pathelement location="${commons-codec.jar}"/>
+		<pathelement location="${overlord-commons.codec.jar}"/>	  	
+	</classpath>
+  </taskdef>	  
   <property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
   <property name="appserver.id" value="tomcat-7" />
   <property name="overlord-commons.install.dir" location="target" />
   <property name="overlord-commons.appserver.dir" location="${overlord-commons.install.dir}/${appserver.id}" />
-
+  <property name="crypt_prefix" value="$${crypt:" />
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="version.org.overlord.overlord-commons" value="" />
   <!-- Configure the properties that will drive the installer -->
@@ -58,14 +65,15 @@
   </target>
   
   <target name="generate-properties" depends="all-properties">
+	<aesEncrypter plain="${overlord-commons.admin.password}" addProperty="overlord-commons.admin.password.aes.encrypted"/>  
     <!-- Configure overlord.properties -->
     <propertyfile file="${overlord-commons.tomcat.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
       <entry key="overlord.port" value="8080" />
       <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
       <entry key="overlord.auth.saml-keystore" value="${sys:catalina.home}/conf/overlord-saml.keystore" />
-      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-keystore-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
-      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
     </propertyfile>
   
   </target>
@@ -87,6 +95,7 @@
     <echo>Configuring Overlord admin user in tomcat-users.xml</echo>
     <copy file="config/tomcat-users-overlord.xml" tofile="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" overwrite="true" />
     <replace file="${overlord-commons.tomcat.config.dir}/tomcat-users.xml" token="@ADMINPASSWORD@" value="${overlord-commons.admin.password}"/>
+    <aesEncrypter plain="${overlord-commons.admin.password}" addProperty="overlord-commons.admin.password.aes.encrypted"/>
     <property name="overlord-commons.saml-keystore.password" value="${overlord-commons.admin.password}"/>
     <property name="overlord-commons.overlord-alias.password" value="${overlord-commons.admin.password}"/>
   </target>

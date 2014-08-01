@@ -15,7 +15,7 @@
     <dependency>
       <artifactId>overlord-commons-ant</artifactId>
       <groupId>org.overlord</groupId>
-    </dependency>
+    </dependency>             
   </dependencies>
   <build>
     <plugins>
@@ -167,6 +167,14 @@
           <artifactId>overlord-commons-idp</artifactId>
           <type>war</type>
         </dependency>
+	    <dependency>
+	      <groupId>org.overlord</groupId>
+	      <artifactId>overlord-commons-codec</artifactId>
+	    </dependency>   
+	    <dependency>
+	      <groupId>commons-codec</groupId>
+	      <artifactId>commons-codec</artifactId>
+	    </dependency>           
       </dependencies>
       <build>
         <plugins>
@@ -196,7 +204,8 @@
                     <property name="overlord-commons.ant.jar" value="${maven.dependency.org.overlord.overlord-commons-ant.jar.path}" />
                     <property name="overlord-commons.idp.file" value="${maven.dependency.org.overlord.overlord-commons-idp.war.path}" />
                     <property name="overlord-commons.services.file" value="${maven.dependency.org.overlord.overlord-commons-services.jar.path}" />
-
+                    <property name="overlord-commons.codec.jar" location="${maven.dependency.org.overlord.overlord-commons-codec.jar.path}" />
+                    <property name="commons-codec.jar" location="${maven.dependency.commons-codec.commons-codec.jar.path}" />  
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
                       <target name="install" />
                     </ant>
@@ -232,6 +241,14 @@
           <artifactId>overlord-commons-idp</artifactId>
           <type>war</type>
         </dependency>
+	    <dependency>
+	      <groupId>org.overlord</groupId>
+	      <artifactId>overlord-commons-codec</artifactId>
+	    </dependency>   
+	    <dependency>
+	      <groupId>commons-codec</groupId>
+	      <artifactId>commons-codec</artifactId>
+	    </dependency>           
       </dependencies>
       <build>
         <plugins>
@@ -264,7 +281,8 @@
                     <property name="overlord-commons.ant.jar" value="${maven.dependency.org.overlord.overlord-commons-ant.jar.path}" />
                     <property name="overlord-commons.idp.file" value="${maven.dependency.org.overlord.overlord-commons-idp.war.path}" />
                     <property name="overlord-commons.services.file" value="${maven.dependency.org.overlord.overlord-commons-services.jar.path}" />
-
+                    <property name="overlord-commons.codec.jar" location="${maven.dependency.org.overlord.overlord-commons-codec.jar.path}" />  
+                    <property name="commons-codec.jar" location="${maven.dependency.commons-codec.commons-codec.jar.path}" />					
                     <ant dir="${basedir}/src/main/resources" antfile="${basedir}/src/main/resources/build.xml">
                       <target name="install" />
                     </ant>

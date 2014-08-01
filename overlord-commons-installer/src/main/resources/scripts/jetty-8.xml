@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into Jetty 8" default="install">
   <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JettyGetPassword" classpath="${overlord-commons.ant.jar}"/>
+  <taskdef name="aesEncrypter" classname="org.overlord.commons.ant.crypt.AesEncrypterTask">
+	<classpath>
+	  	<pathelement location="${overlord-commons.ant.jar}"/>
+	  	<pathelement location="${commons-codec.jar}"/>
+		<pathelement location="${overlord-commons.codec.jar}"/>	  	
+	</classpath>
+  </taskdef>	  
 	<property file="overlord-commons-installer.properties" />
 
   <!-- Customize these properties when calling this installer -->
@@ -10,7 +17,7 @@
 
   <!-- These properties should get loaded from overlord-commons-installer.properties included in the installer JAR -->
   <property name="version.org.overlord.overlord-commons" value="" />
-
+  <property name="crypt_prefix" value="$${crypt:" />
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
@@ -25,14 +32,15 @@
   </target>
 
   <target name="generate-properties" depends="all-properties">
+    <aesEncrypter plain="${overlord-commons.admin.password}" addProperty="overlord-commons.admin.password.aes.encrypted"/>
     <!-- Configure overlord.properties -->
     <propertyfile file="${overlord-commons.jetty.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
       <entry key="overlord.port" value="8080" />
       <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
       <entry key="overlord.auth.saml-keystore" value="${sys:jetty.home}/etc/overlord-saml.keystore" />
-      <entry key="overlord.auth.saml-keystore-password" value="${overlord-commons.saml-keystore.password}" />
+      <entry key="overlord.auth.saml-keystore-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
       <entry key="overlord.auth.saml-key-alias" value="overlord" />
-      <entry key="overlord.auth.saml-key-alias-password" value="${overlord-commons.overlord-alias.password}" />
+      <entry key="overlord.auth.saml-key-alias-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
     </propertyfile>
   </target>
   
