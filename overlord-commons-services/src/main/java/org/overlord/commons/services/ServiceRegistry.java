@@ -40,4 +40,19 @@ public interface ServiceRegistry {
      */
     public <T> Set<T> getServices(Class<T> serviceInterface);
 
+    /**
+     * This method registers a service listener associated with the supplied service interface.
+     * 
+     * @param serviceInterface The service type
+     * @param listener The service listener
+     */
+    public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener);
+
+    /**
+     * This method unregisters a service listener.
+     * 
+     * @param listener The service listener
+     */
+    public <T> void removeServiceListener(ServiceListener<T> listener);
+
 }

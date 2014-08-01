@@ -18,11 +18,14 @@ package org.overlord.commons.services;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 
 /**
@@ -31,7 +34,12 @@ import org.osgi.framework.ServiceReference;
  *
  * @author eric.wittmann@redhat.com
  */
-public class OSGiServiceRegistry implements ServiceRegistry {
+public class OSGiServiceRegistry extends AbstractServiceRegistry {
+    
+    private static final Logger LOG=Logger.getLogger(OSGiServiceRegistry.class.getName());
+
+    private java.util.Map<ServiceListener<?>, ServiceListenerAdapter<?>> _listeners=
+                            new java.util.HashMap<ServiceListener<?>, ServiceListenerAdapter<?>>();
 
     /**
      * Constructor.
@@ -51,12 +59,17 @@ public class OSGiServiceRegistry implements ServiceRegistry {
             Bundle bundle = FrameworkUtil.getBundle(serviceInterface);
             if (bundle != null) {
                 BundleContext context = bundle.getBundleContext();
-                ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
-                if (serviceReferences != null) {
-                    if (serviceReferences.length == 1)
-                        service = (T) context.getService(serviceReferences[0]);
-                    else
-                        throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
+                
+                if (context != null) {
+                    ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
+                    if (serviceReferences != null) {
+                        if (serviceReferences.length == 1)
+                            service = (T) context.getService(serviceReferences[0]);
+                        else
+                            throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
+                    }
+                } else {
+                    LOG.warning("Unable to get bundle context for interface: "+serviceInterface);
                 }
             }
         } catch (InvalidSyntaxException e) {
@@ -96,5 +109,95 @@ public class OSGiServiceRegistry implements ServiceRegistry {
         return services;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener) {
+        synchronized (_listeners) {
+            _listeners.put(listener, new ServiceListenerAdapter<T>(serviceInterface, listener));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> void removeServiceListener(ServiceListener<T> listener) {
+        synchronized (_listeners) {
+            @SuppressWarnings("unchecked")
+            ServiceListenerAdapter<T> adapter=(ServiceListenerAdapter<T>)_listeners.get(listener);
+            
+            if (adapter != null) {
+                adapter.close();
+                _listeners.remove(listener);
+            }
+        }
+    }
+
+    /**
+     * This class bridges between the OSGi service listener and the commons service listener.
+     * 
+     */
+    public static class ServiceListenerAdapter<T> {
+        
+        private Class<T> _serviceInterface;
+        private ServiceListener<T> _serviceListener;
+        
+        private org.osgi.framework.ServiceListener _osgiListener=null;
+        
+        public ServiceListenerAdapter(Class<T> serviceInterface, ServiceListener<T> listener) {
+            _serviceInterface = serviceInterface;
+            _serviceListener = listener;
+            
+            init();
+        }
+        
+        @SuppressWarnings("unchecked")
+        protected void init() {
+            Bundle bundle = FrameworkUtil.getBundle(_serviceInterface);
+            if (bundle != null) {
+                final BundleContext context = bundle.getBundleContext();
+                
+                _osgiListener = new org.osgi.framework.ServiceListener() {
+                    public void serviceChanged(ServiceEvent ev) {
+                        ServiceReference sr = ev.getServiceReference();
+                        switch(ev.getType()) {
+                        case ServiceEvent.REGISTERED:
+                            _serviceListener.registered((T)context.getService(sr));
+                            break;
+                        case ServiceEvent.UNREGISTERING:
+                            _serviceListener.unregistered((T)context.getService(sr));
+                            break;
+                        default:
+                            break;
+                        }
+                    }           
+                };
+                
+                String filter = "(objectclass=" + _serviceInterface.getName() + ")";
+                try {
+                    context.addServiceListener(_osgiListener, filter);
+                } catch (InvalidSyntaxException e) { 
+                    LOG.log(Level.SEVERE, "Failed to add service listener for type '"+_serviceInterface.getName()+"'", e);
+                }
+
+                ServiceReference[] srefs;
+                try {
+                    srefs = context.getServiceReferences(_serviceInterface.getName(), null);
+                    
+                    if (srefs != null) {
+                        for (int i=0; i < srefs.length; i++) {
+                            _serviceListener.registered((T)context.getService(srefs[i]));
+                        }
+                    }
+                } catch (InvalidSyntaxException e) {
+                    LOG.log(Level.SEVERE, "Failed to get service references for type '"+_serviceInterface.getName()+"'", e);
+                }
+            }
+        }
+        
+        public void close() {
+            
+        }
+    }
 }
 

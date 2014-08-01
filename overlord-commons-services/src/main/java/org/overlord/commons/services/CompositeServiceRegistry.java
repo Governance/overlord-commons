@@ -66,6 +66,26 @@ public class CompositeServiceRegistry implements ServiceRegistry {
     }
 
     /**
+     * @see org.overlord.commons.services.ServiceRegistry#addServiceListener(java.lang.Class,org.overlord.commons.services.ServiceListener)
+     */
+    @Override
+    public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener) {
+        for (ServiceRegistry registry : registries) {
+            registry.addServiceListener(serviceInterface, listener);
+        }
+    }
+
+    /**
+     * @see org.overlord.commons.services.ServiceRegistry#removeServiceListener(org.overlord.commons.services.ServiceListener)
+     */
+    @Override
+    public <T> void removeServiceListener(ServiceListener<T> listener) {
+        for (ServiceRegistry registry : registries) {
+            registry.removeServiceListener(listener);
+        }
+    }
+
+    /**
      * @param registry
      */
     public void addRegistry(ServiceRegistry registry) {
