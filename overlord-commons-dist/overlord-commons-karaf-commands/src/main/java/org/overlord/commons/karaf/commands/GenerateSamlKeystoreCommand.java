@@ -20,62 +20,30 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
-import org.overlord.commons.karaf.commands.i18n.Messages;
-import org.overlord.commons.karaf.commands.saml.GenerateSamlKeystoreUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Jboss Aesh command included in the jboss fuse command console. It
- * generates/ovewrite the overlord-saml.keystore file in the etc folder, using
- * as keypass the param. It uses the library bouncycastle to encrypt the
- * keystore file. It was not possible to use the sun.security package because it
- * was not supported in osgi environments.
+ * Karaf console command for use within JBoss Fuse. It generates/overwrites the overlord-saml.keystore file in the /etc
+ * folder.  Call it w/ the keystore password as an argument.  Ex:
+ * 
+ * overlord:generateSamlKeystore [password]
+ * 
+ * Note that this uses the BouncyCastle library to encrypt the keystore file. It was not possible to directly use
+ * sun.security as it does not support OSGi environments.
  *
  * @author David Virgil Naranjo
  */
-@Command(scope = "overlord", name = "generateSamlKeystore", description = "Generates a keystore file and update the etc folder and the overlord profiles")
-public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
+@Command(scope = "overlord", name = "generateSamlKeystore")
+public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenerateSamlKeystoreCommand.class);
-
-    @Argument(index = 0, name = "password", description = "The command argument", required = true, multiValued = false)
-    String password = null;
-
-    public static final String FUSE_CONFIG_DIR = "etc";
-
-
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.karaf.shell.console.AbstractAction#doExecute()
-     */
-    @Override
-    protected Object doExecute() throws Exception {
-        String fuse_config_path = getFuseConfigPath();
-        String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
-        logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin"));
-        // This 3 lines generate/overwrite the keystore file.
-        File keystore = new File(file);
-        GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
-        util.generate(password, keystore);
-        // Once the keystore file is generated the references to the saml
-        // password existing in the overlord.properties file should be updated.
-        updateOverlordProperties();
-        logger.info(Messages.getString("generate.saml.keystore.command.correctly.created"));
-        return null;
-    }
+    private static final String FUSE_CONFIG_DIR = "etc";
 
     /**
      * Gets the fuse config path.
      *
      * @return the fuse config path
      */
-    private String getFuseConfigPath() {
+    protected String getConfigPath() {
         String karaf_home = System.getProperty("karaf.home");
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(karaf_home);
@@ -87,28 +55,12 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
     }
 
     /**
-     * Gets the overlord properties file path.
-     *
-     * @return the overlord properties file path
-     */
-    private String getOverlordPropertiesFilePath() {
-        String karaf_home = System.getProperty("karaf.home");
-        StringBuilder fuse_config_path = new StringBuilder();
-        fuse_config_path.append(karaf_home);
-        if (!karaf_home.endsWith(File.separator)) {
-            fuse_config_path.append(File.separator);
-        }
-        fuse_config_path.append(FUSE_CONFIG_DIR).append(File.separator).append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
-        return fuse_config_path.toString();
-    }
-
-    /**
      * Update the overlord properties with the new password introduced.
      *
      * @throws Exception
      *             the exception
      */
-    private void updateOverlordProperties() throws Exception {
+    protected void updateOverlordProperties() throws Exception {
         String filePath = getOverlordPropertiesFilePath();
         File overlordFile = new File(filePath);
         if (overlordFile.exists()) {
@@ -152,5 +104,21 @@ public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
                 }
             }
         }
+    }
+
+    /**
+     * Gets the overlord properties file path.
+     *
+     * @return the overlord properties file path
+     */
+    private String getOverlordPropertiesFilePath() {
+        String karaf_home = System.getProperty("karaf.home");
+        StringBuilder fuse_config_path = new StringBuilder();
+        fuse_config_path.append(karaf_home);
+        if (!karaf_home.endsWith(File.separator)) {
+            fuse_config_path.append(File.separator);
+        }
+        fuse_config_path.append(FUSE_CONFIG_DIR).append(File.separator).append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
+        return fuse_config_path.toString();
     }
 }
