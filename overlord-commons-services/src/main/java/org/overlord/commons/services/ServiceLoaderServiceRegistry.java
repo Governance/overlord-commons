@@ -29,7 +29,7 @@ import java.util.Set;
  *
  * @author eric.wittmann@redhat.com
  */
-public class ServiceLoaderServiceRegistry implements ServiceRegistry {
+public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     
     private Map<Class<?>, Set<?>> servicesCache = new HashMap<Class<?>, Set<?>>();
     private Map<Class<?>, Object> serviceCache = new HashMap<Class<?>, Object>();
@@ -43,19 +43,17 @@ public class ServiceLoaderServiceRegistry implements ServiceRegistry {
         if (serviceCache.containsKey(serviceInterface))
             return (T) serviceCache.get(serviceInterface);
 
+        // Cached single service values are derived from the values cached when checking
+        // for multiple services
         T rval = null;
-        try {
-            for (T service : ServiceLoader.load(serviceInterface)) {
-                if (rval == null) {
-                    rval = service;
-                    break;
-                } else {
-                    throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
-                }
-            }
-        } catch (ServiceConfigurationError sce) {
-            // No services found - don't check again.
+        Set<T> services=getServices(serviceInterface);
+        
+        if (services.size() > 1) {
+            throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
+        } else if (!services.isEmpty()) {
+            rval = services.iterator().next();
         }
+
         serviceCache.put(serviceInterface, rval);
         return rval;
     }

@@ -47,10 +47,24 @@ public class ServiceRegistryUtil {
     }
 
     /**
-     * @see org.overlord.commons.services.ServiceRegistry#getSingleService(Class)
+     * @see org.overlord.commons.services.ServiceRegistry#getServices(Class)
      */
     public static <T> Set<T> getServices(Class<T> serviceInterface) {
         return registry.getServices(serviceInterface);
+    }
+
+    /**
+     * @see org.overlord.commons.services.ServiceRegistry#addServiceListener(Class,ServiceListener)
+     */
+    public static <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener) {
+        registry.addServiceListener(serviceInterface, listener);
+    }
+
+    /**
+     * @see org.overlord.commons.services.ServiceRegistry#removeServiceListener(ServiceListener)
+     */
+    public static <T> void removeServiceListener(ServiceListener<T> listener) {
+        registry.removeServiceListener(listener);
     }
 
 }
