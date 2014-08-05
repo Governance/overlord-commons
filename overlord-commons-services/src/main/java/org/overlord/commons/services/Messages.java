@@ -15,11 +15,12 @@
  */
 package org.overlord.commons.services;
 
+import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * 
+ * i18n messages
  *
  * @author eric.wittmann@redhat.com
  */
@@ -31,6 +32,11 @@ public class Messages {
     private Messages() {
     }
 
+    /**
+     * Gets a string translation.
+     * @param key
+     * @return the translated string
+     */
     public static String getString(String key) {
         try {
             return RESOURCE_BUNDLE.getString(key);
@@ -38,4 +44,21 @@ public class Messages {
             return '!' + key + '!';
         }
     }
+
+    /**
+     * Look up a message in the i18n resource message bundle by key, then format the
+     * message with the given params and return the result.
+     * @param key
+     * @param params
+     * @return the translated and formatted string
+     */
+    public static String format(String key, Object ... params) {
+        String msg = getString(key);
+        try {
+            return MessageFormat.format(msg, params);
+        } catch (Exception e) {
+            return '!' + key + '!';
+        }
+    }
+
 }
