@@ -271,24 +271,25 @@ public class SubsystemParser_1_0 implements XMLStreamConstants, XMLElementReader
             for (ModelNode configuration: configurations) {
                 ModelNode configChild = configuration.get(0);
                 
-                streamWriter.writeStartElement(Constants.ELEMENT_CONFIGURATION);
+                streamWriter.writeStartElement(Constants.ELEMENT_CONFIGURATION); // <configuration>
                 
                 writeAttributeIfDefined(streamWriter, configChild, Constants.ATTRIBUTE_NAME);
                 
                 if (configChild.hasDefined(Constants.MODEL_PROPERTY)) {
+                    streamWriter.writeStartElement(Constants.ELEMENT_PROPERTIES); // <properties>
                     final List<ModelNode> properties = configChild.get(Constants.MODEL_PROPERTY).asList();
                     for (ModelNode property: properties) {
-                        streamWriter.writeStartElement(Constants.ELEMENT_PROPERTY);
+                        streamWriter.writeStartElement(Constants.ELEMENT_PROPERTY); // <property>
                         
                         ModelNode propertyChild = property.get(0);
                         writeAttributeIfDefined(streamWriter, propertyChild, Constants.ATTRIBUTE_NAME);
                         writeAttributeIfDefined(streamWriter, propertyChild, Constants.ATTRIBUTE_VALUE);
                         
-                        streamWriter.writeEndElement();
+                        streamWriter.writeEndElement(); // </property>
                     }
-                    
+                    streamWriter.writeEndElement(); // </properties>
                 }
-                streamWriter.writeEndElement();
+                streamWriter.writeEndElement(); // </configuration>
             }
         }
         

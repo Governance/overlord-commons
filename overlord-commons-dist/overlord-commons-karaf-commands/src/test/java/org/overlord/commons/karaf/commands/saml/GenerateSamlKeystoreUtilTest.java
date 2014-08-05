@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.overlord.commons.karaf.commands.saml.GenerateSamlKeystoreUtil;
 
 public class GenerateSamlKeystoreUtilTest {
 
@@ -12,10 +11,10 @@ public class GenerateSamlKeystoreUtilTest {
     public void testGenerate() throws Exception {
         final File temp;
 
-        temp = File.createTempFile("temp", Long.toString(System.nanoTime()));
+        temp = File.createTempFile("temp", Long.toString(System.nanoTime())); //$NON-NLS-1$
 
         GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
-        util.generate("overlord-password", temp);
+        util.generate("overlord-password", temp); //$NON-NLS-1$
         Assert.assertTrue(temp.exists());
         Assert.assertTrue(temp.length() > 0);
     }

@@ -69,7 +69,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                             throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
                     }
                 } else {
-                    LOG.warning("Unable to get bundle context for interface: "+serviceInterface);
+                    LOG.warning("Unable to get bundle context for interface: " + serviceInterface);
                 }
             }
         } catch (InvalidSyntaxException e) {
@@ -173,11 +173,11 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                     }           
                 };
                 
-                String filter = "(objectclass=" + _serviceInterface.getName() + ")";
+                String filter = "(objectclass=" + _serviceInterface.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
                 try {
                     context.addServiceListener(_osgiListener, filter);
                 } catch (InvalidSyntaxException e) { 
-                    LOG.log(Level.SEVERE, "Failed to add service listener for type '"+_serviceInterface.getName()+"'", e);
+                    LOG.log(Level.SEVERE, "Failed to add service listener for type '" + _serviceInterface.getName() + "'", e);
                 }
 
                 ServiceReference[] srefs;
@@ -190,7 +190,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                         }
                     }
                 } catch (InvalidSyntaxException e) {
-                    LOG.log(Level.SEVERE, "Failed to get service references for type '"+_serviceInterface.getName()+"'", e);
+                    LOG.log(Level.SEVERE, "Failed to get service references for type '" + _serviceInterface.getName() + "'", e);
                 }
             }
         }

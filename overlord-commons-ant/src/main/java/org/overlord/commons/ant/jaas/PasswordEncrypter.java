@@ -76,7 +76,7 @@ public class PasswordEncrypter extends Task {
      */
     @Override
     public void execute() throws BuildException {
-        String generatedPassword="";
+        String generatedPassword = ""; //$NON-NLS-1$
 
         if (addproperty == null || addproperty.equals("")) { //$NON-NLS-1$
             throw new BuildException("\tThe output property is required for this task."); //$NON-NLS-1$

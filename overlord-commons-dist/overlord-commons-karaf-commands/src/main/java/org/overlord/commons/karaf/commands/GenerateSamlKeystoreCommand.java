@@ -36,7 +36,7 @@ import org.apache.felix.gogo.commands.Command;
 @Command(scope = "overlord", name = "generateSamlKeystore")
 public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
 
-    private static final String FUSE_CONFIG_DIR = "etc";
+    private static final String FUSE_CONFIG_DIR = "etc"; //$NON-NLS-1$
 
     /**
      * Gets the fuse config path.
@@ -44,7 +44,7 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
      * @return the fuse config path
      */
     protected String getConfigPath() {
-        String karaf_home = System.getProperty("karaf.home");
+        String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(karaf_home);
         if (!karaf_home.endsWith(File.separator)) {
@@ -112,7 +112,7 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
      * @return the overlord properties file path
      */
     private String getOverlordPropertiesFilePath() {
-        String karaf_home = System.getProperty("karaf.home");
+        String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(karaf_home);
         if (!karaf_home.endsWith(File.separator)) {

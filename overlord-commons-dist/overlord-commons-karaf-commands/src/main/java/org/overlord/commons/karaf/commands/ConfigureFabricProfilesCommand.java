@@ -22,19 +22,19 @@ import org.apache.felix.gogo.commands.Command;
 @Command(scope = "overlord", name = "configureFabric")
 public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand {
 
-    private static final String FABRIC_PROFILES_WINDOWS_DIR = "fabric\\import\\fabric\\configs\\versions\\1.0\\profiles";
-    private static final String FABRIC_PROFILES_UNIX_DIR = "fabric/import/fabric/configs/versions/1.0/profiles";
+    private static final String FABRIC_PROFILES_WINDOWS_DIR = "fabric\\import\\fabric\\configs\\versions\\1.0\\profiles"; //$NON-NLS-1$
+    private static final String FABRIC_PROFILES_UNIX_DIR = "fabric/import/fabric/configs/versions/1.0/profiles"; //$NON-NLS-1$
 
     private static String FABRIC_PROFILES_DIR;
     private static String OVERLORD_COMMONS_PROFILE_PATH;
 
     static {
-        if (File.separator.equals("/")) {
+        if (File.separator.equals("/")) { //$NON-NLS-1$
             FABRIC_PROFILES_DIR = FABRIC_PROFILES_UNIX_DIR;
-            OVERLORD_COMMONS_PROFILE_PATH = "overlord/commons.profile";
+            OVERLORD_COMMONS_PROFILE_PATH = "overlord/commons.profile"; //$NON-NLS-1$
         } else {
             FABRIC_PROFILES_DIR = FABRIC_PROFILES_WINDOWS_DIR;
-            OVERLORD_COMMONS_PROFILE_PATH = "overlord\\commons.profile";
+            OVERLORD_COMMONS_PROFILE_PATH = "overlord\\commons.profile"; //$NON-NLS-1$
         }
     }
 
@@ -44,7 +44,7 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
      * @return the fuse config path
      */
     protected String getConfigPath() {
-        String karaf_home = System.getProperty("karaf.home");
+        String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(karaf_home);
         if (!karaf_home.endsWith(File.separator)) {

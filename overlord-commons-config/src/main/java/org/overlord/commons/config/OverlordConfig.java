@@ -80,7 +80,7 @@ public class OverlordConfig {
             if (ks == null) {
                 throw new RuntimeException("Overlord configuration missing: " + SAML_KEYSTORE); //$NON-NLS-1$
             }
-            if (!ks.startsWith("profile:")) {
+            if (!ks.startsWith("profile:")) { //$NON-NLS-1$
                 try {
 
                     File ksFile = new File(ks);
@@ -95,8 +95,7 @@ public class OverlordConfig {
                 }
                 keystore = ks;
             } else {
-                keystore = ks.substring("profile:".length());
-                StringBuilder builder = new StringBuilder();
+                keystore = ks.substring("profile:".length()); //$NON-NLS-1$
 
                 File temp = null;
                 try {
@@ -108,7 +107,6 @@ public class OverlordConfig {
 
                 OutputStream os = null;
                 try {
-
                     os = new FileOutputStream(temp);
 
                     byte[] keystoreContent = null;

@@ -35,8 +35,6 @@ import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 import org.overlord.commons.karaf.commands.i18n.Messages;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Saml Keystore generator util. It generates a keystore file based on a
@@ -48,8 +46,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GenerateSamlKeystoreUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(GenerateSamlKeystoreUtil.class);
-
     private final static int validity = 90;
     private char[] keyPass = null;
     private char[] storePass = null;
@@ -57,7 +53,6 @@ public class GenerateSamlKeystoreUtil {
     private KeyStore keyStore = null;
     private String storetype = null;
     private String srcstoretype = null;
-    private static final String P12KEYSTORE = "PKCS12";
 
     private String alias = null;
     private String dname = null;
@@ -69,11 +64,11 @@ public class GenerateSamlKeystoreUtil {
      * Instantiates a new generate saml keystore util.
      */
     public GenerateSamlKeystoreUtil() {
-        storetype = "jks";
-        alias = "overlord";
-        dname = "CN=Picketbox vault, OU=picketbox, O=Jboss, L=Westford, ST=Mass, C=US";
+        storetype = "jks"; //$NON-NLS-1$
+        alias = "overlord"; //$NON-NLS-1$
+        dname = "CN=Picketbox vault, OU=picketbox, O=Jboss, L=Westford, ST=Mass, C=US"; //$NON-NLS-1$
         keysize = 2048;
-        keyAlgName = "RSA";
+        keyAlgName = "RSA"; //$NON-NLS-1$
     }
 
     /**
@@ -142,9 +137,9 @@ public class GenerateSamlKeystoreUtil {
     private void doGenKeyPair(String alias, String dname, String keyAlgName, int keysize, String sigAlgName) throws Exception {
 
         if (keysize == -1) {
-            if ("EC".equalsIgnoreCase(keyAlgName)) {
+            if ("EC".equalsIgnoreCase(keyAlgName)) { //$NON-NLS-1$
                 keysize = 256;
-            } else if ("RSA".equalsIgnoreCase(keyAlgName)) {
+            } else if ("RSA".equalsIgnoreCase(keyAlgName)) { //$NON-NLS-1$
                 keysize = 2048;
             } else {
                 keysize = 1024;
@@ -152,7 +147,7 @@ public class GenerateSamlKeystoreUtil {
         }
 
         if (keyStore.containsAlias(alias)) {
-            throw new Exception(Messages.getString("Key.pair.not.generated.alias.alias.already.exists"));
+            throw new Exception(Messages.getString("Key.pair.not.generated.alias.alias.already.exists")); //$NON-NLS-1$
         }
 
         if (sigAlgName == null) {
@@ -174,7 +169,7 @@ public class GenerateSamlKeystoreUtil {
        calendar.add(Calendar.DAY_OF_YEAR, validity);
         // time from which certificate is valid
         Date expiryDate = calendar.getTime();            // time after which certificate is not valid
-        BigInteger serialNumber =new BigInteger("10");       // serial number for certificate
+        BigInteger serialNumber =new BigInteger("10");       // serial number for certificate //$NON-NLS-1$
                  // private key of the certifying authority (ca) certificate
 
         X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
@@ -186,7 +181,7 @@ public class GenerateSamlKeystoreUtil {
         certGen.setNotAfter(expiryDate);
         certGen.setSubjectDN(subjectName);
         certGen.setPublicKey(keypair.getPublic());
-        certGen.setSignatureAlgorithm("SHA256withRSA");
+        certGen.setSignatureAlgorithm("SHA256withRSA"); //$NON-NLS-1$
 
         certGen.addExtension(X509Extensions.SubjectKeyIdentifier, false,
  new SubjectKeyIdentifierStructure(keypair.getPublic()));
@@ -207,14 +202,14 @@ public class GenerateSamlKeystoreUtil {
      *             the exception
      */
     private static String getCompatibleSigAlgName(String keyAlgName) throws Exception {
-        if ("DSA".equalsIgnoreCase(keyAlgName)) {
-            return "SHA1WithDSA";
-        } else if ("RSA".equalsIgnoreCase(keyAlgName)) {
-            return "SHA256WithRSA";
-        } else if ("EC".equalsIgnoreCase(keyAlgName)) {
-            return "SHA256withECDSA";
+        if ("DSA".equalsIgnoreCase(keyAlgName)) { //$NON-NLS-1$
+            return "SHA1WithDSA"; //$NON-NLS-1$
+        } else if ("RSA".equalsIgnoreCase(keyAlgName)) { //$NON-NLS-1$
+            return "SHA256WithRSA"; //$NON-NLS-1$
+        } else if ("EC".equalsIgnoreCase(keyAlgName)) { //$NON-NLS-1$
+            return "SHA256withECDSA"; //$NON-NLS-1$
         } else {
-            throw new Exception(Messages.getString("Cannot.derive.signature.algorithm"));
+            throw new Exception(Messages.getString("Cannot.derive.signature.algorithm")); //$NON-NLS-1$
         }
     }
 
