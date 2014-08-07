@@ -37,13 +37,7 @@ public class CryptLookup extends StrLookup {
      */
     @Override
     public String lookup(String key) {
-        try {
-            String decryptedValue = AesEncrypter.decrypt(key);
-            return decryptedValue;
-        } catch (Throwable t) {
-            // Eat it - if something goes wrong, too bad - we're probably not running in jboss
-        }
-        return null;
+        return AesEncrypter.decrypt(key);
     }
 
 }
