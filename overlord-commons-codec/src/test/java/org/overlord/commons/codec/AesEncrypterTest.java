@@ -28,7 +28,7 @@ public class AesEncrypterTest {
      */
     @Test
     public void test() throws Exception {
-        String password = "123admin!";
+        String password = "123admin!"; //$NON-NLS-1$
         String encrypted = AesEncrypter.encrypt(password);
         String decrypted = AesEncrypter.decrypt(encrypted);
 

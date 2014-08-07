@@ -34,13 +34,13 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class AesEncrypter {
 
-    private static final String secretKey = "123!overlord!567";
+    private static final String secretKey = "123!overlord!567"; //$NON-NLS-1$
 
     private static SecretKeySpec skeySpec;
 
     static {
         byte[] ivraw = secretKey.getBytes();
-        skeySpec = new SecretKeySpec(ivraw, "AES");
+        skeySpec = new SecretKeySpec(ivraw, "AES"); //$NON-NLS-1$
 
     }
 
@@ -55,7 +55,7 @@ public class AesEncrypter {
         byte[] encrypted;
         Cipher cipher;
         try {
-            cipher = Cipher.getInstance("AES");
+            cipher = Cipher.getInstance("AES"); //$NON-NLS-1$
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
@@ -86,7 +86,7 @@ public class AesEncrypter {
         byte[] decoded = Base64.decodeBase64(encryptedText);
         Cipher cipher;
         try {
-            cipher = Cipher.getInstance("AES");
+            cipher = Cipher.getInstance("AES"); //$NON-NLS-1$
             cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
