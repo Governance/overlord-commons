@@ -21,7 +21,10 @@
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-auth</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-codec</artifactId>
+    </dependency>
     <!-- Third Party -->
     <dependency>
       <groupId>commons-io</groupId>
@@ -86,6 +89,8 @@
               org.osgi.framework,
               org.overlord.commons.services,
               io.fabric8.api,
+              org.overlord.commons.codec,
+              java.util,
               !org.jboss.security.vault
             </Import-Package>
           </instructions>

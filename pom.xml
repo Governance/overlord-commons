@@ -122,6 +122,7 @@
     <module>overlord-commons-eap-config-extension</module>
     <module>overlord-commons-eap-deploy-extension</module>
     <module>overlord-commons-eap-deploy-module</module>
+    <module>overlord-commons-codec</module>
   </modules>
 
   <build>
@@ -414,6 +415,11 @@
       <dependency>
         <groupId>org.overlord</groupId>
         <artifactId>overlord-commons-eap-deploy-module</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.overlord</groupId>
+        <artifactId>overlord-commons-codec</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
