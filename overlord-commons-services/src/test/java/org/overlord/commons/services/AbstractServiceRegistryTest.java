@@ -49,11 +49,11 @@ public class AbstractServiceRegistryTest {
         sr.init(impl);
         
         if (!impl.isInit()) {
-            fail("TestServiceImpl has not been initialized");
+            fail("TestServiceImpl has not been initialized"); //$NON-NLS-1$
         }
         
         if (impl.isClose()) {
-            fail("TestServiceImpl should not have been closed");
+            fail("TestServiceImpl should not have been closed"); //$NON-NLS-1$
         }
     }
 
@@ -81,11 +81,11 @@ public class AbstractServiceRegistryTest {
         sr.close(impl);
         
         if (impl.isInit()) {
-            fail("TestServiceImpl should not have been initialized");
+            fail("TestServiceImpl should not have been initialized"); //$NON-NLS-1$
         }
         
         if (!impl.isClose()) {
-            fail("TestServiceImpl has not been closed");
+            fail("TestServiceImpl has not been closed"); //$NON-NLS-1$
         }
     }
     
@@ -114,7 +114,7 @@ public class AbstractServiceRegistryTest {
         try {
             sr.init(impl);
             
-            fail("Should have thrown exception");
+            fail("Should have thrown exception"); //$NON-NLS-1$
         } catch (Exception e) {
             // Ignore
         }
@@ -145,7 +145,7 @@ public class AbstractServiceRegistryTest {
         try {
             sr.close(impl);
             
-            fail("Should have thrown exception");
+            fail("Should have thrown exception"); //$NON-NLS-1$
         } catch (Exception e) {
             // Ignore
         }

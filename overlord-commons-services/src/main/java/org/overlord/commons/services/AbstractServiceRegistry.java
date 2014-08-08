@@ -57,7 +57,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
         
         if (service != null) {            
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Service created by ["+getClass().getSimpleName()+"] is: "+service);
+                LOG.fine("Service created by ["+getClass().getSimpleName()+"] is: "+service); //$NON-NLS-1$ //$NON-NLS-2$
             }
             
             Method[] methods=service.getClass().getMethods();
@@ -86,7 +86,7 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
         
         if (service != null) {
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Service closed by ["+getClass().getSimpleName()+"] is: "+service);
+                LOG.fine("Service closed by ["+getClass().getSimpleName()+"] is: "+service); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
             Method[] methods=service.getClass().getMethods();
