@@ -40,22 +40,24 @@ public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
-        if (serviceCache.containsKey(serviceInterface))
-            return (T) serviceCache.get(serviceInterface);
-
-        // Cached single service values are derived from the values cached when checking
-        // for multiple services
-        T rval = null;
-        Set<T> services=getServices(serviceInterface);
-        
-        if (services.size() > 1) {
-            throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
-        } else if (!services.isEmpty()) {
-            rval = services.iterator().next();
+        synchronized (serviceCache) {
+            if (serviceCache.containsKey(serviceInterface))
+                return (T) serviceCache.get(serviceInterface);
+    
+            // Cached single service values are derived from the values cached when checking
+            // for multiple services
+            T rval = null;
+            Set<T> services=getServices(serviceInterface);
+            
+            if (services.size() > 1) {
+                throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
+            } else if (!services.isEmpty()) {
+                rval = services.iterator().next();
+            }
+    
+            serviceCache.put(serviceInterface, rval);
+            return rval;
         }
-
-        serviceCache.put(serviceInterface, rval);
-        return rval;
     }
 
     /**
@@ -64,19 +66,22 @@ public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     @SuppressWarnings("unchecked")
     @Override
     public <T> Set<T> getServices(Class<T> serviceInterface) {
-        if (servicesCache.containsKey(serviceInterface))
-            return (Set<T>) servicesCache.get(serviceInterface);
-
-        Set<T> services = new LinkedHashSet<T>();
-        try {
-            for (T service : ServiceLoader.load(serviceInterface)) {
-                services.add(service);
+        synchronized(servicesCache) {
+            if (servicesCache.containsKey(serviceInterface))
+                return (Set<T>) servicesCache.get(serviceInterface);
+    
+            Set<T> services = new LinkedHashSet<T>();
+            try {
+                for (T service : ServiceLoader.load(serviceInterface)) {
+                    init(service);
+                    services.add(service);
+                }
+            } catch (ServiceConfigurationError sce) {
+                // No services found - don't check again.
             }
-        } catch (ServiceConfigurationError sce) {
-            // No services found - don't check again.
+            servicesCache.put(serviceInterface, services);
+            return services;
         }
-        servicesCache.put(serviceInterface, services);
-        return services;
     }
 
 }

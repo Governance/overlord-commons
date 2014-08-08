@@ -16,11 +16,17 @@
 
 package org.overlord.commons.services;
 
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Abstract service registry implementation.
  *
  */
 public abstract class AbstractServiceRegistry implements ServiceRegistry {
+    
+    private static final Logger LOG=Logger.getLogger(AbstractServiceRegistry.class.getName());
 
     /**
      * {@inheritDoc}
@@ -39,6 +45,64 @@ public abstract class AbstractServiceRegistry implements ServiceRegistry {
      * {@inheritDoc}
      */
     public <T> void removeServiceListener(ServiceListener<T> listener) {
+    }
+    
+    /**
+     * This method initializes the supplied service if it has a method
+     * annotated with @ServiceInit.
+     * 
+     * @param service The service
+     */
+    protected void init(Object service) {
+        
+        if (service != null) {            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Service created by ["+getClass().getSimpleName()+"] is: "+service);
+            }
+            
+            Method[] methods=service.getClass().getMethods();
+            
+            for (int i=0; i < methods.length; i++) {
+                if (methods[i].isAnnotationPresent(ServiceInit.class)
+                        && methods[i].getReturnType() == void.class
+                        && methods[i].getParameterTypes().length == 0) {
+                    try {
+                        methods[i].invoke(service);
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * This method closes the supplied service if it has a method
+     * annotated with @ServiceClose.
+     * 
+     * @param service The service
+     */
+    protected void close(Object service) {
+        
+        if (service != null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Service closed by ["+getClass().getSimpleName()+"] is: "+service);
+            }
+
+            Method[] methods=service.getClass().getMethods();
+            
+            for (int i=0; i < methods.length; i++) {
+                if (methods[i].isAnnotationPresent(ServiceClose.class)
+                        && methods[i].getReturnType() == void.class
+                        && methods[i].getParameterTypes().length == 0) {
+                    try {
+                        methods[i].invoke(service);
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+            }
+        }
     }
 
 }
