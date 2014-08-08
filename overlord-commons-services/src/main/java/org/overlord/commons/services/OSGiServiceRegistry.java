@@ -40,6 +40,8 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
 
     private java.util.Map<ServiceListener<?>, ServiceListenerAdapter<?>> _listeners=
                             new java.util.HashMap<ServiceListener<?>, ServiceListenerAdapter<?>>();
+    
+    private java.util.List<Object> _services=new java.util.ArrayList<Object>();
 
     /**
      * Constructor.
@@ -47,6 +49,30 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
     public OSGiServiceRegistry() {
     }
 
+    @Override
+    protected void init(Object service) {
+        synchronized(_services) {
+            if (!_services.contains(service)) {
+                super.init(service);
+            }
+            _services.add(service);
+        }
+    }
+    
+    @Override
+    protected void close(Object service) {
+        synchronized(_services) {
+            // Check if service is removed from the list, and that no other instances
+            // of that service remain, before calling close. This allows multiple references
+            // to the same service to be used and only closing it once the last reference
+            // has been removed.
+            if (_services.remove(service)
+                    && !_services.contains(service)) {
+                super.close(service);
+            }
+        }
+    }
+    
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
      */
@@ -63,10 +89,12 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                 if (context != null) {
                     ServiceReference[] serviceReferences = context.getServiceReferences(serviceInterface.getName(), null);
                     if (serviceReferences != null) {
-                        if (serviceReferences.length == 1)
+                        if (serviceReferences.length == 1) {
                             service = (T) context.getService(serviceReferences[0]);
-                        else
+                            init(service);
+                        } else {
                             throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
+                        }
                     }
                 } else {
                     LOG.warning(Messages.format("OSGiServiceRegistry.MissingBundleContext", serviceInterface)); //$NON-NLS-1$
@@ -98,6 +126,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                     if (serviceReferences != null) {
                         for (ServiceReference serviceReference : serviceReferences) {
                             T service = (T) context.getService(serviceReference);
+                            init(service);
                             services.add(service);
                         }
                     }
@@ -114,7 +143,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
      */
     public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener) {
         synchronized (_listeners) {
-            _listeners.put(listener, new ServiceListenerAdapter<T>(serviceInterface, listener));
+            _listeners.put(listener, new ServiceListenerAdapter<T>(serviceInterface, listener, this));
         }
     }
 
@@ -141,12 +170,14 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
         
         private Class<T> _serviceInterface;
         private ServiceListener<T> _serviceListener;
+        private OSGiServiceRegistry _serviceRegistry;
         
         private org.osgi.framework.ServiceListener _osgiListener=null;
         
-        public ServiceListenerAdapter(Class<T> serviceInterface, ServiceListener<T> listener) {
+        public ServiceListenerAdapter(Class<T> serviceInterface, ServiceListener<T> listener, OSGiServiceRegistry reg) {
             _serviceInterface = serviceInterface;
             _serviceListener = listener;
+            _serviceRegistry = reg;
             
             init();
         }
@@ -160,12 +191,15 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                 _osgiListener = new org.osgi.framework.ServiceListener() {
                     public void serviceChanged(ServiceEvent ev) {
                         ServiceReference sr = ev.getServiceReference();
+                        T service=(T)context.getService(sr);
                         switch(ev.getType()) {
                         case ServiceEvent.REGISTERED:
-                            _serviceListener.registered((T)context.getService(sr));
+                            _serviceRegistry.init(service);
+                            _serviceListener.registered(service);
                             break;
                         case ServiceEvent.UNREGISTERING:
-                            _serviceListener.unregistered((T)context.getService(sr));
+                            _serviceListener.unregistered(service);
+                            _serviceRegistry.close(service);
                             break;
                         default:
                             break;
@@ -186,7 +220,9 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                     
                     if (srefs != null) {
                         for (int i=0; i < srefs.length; i++) {
-                            _serviceListener.registered((T)context.getService(srefs[i]));
+                            T service=(T)context.getService(srefs[i]);
+                            _serviceRegistry.init(service);
+                            _serviceListener.registered(service);
                         }
                     }
                 } catch (InvalidSyntaxException e) {
