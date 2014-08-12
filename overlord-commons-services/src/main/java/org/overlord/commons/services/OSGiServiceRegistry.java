@@ -142,23 +142,26 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
      * {@inheritDoc}
      */
     public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener) {
+        ServiceListenerAdapter<T> adapter=new ServiceListenerAdapter<T>(serviceInterface, listener, this);
+        
         synchronized (_listeners) {
-            _listeners.put(listener, new ServiceListenerAdapter<T>(serviceInterface, listener, this));
+            _listeners.put(listener, adapter);
         }
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public <T> void removeServiceListener(ServiceListener<T> listener) {
+        ServiceListenerAdapter<T> adapter=null;
+        
         synchronized (_listeners) {
-            @SuppressWarnings("unchecked")
-            ServiceListenerAdapter<T> adapter=(ServiceListenerAdapter<T>)_listeners.get(listener);
-            
-            if (adapter != null) {
-                adapter.close();
-                _listeners.remove(listener);
-            }
+            adapter = (ServiceListenerAdapter<T>)_listeners.remove(listener);
+        }
+        
+        if (adapter != null) {
+            adapter.close();
         }
     }
 
