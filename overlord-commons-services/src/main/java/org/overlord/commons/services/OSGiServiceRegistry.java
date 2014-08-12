@@ -41,7 +41,8 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
     private java.util.Map<ServiceListener<?>, ServiceListenerAdapter<?>> _listeners=
                             new java.util.HashMap<ServiceListener<?>, ServiceListenerAdapter<?>>();
     
-    private java.util.List<Object> _services=new java.util.ArrayList<Object>();
+    private java.util.Map<Class<?>,java.util.List<Object>> _services=new java.util.HashMap<Class<?>,java.util.List<Object>>();
+    private java.util.Map<Class<?>,ServiceListener<?>> _serviceListeners=new java.util.HashMap<Class<?>,ServiceListener<?>>();
 
     /**
      * Constructor.
@@ -49,26 +50,102 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
     public OSGiServiceRegistry() {
     }
 
-    @Override
-    protected void init(Object service) {
+    /**
+     * This method initializes the supplied service.
+     * 
+     * @param serviceInterface The service interface
+     * @param service The service
+     */
+    protected <T> void init(final Class<T> serviceInterface, Object service) {
+        boolean createListener=false;
+        boolean initService=false;
+        
         synchronized(_services) {
-            if (!_services.contains(service)) {
-                super.init(service);
+            java.util.List<Object> services=_services.get(serviceInterface);
+            
+            if (services == null) {
+                createListener = true;
+                services = new java.util.ArrayList<Object>();
+                _services.put(serviceInterface, services);
             }
-            _services.add(service);
+            
+            if (!services.contains(service)) {
+                initService = true;                
+                services.add(service);
+            }
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Initialize interface="+serviceInterface+" service="+service+" initService="
+                        +initService+" createListener="+createListener);
+        }
+        
+        if (initService) {
+            super.init(service);
+        }
+        
+        if (createListener) {
+            ServiceListener<T> sl=new ServiceListener<T>() {
+
+                @Override
+                public void registered(T service) {
+                }
+
+                @Override
+                public void unregistered(T service) {
+                    close(serviceInterface, service);
+                }                
+            };
+            
+            addServiceListener(serviceInterface, sl);
+            
+            synchronized(_serviceListeners) {
+                _serviceListeners.put(serviceInterface, sl);
+            }
         }
     }
     
-    @Override
-    protected void close(Object service) {
+    /**
+     * Close the supplied service.
+     * 
+     * @param serviceInterface The service interface
+     * @param service The service
+     */
+    protected void close(Class<?> serviceInterface, Object service) {
+        boolean removeListener=false;
+        boolean closeService=false;
+        
         synchronized(_services) {
-            // Check if service is removed from the list, and that no other instances
-            // of that service remain, before calling close. This allows multiple references
-            // to the same service to be used and only closing it once the last reference
-            // has been removed.
-            if (_services.remove(service)
-                    && !_services.contains(service)) {
-                super.close(service);
+            java.util.List<Object> services=_services.get(serviceInterface);
+            
+            if (services != null) {                
+                closeService = services.remove(service);
+                
+                if (services.size() == 0) {
+                    removeListener = true;
+                    _services.remove(serviceInterface);
+                }
+            }
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Close interface="+serviceInterface+" service="+service+" closeService="
+                        +closeService+" removeListener="+removeListener);
+        }
+        
+        if (closeService) {
+            super.close(service);
+        }
+        
+        if (removeListener) {
+            ServiceListener<?> l=null;
+            
+            synchronized(_serviceListeners) {
+                l = _serviceListeners.remove(serviceInterface);
+            }
+            
+            if (l != null) {
+                removeServiceListener(l);
             }
         }
     }
@@ -91,7 +168,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                     if (serviceReferences != null) {
                         if (serviceReferences.length == 1) {
                             service = (T) context.getService(serviceReferences[0]);
-                            init(service);
+                            init(serviceInterface, service);
                         } else {
                             throw new IllegalStateException(Messages.getString("OSGiServiceRegistry.MultipleImplsRegistered") + serviceInterface); //$NON-NLS-1$
                         }
@@ -126,7 +203,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                     if (serviceReferences != null) {
                         for (ServiceReference serviceReference : serviceReferences) {
                             T service = (T) context.getService(serviceReference);
-                            init(service);
+                            init(serviceInterface, service);
                             services.add(service);
                         }
                     }
@@ -197,12 +274,12 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
                         T service=(T)context.getService(sr);
                         switch(ev.getType()) {
                         case ServiceEvent.REGISTERED:
-                            _serviceRegistry.init(service);
+                            _serviceRegistry.init(_serviceInterface, service);
                             _serviceListener.registered(service);
                             break;
                         case ServiceEvent.UNREGISTERING:
                             _serviceListener.unregistered(service);
-                            _serviceRegistry.close(service);
+                            _serviceRegistry.close(_serviceInterface, service);
                             break;
                         default:
                             break;
