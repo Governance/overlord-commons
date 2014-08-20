@@ -72,6 +72,14 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(filePath);
+                    if (!props.containsKey(CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE)) {
+                        props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE,
+                            CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_VALUE);
+                    }
+                    if (!props.containsKey(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS)) {
+                        props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS,
+                            CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
+                    }
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
                     props.store(out, null);
