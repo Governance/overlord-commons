@@ -76,8 +76,8 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Initialize interface="+serviceInterface+" service="+service+" initService="
-                        +initService+" createListener="+createListener);
+            LOG.finest("Initialize interface="+serviceInterface+" service="+service+" initService=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        +initService+" createListener="+createListener); //$NON-NLS-1$
         }
         
         if (initService) {
@@ -129,8 +129,8 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Close interface="+serviceInterface+" service="+service+" closeService="
-                        +closeService+" removeListener="+removeListener);
+            LOG.finest("Close interface="+serviceInterface+" service="+service+" closeService=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        +closeService+" removeListener="+removeListener); //$NON-NLS-1$
         }
         
         if (closeService) {

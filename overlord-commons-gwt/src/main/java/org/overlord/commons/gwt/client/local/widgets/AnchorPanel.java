@@ -38,7 +38,18 @@ public class AnchorPanel extends ComplexPanel implements InsertPanel.ForIsWidget
     public AnchorPanel() {
         setElement(DOM.createAnchor());
     }
-
+    
+    /**
+     * @param href
+     */
+    public void setHref(String href) {
+        if (href == null) {
+            getElement().removeAttribute("href"); //$NON-NLS-1$
+        } else {
+            getElement().setAttribute("href", href); //$NON-NLS-1$
+        }
+    }
+    
     /**
      * Adds a new child widget to the panel.
      * 
