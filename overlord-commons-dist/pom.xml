@@ -10,6 +10,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>overlord-commons-dist-fuse6</module>
+    <module>overlord-commons-dist-fabric-profile</module>
     <module>overlord-commons-dist-eap6</module>
     <module>overlord-commons-karaf-commands</module>
   </modules>
