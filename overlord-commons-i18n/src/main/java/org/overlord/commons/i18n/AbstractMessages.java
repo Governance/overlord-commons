@@ -95,7 +95,7 @@ public class AbstractMessages {
      * Gets the locale to use when finding a bundle.  The locale to use is either from the
      * thread local value, if set, or else the system default locale.
      */
-    protected Locale getLocale() {
+    public Locale getLocale() {
         if (tlocale.get() != null) {
             return tlocale.get();
         } else {
