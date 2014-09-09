@@ -20,23 +20,54 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
+import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
-
+import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.overlord.commons.karaf.commands.i18n.Messages;
+import org.overlord.commons.karaf.commands.saml.GenerateSamlKeystoreUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Karaf console command for use within JBoss Fuse. It generates/overwrites the overlord-saml.keystore file in the /etc
  * folder.  Call it w/ the keystore password as an argument.  Ex:
- * 
+ *
  * overlord:generateSamlKeystore [password]
- * 
+ *
  * Note that this uses the BouncyCastle library to encrypt the keystore file. It was not possible to directly use
  * sun.security as it does not support OSGi environments.
  *
  * @author David Virgil Naranjo
  */
 @Command(scope = "overlord", name = "generateSamlKeystore")
-public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
+public class GenerateSamlKeystoreCommand extends OsgiCommandSupport {
+
+    private static final Logger logger = LoggerFactory.getLogger(GenerateSamlKeystoreCommand.class);
 
     private static final String FUSE_CONFIG_DIR = "etc"; //$NON-NLS-1$
+
+    @Argument(index = 0, name = "password", required = true, multiValued = false)
+    protected String password = null;
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.apache.karaf.shell.console.AbstractAction#doExecute()
+     */
+    @Override
+    protected Object doExecute() throws Exception {
+        String fuse_config_path = getConfigPath();
+        String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
+        logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
+        // This 3 lines generate/overwrite the keystore file.
+        File keystore = new File(file);
+        GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
+        util.generate(password, keystore);
+        // Once the keystore file is generated the references to the saml
+        // password existing in the overlord.properties file should be updated.
+        updateOverlordProperties();
+        logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
+        return null;
+    }
 
     /**
      * Gets the fuse config path.
