@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.jboss.integration-platform</groupId>
     <artifactId>jboss-integration-platform-parent</artifactId>
-    <version>6.0.0.CR9</version>
+    <version>6.0.0.CR12</version>
   </parent>
 
   <groupId>org.overlord</groupId>
@@ -85,7 +86,7 @@
     <!-- Third party libraries -->
     <version.org.picketbox>4.0.19.SP4</version.org.picketbox>
     <version.org.picketlink>2.5.3.SP4</version.org.picketlink>
-    <version.org.jboss.as.jboss-as-security>7.2.0.Final</version.org.jboss.as.jboss-as-security>
+    <version.org.jboss.as>7.4.0.Final-redhat-11</version.org.jboss.as>
     <version.org.eclipse.jetty>8.1.9.v20130131</version.org.eclipse.jetty>
     <version.org.apache.tomcat>7.0.47</version.org.apache.tomcat>
 
@@ -139,7 +140,6 @@
           <artifactId>maven-scr-plugin</artifactId>
           <version>1.9.0</version>
         </plugin>
-
       </plugins>
     </pluginManagement>
 
@@ -263,33 +263,33 @@
 
       <!-- Fabric 8 api library -->
       <dependency>
-		<groupId>io.fabric8</groupId>
-      	<artifactId>fabric-api</artifactId>
-      	<version>${version.io.fabric8}</version>
-      </dependency>      
-      
-      <!-- Declarative Service Annotations -->   
-	  <dependency>
-	    <groupId>org.apache.felix</groupId>
-	  	<artifactId>org.apache.felix.scr.annotations</artifactId>
-	  	<version>1.7.0</version>
-	  </dependency>
-    <dependency>
-      <groupId>org.apache.karaf.shell</groupId>
-      <artifactId>org.apache.karaf.shell.console</artifactId>
-      <version>2.3.5</version>
-    </dependency>
-	<dependency>
-		<groupId>org.bouncycastle</groupId>
-		<artifactId>bcprov-jdk15on</artifactId>
-		<version>1.49</version>
-	</dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric-api</artifactId>
+        <version>${version.io.fabric8}</version>
+      </dependency>
+
+      <!-- Declarative Service Annotations -->
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.scr.annotations</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.console</artifactId>
+        <version>2.3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <version>1.49</version>
+      </dependency>
 
       <!-- Integration Platform Imports -->
       <dependency>
         <groupId>org.jboss.integration-platform</groupId>
         <artifactId>jboss-integration-platform-bom</artifactId>
-        <version>6.0.0.CR9</version>
+        <version>6.0.0.CR12</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -305,10 +305,22 @@
         <artifactId>picketlink-federation</artifactId>
         <version>${version.org.picketlink}</version>
       </dependency>
+
+      <!-- JBoss AS -->
       <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-security</artifactId>
-        <version>${version.org.jboss.as.jboss-as-security}</version>
+        <version>${version.org.jboss.as}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-naming</artifactId>
+        <version>${version.org.jboss.as}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-server</artifactId>
+        <version>${version.org.jboss.as}</version>
       </dependency>
 
       <!-- Tomcat -->
@@ -396,7 +408,7 @@
         <artifactId>overlord-commons-karaf-commands</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-osgi</artifactId>
@@ -477,7 +489,20 @@
         <updatePolicy>daily</updatePolicy>
       </snapshots>
     </repository>
-
+    <repository>
+      <id>redhat-ea-repository</id>
+      <name>Red Hat Early Access Repository</name>
+      <url>http://maven.repository.redhat.com/earlyaccess/all</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>
