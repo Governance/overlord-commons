@@ -32,11 +32,12 @@ import com.google.gwt.user.client.ui.Widget;
  * Implements a simple unordered list (ul).
  *
  * @author eric.wittmann@redhat.com
+ * @author Brett Meyer
  */
 public class UnorderedListPanel extends Panel implements IndexedPanel {
 
 	private List<Widget> children = new ArrayList<Widget>();
-	private Map<Widget, Element> wrapperMap = new HashMap<Widget, Element>();
+	private Map<Widget, Element> liMap = new HashMap<Widget, Element>();
 
 	/**
 	 * Constructor.
@@ -54,9 +55,17 @@ public class UnorderedListPanel extends Panel implements IndexedPanel {
 			throw new NullPointerException("Cannot add a null widget."); //$NON-NLS-1$
 		w.removeFromParent();
 		children.add(w);
-		Element li = Document.get().createLIElement().cast();
-		wrapperMap.put(w, li);
-		DOM.appendChild(li, w.getElement());
+		
+		Element li;
+		if (w.getElement().getNodeName().toLowerCase().equals("li")) { //$NON-NLS-1$
+		    // The widget is a list item.  Simply use it. 
+		    li = w.getElement();
+		} else {
+		    // The widget needs wrapped with a list item.
+		    li = Document.get().createLIElement().cast();
+	        DOM.appendChild(li, w.getElement());
+		}
+		liMap.put(w, li);
 		DOM.appendChild(getElement(), li);
 		adopt(w);
 	}
@@ -68,8 +77,8 @@ public class UnorderedListPanel extends Panel implements IndexedPanel {
 	 * @param theClass
 	 */
 	public void setLiClass(Widget w, String theClass) {
-	    if (this.wrapperMap.containsKey(w)) {
-	        this.wrapperMap.get(w).setClassName(theClass);
+	    if (this.liMap.containsKey(w)) {
+	        this.liMap.get(w).setClassName(theClass);
 	    }
 	}
 
@@ -113,10 +122,10 @@ public class UnorderedListPanel extends Panel implements IndexedPanel {
 		if (!this.children.contains(w))
 			return false;
 		orphan(w);
-		Element liWrapper = this.wrapperMap.get(w);
+		Element liWrapper = this.liMap.get(w);
 		getElement().removeChild(liWrapper);
 		this.children.remove(w);
-		this.wrapperMap.remove(w);
+		this.liMap.remove(w);
 		return true;
 	}
 
