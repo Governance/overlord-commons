@@ -86,7 +86,7 @@
     <!-- Third party libraries -->
     <version.org.picketbox>4.0.19.SP4</version.org.picketbox>
     <version.org.picketlink>2.5.3.SP4</version.org.picketlink>
-    <version.org.jboss.as>7.4.0.Final-redhat-11</version.org.jboss.as>
+    <version.org.jboss.as>7.4.0.Final-redhat-19</version.org.jboss.as>
     <version.org.eclipse.jetty>8.1.9.v20130131</version.org.eclipse.jetty>
     <version.org.apache.tomcat>7.0.47</version.org.apache.tomcat>
 
@@ -490,9 +490,9 @@
       </snapshots>
     </repository>
     <repository>
-      <id>redhat-ea-repository</id>
-      <name>Red Hat Early Access Repository</name>
-      <url>http://maven.repository.redhat.com/earlyaccess/all</url>
+      <id>redhat-tech-preview-repository</id>
+      <name>Red Hat Tech Preview Repository</name>
+      <url>http://maven.repository.redhat.com/techpreview/all/</url>
       <layout>default</layout>
       <releases>
         <enabled>true</enabled>
