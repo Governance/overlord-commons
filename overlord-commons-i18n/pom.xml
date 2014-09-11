@@ -28,13 +28,6 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
-              org.overlord.commons.gwt.server.filters
-            </Export-Package>
-            <Import-Package>
-              javax.servlet,
-              javax.servlet.http
-            </Import-Package>
           </instructions>
         </configuration>
       </plugin>
