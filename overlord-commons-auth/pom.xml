@@ -58,12 +58,6 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
-              org.overlord.commons.auth.util,
-              org.overlord.commons.auth.filters,
-              org.overlord.commons.auth.handlers,
-              org.overlord.commons.auth.saml.sp
-            </Export-Package>
           </instructions>
         </configuration>
       </plugin>

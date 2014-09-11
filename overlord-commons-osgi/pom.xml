@@ -45,15 +45,6 @@
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
-              org.overlord.commons.osgi.*
-            </Export-Package>
-            <Import-Package>
-              javax.servlet,
-              org.osgi.framework,
-              org.apache.commons.codec.digest,
-              org.apache.commons.io
-            </Import-Package>
           </instructions>
         </configuration>
       </plugin>
