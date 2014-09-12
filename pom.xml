@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jboss.integration-platform</groupId>
     <artifactId>jboss-integration-platform-parent</artifactId>
-    <version>6.0.0.CR9</version>
+    <version>6.0.0.CR12</version>
   </parent>
 
   <groupId>org.overlord</groupId>
@@ -86,7 +86,7 @@
     <!-- Third party libraries -->
     <version.org.picketbox>4.0.19.SP4</version.org.picketbox>
     <version.org.picketlink>2.5.3.SP4</version.org.picketlink>
-    <version.org.jboss.as.jboss-as-security>7.2.0.Final</version.org.jboss.as.jboss-as-security>
+    <version.org.jboss.as>7.4.0.Final-redhat-19</version.org.jboss.as>
     <version.org.eclipse.jetty>8.1.9.v20130131</version.org.eclipse.jetty>
     <version.org.apache.tomcat>7.0.47</version.org.apache.tomcat>
 
@@ -140,7 +140,6 @@
           <artifactId>maven-scr-plugin</artifactId>
           <version>1.9.0</version>
         </plugin>
-
       </plugins>
     </pluginManagement>
 
@@ -295,7 +294,7 @@
       <dependency>
         <groupId>org.jboss.integration-platform</groupId>
         <artifactId>jboss-integration-platform-bom</artifactId>
-        <version>6.0.0.CR9</version>
+        <version>6.0.0.CR12</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -311,10 +310,22 @@
         <artifactId>picketlink-federation</artifactId>
         <version>${version.org.picketlink}</version>
       </dependency>
+
+      <!-- JBoss AS -->
       <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-security</artifactId>
-        <version>${version.org.jboss.as.jboss-as-security}</version>
+        <version>${version.org.jboss.as}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-naming</artifactId>
+        <version>${version.org.jboss.as}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.as</groupId>
+        <artifactId>jboss-as-server</artifactId>
+        <version>${version.org.jboss.as}</version>
       </dependency>
 
       <!-- Tomcat -->
@@ -483,7 +494,20 @@
         <updatePolicy>daily</updatePolicy>
       </snapshots>
     </repository>
-
+    <repository>
+      <id>redhat-tech-preview-repository</id>
+      <name>Red Hat Tech Preview Repository</name>
+      <url>http://maven.repository.redhat.com/techpreview/all/</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>daily</updatePolicy>
+      </snapshots>
+    </repository>
   </repositories>
 
   <pluginRepositories>

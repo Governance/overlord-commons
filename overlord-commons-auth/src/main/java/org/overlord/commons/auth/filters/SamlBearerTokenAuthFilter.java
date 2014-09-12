@@ -243,6 +243,9 @@ public class SamlBearerTokenAuthFilter implements Filter {
 
     /**
      * Wrap/proxy the http request.
+     * 
+     * TODO need an option to wrap instead of proxy - undertow forbids proxied requests (security feature presumably?)
+     * 
      * @param request
      * @param principal
      */
