@@ -172,15 +172,15 @@ public class GenerateSamlKeystoreUtil {
         Date date = getStartDate(startDate);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date); // Configuramos la fecha que se recibe
-       calendar.add(Calendar.DAY_OF_YEAR, validity);
+        calendar.add(Calendar.DAY_OF_YEAR, validity);
         // time from which certificate is valid
         Date expiryDate = calendar.getTime();            // time after which certificate is not valid
 
 
-        X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(dname), new BigInteger("1"), date, expiryDate, new X500Name(
+        X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(new X500Name(dname), new BigInteger("1"), date, expiryDate, new X500Name( //$NON-NLS-1$
                 dname), SubjectPublicKeyInfo.getInstance(keypair.getPublic().getEncoded()));
-        byte[] certBytes = certBuilder.build(new JCESigner(privKey, "SHA256withRSA")).getEncoded();
-        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        byte[] certBytes = certBuilder.build(new JCESigner(privKey, "SHA256withRSA")).getEncoded(); //$NON-NLS-1$
+        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509"); //$NON-NLS-1$
         X509Certificate certificate = (X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(certBytes));
 
         chain[0] = certificate;
@@ -226,14 +226,14 @@ public class GenerateSamlKeystoreUtil {
     private static class JCESigner implements ContentSigner {
 
         private static final AlgorithmIdentifier PKCS1_SHA256_WITH_RSA_OID = new AlgorithmIdentifier(
-                new ASN1ObjectIdentifier("1.2.840.113549.1.1.11"));
+                new ASN1ObjectIdentifier("1.2.840.113549.1.1.11")); //$NON-NLS-1$
 
         private Signature signature;
         private ByteArrayOutputStream outputStream;
 
         public JCESigner(PrivateKey privateKey, String signatureAlgorithm) {
-            if (!"SHA256withRSA".equals(signatureAlgorithm)) {
-                throw new IllegalArgumentException("Signature algorithm \"" + signatureAlgorithm + "\" not yet supported");
+            if (!"SHA256withRSA".equals(signatureAlgorithm)) { //$NON-NLS-1$
+                throw new IllegalArgumentException(Messages.format("Signature algorithm \"{0}\" not yet supported.", signatureAlgorithm)); //$NON-NLS-1$
             }
             try {
                 this.outputStream = new ByteArrayOutputStream();
@@ -246,7 +246,7 @@ public class GenerateSamlKeystoreUtil {
 
         @Override
         public AlgorithmIdentifier getAlgorithmIdentifier() {
-            if (signature.getAlgorithm().equals("SHA256withRSA")) {
+            if (signature.getAlgorithm().equals("SHA256withRSA")) { //$NON-NLS-1$
                 return PKCS1_SHA256_WITH_RSA_OID;
             } else {
                 return null;

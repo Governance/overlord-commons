@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -263,32 +264,32 @@
 
       <!-- Fabric 8 api library -->
       <dependency>
-		<groupId>io.fabric8</groupId>
-      	<artifactId>fabric-api</artifactId>
-      	<version>${version.io.fabric8}</version>
-      </dependency>      
-      
-      <!-- Declarative Service Annotations -->   
-	  <dependency>
-	    <groupId>org.apache.felix</groupId>
-	  	<artifactId>org.apache.felix.scr.annotations</artifactId>
-	  	<version>1.7.0</version>
-	  </dependency>
-    <dependency>
-      <groupId>org.apache.karaf.shell</groupId>
-      <artifactId>org.apache.karaf.shell.console</artifactId>
-      <version>2.3.5</version>
-    </dependency>
-	<dependency>
-		<groupId>org.bouncycastle</groupId>
-		<artifactId>bcprov-jdk15on</artifactId>
-		<version>1.49</version>
-	</dependency>
-	<dependency>
-	<groupId>org.bouncycastle</groupId>
-	<artifactId>bcpkix-jdk15on</artifactId>
-	<version>1.49</version>
-</dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>fabric-api</artifactId>
+        <version>${version.io.fabric8}</version>
+      </dependency>
+
+      <!-- Declarative Service Annotations -->
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.apache.felix.scr.annotations</artifactId>
+        <version>1.7.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.karaf.shell</groupId>
+        <artifactId>org.apache.karaf.shell.console</artifactId>
+        <version>2.3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk15on</artifactId>
+        <version>1.49</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk15on</artifactId>
+        <version>1.49</version>
+      </dependency>
 
       <!-- Integration Platform Imports -->
       <dependency>
@@ -401,7 +402,7 @@
         <artifactId>overlord-commons-karaf-commands</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>overlord-commons-osgi</artifactId>
