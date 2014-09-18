@@ -16,4 +16,11 @@ public interface CommandConstants {
         public static final String OVERLORD_BASE_URL = "overlord.baseUrl"; //$NON-NLS-1$
         public static final String OVERLORD_BASE_URL_VALUE = "${container:httpUrl}"; //$NON-NLS-1$
     }
+
+    interface SrampProperties {
+        public static final String SRAMP_PROPERTIES_FILE_NAME = "sramp.properties"; //$NON-NLS-1$
+        
+        public static final String SRAMP_EVENTS_JMS_USER="sramp.config.events.jms.user";
+        public static final String SRAMP_EVENTS_JMS_PASSWORD="sramp.config.events.jms.password";
+    }
 }
