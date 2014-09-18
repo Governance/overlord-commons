@@ -112,6 +112,7 @@
     <module>overlord-commons-idp-jetty8</module>
     <module>overlord-commons-idp-fuse61</module>
     <module>overlord-commons-installer</module>
+    <module>overlord-commons-karaf-commands</module>
     <module>overlord-commons-maven-plugin</module>
     <module>overlord-commons-osgi</module>
     <module>overlord-commons-osgi-weld</module>
@@ -453,6 +454,18 @@
 
     </dependencies>
   </dependencyManagement>
+
+  <dependencies>
+    <!-- Common libraries -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+  </dependencies>
 
   <reporting>
     <plugins>
