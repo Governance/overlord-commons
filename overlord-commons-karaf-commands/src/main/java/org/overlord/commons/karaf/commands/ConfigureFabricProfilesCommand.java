@@ -72,8 +72,8 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(filePath);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, keystorePassword);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, keystorePassword);
                     props.store(out, null);
 
                 } finally {
@@ -97,8 +97,8 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
                             CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_FABRIC_VALUE);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS,
                             CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, keystorePassword);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, keystorePassword);
                     props.store(out, null);
 
                 } finally {

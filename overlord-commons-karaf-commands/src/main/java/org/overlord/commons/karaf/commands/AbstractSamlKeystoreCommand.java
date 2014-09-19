@@ -28,8 +28,8 @@ abstract public class AbstractSamlKeystoreCommand extends OsgiCommandSupport {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractSamlKeystoreCommand.class);
 
-    @Argument(index = 0, name = "password", required = true, multiValued = false)
-    protected String password = null;
+    @Argument(index = 0, name = "keystorePassword", required = true, multiValued = false)
+    protected String keystorePassword = null;
 
     /*
      * (non-Javadoc)
@@ -40,19 +40,24 @@ abstract public class AbstractSamlKeystoreCommand extends OsgiCommandSupport {
     protected Object doExecute() throws Exception {
         String fuse_config_path = getConfigPath();
         String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
-        logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
-        // This 3 lines generate/overwrite the keystore file.
         File keystore = new File(file);
-        GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
-        util.generate(password, keystore);
-        // Once the keystore file is generated the references to the saml
-        // password existing in the overlord.properties file should be updated.
-        updateOverlordProperties();
-        logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
+        if (!keystore.exists()) {
+            logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
+            GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
+            util.generate(keystorePassword, keystore);
+            // Once the keystore file is generated the references to the saml
+            // password existing in the overlord.properties file should be updated.
+            updateOverlordProperties();
+            logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
+        }
         return null;
     }
     
     abstract protected String getConfigPath();
     
     abstract protected void updateOverlordProperties() throws Exception;
+    
+    public void setKeystorePassword(String keystorePassword) {
+        this.keystorePassword = keystorePassword;
+    }
 }

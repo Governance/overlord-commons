@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import org.apache.felix.gogo.commands.Command;
+import org.overlord.commons.codec.AesEncrypter;
 
 /**
  * Karaf console command for use within JBoss Fuse. It generates/overwrites the overlord-saml.keystore file in the /etc
@@ -63,6 +64,9 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
     protected void updateOverlordProperties() throws Exception {
         String filePath = getOverlordPropertiesFilePath();
         File overlordFile = new File(filePath);
+
+        String encryptedPassword = "${crypt:" + AesEncrypter.encrypt(keystorePassword) + "}";
+        
         if (overlordFile.exists()) {
             FileInputStream in = null;
             try {
@@ -80,8 +84,8 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
                         props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS,
                             CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
                     }
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, encryptedPassword);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, encryptedPassword);
                     props.store(out, null);
 
                 } finally {
@@ -103,8 +107,8 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
                             CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_VALUE);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS,
                             CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
-                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, encryptedPassword);
+                    props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, encryptedPassword);
                     props.store(out, null);
 
                 } finally {
