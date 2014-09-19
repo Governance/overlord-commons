@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.security.KeyPair;
 import java.security.KeyStore;
+import java.security.Principal;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +37,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -76,6 +78,7 @@ public class SamlBearerTokenAuthFilter implements Filter {
     private String keystorePassword;
     private String keyAlias;
     private String keyPassword;
+    private boolean wrapRequest;
 
     /**
      * Constructor.
@@ -148,6 +151,14 @@ public class SamlBearerTokenAuthFilter implements Filter {
             keyPassword = defaultKeyPassword();
         }
 
+        // Wrap the request instead of proxying it (required by some platforms like WildFly)
+        parameter = config.getInitParameter("wrapRequest"); //$NON-NLS-1$
+        if (parameter != null && parameter.trim().length() > 0) {
+            wrapRequest = Boolean.parseBoolean(parameter);
+        } else {
+            wrapRequest = defaultWrapRequest();
+        }
+
     }
 
     /**
@@ -182,6 +193,13 @@ public class SamlBearerTokenAuthFilter implements Filter {
      * @return the default value of signatureRequired
      */
     protected boolean defaultSignatureRequired() {
+        return false;
+    }
+
+    /**
+     * @return the default value of wrapRequest
+     */
+    protected boolean defaultWrapRequest() {
         return false;
     }
 
@@ -237,14 +255,43 @@ public class SamlBearerTokenAuthFilter implements Filter {
         if (principal == NO_PROXY) {
             chain.doFilter(request, response);
         } else {
-            chain.doFilter(proxyRequest(request, principal), response);
+            HttpServletRequest hsr = null;
+            if (wrapRequest) {
+                hsr = wrapTheRequest(request, principal);
+            } else {
+                hsr = proxyRequest(request, principal);
+            }
+            chain.doFilter(hsr, response);
         }
     }
 
     /**
+     * Wrap the request to provide the principal.
+     * @param request
+     * @param principal
+     */
+    private HttpServletRequest wrapTheRequest(final ServletRequest request, final SimplePrincipal principal) {
+        HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper((HttpServletRequest) request) {
+            @Override
+            public Principal getUserPrincipal() {
+                return principal;
+            }
+            
+            @Override
+            public boolean isUserInRole(String role) {
+                return principal.getRoles().contains(role);
+            }
+            
+            @Override
+            public String getRemoteUser() {
+                return principal.getName();
+            }
+        };
+        return wrapper;
+    }
+
+    /**
      * Wrap/proxy the http request.
-     * 
-     * TODO need an option to wrap instead of proxy - undertow forbids proxied requests (security feature presumably?)
      * 
      * @param request
      * @param principal
