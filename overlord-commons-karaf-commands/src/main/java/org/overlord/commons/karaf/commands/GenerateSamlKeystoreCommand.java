@@ -65,7 +65,7 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
         String filePath = getOverlordPropertiesFilePath();
         File overlordFile = new File(filePath);
 
-        String encryptedPassword = "${crypt:" + AesEncrypter.encrypt(keystorePassword) + "}";
+        String encryptedPassword = "${crypt:" + AesEncrypter.encrypt(keystorePassword) + "}"; //$NON-NLS-1$ //$NON-NLS-2$
         
         if (overlordFile.exists()) {
             FileInputStream in = null;

@@ -99,10 +99,10 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
                 password = split[0];
                 roles = Arrays.copyOfRange(split, 1, split.length);
             } else {
-                password = "{CRYPT}" + DigestUtils.sha256Hex(adminPassword) + "{CRYPT}"; //$NON-NLS-1$
-                roles = new String[] {"overlorduser", "overlordadmin", "admin.sramp"};
+                password = "{CRYPT}" + DigestUtils.sha256Hex(adminPassword) + "{CRYPT}"; //$NON-NLS-1$ //$NON-NLS-2$
+                roles = new String[] {"overlorduser", "overlordadmin", "admin.sramp"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
-            usersProperties.setProperty("admin", password + "," + StringUtils.join(roles, ",")); //$NON-NLS-1$ //$NON-NLS-2$
+            usersProperties.setProperty("admin", password + "," + StringUtils.join(roles, ",")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             usersProperties.store(new FileOutputStream(srcFile), ""); //$NON-NLS-1$
             
             // enable encryption
@@ -147,7 +147,7 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
         db.setEntityResolver(new EntityResolver() {
             public InputSource resolveEntity(String pid, String sid) throws SAXException {
                 return new InputSource(AbstractConfigureCommand.class.getClassLoader().getResourceAsStream(
-                        "/configure.dtd"));
+                        "/configure.dtd")); //$NON-NLS-1$
             }
         });
         Document d = db.parse(xmlFile);
