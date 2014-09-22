@@ -67,12 +67,13 @@
   <target name="generate-properties" depends="all-properties">
 	<aesEncrypter plain="${overlord-commons.admin.password}" addProperty="overlord-commons.admin.password.aes.encrypted"/>  
     <!-- Configure overlord.properties -->
+    <!-- Configure overlord.properties -->
+     <copy file="overlord.properties" tofile="${overlord-commons.tomcat.config.dir}/overlord.properties" overwrite="true" />    
     <propertyfile file="${overlord-commons.tomcat.config.dir}/overlord.properties" comment=" Common properties shared by Overlord applications" >
       <entry key="overlord.port" value="8080" />
       <entry key="overlord.baseUrl" value="http://localhost:${overlord.port}" />
       <entry key="overlord.auth.saml-keystore" value="${sys:catalina.home}/conf/overlord-saml.keystore" />
       <entry key="overlord.auth.saml-keystore-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
-      <entry key="overlord.auth.saml-key-alias" value="overlord" />
       <entry key="overlord.auth.saml-key-alias-password" value="${crypt_prefix}${overlord-commons.admin.password.aes.encrypted}}" />
     </propertyfile>
   

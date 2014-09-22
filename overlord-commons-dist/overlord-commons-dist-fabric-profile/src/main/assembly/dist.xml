@@ -17,5 +17,15 @@
       <directoryMode>0755</directoryMode>
       <fileMode>0755</fileMode>
     </fileSet>
+   <fileSet>
+      <directory>../../overlord-commons-installer/src/main/resources</directory>
+      <includes>
+      	<include>overlord.properties</include>
+      </includes>
+      <outputDirectory>overlord/commons.profile/</outputDirectory>
+      <filtered>true</filtered>
+      <directoryMode>0755</directoryMode>
+      <fileMode>0755</fileMode>
+    </fileSet>    
   </fileSets>
 </assembly>

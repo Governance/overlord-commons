@@ -44,7 +44,26 @@
       <artifactId>overlord-commons-codec</artifactId>
     </dependency>
   </dependencies>
+  <properties>
+  	<overlord.commons.port>8181</overlord.commons.port>
+  	<overlord.commons.base.url>http\://localhost\:${overlord.port}</overlord.commons.base.url>
+  	<overlord.commons.auth.saml.keystore>${sys\:karaf.home}/etc/overlord-saml.keystore</overlord.commons.auth.saml.keystore>
+  </properties>
   <build>
+  	<resources>
+  		<resource>
+  			<directory>src/main/resources</directory>
+  			<filtering>true</filtering>
+  		</resource>
+  		<resource>
+  			<directory>../overlord-commons-installer/src/main/resources</directory>
+  			<includes>
+  				<include>overlord.properties</include>
+  				<include>xslt/configure.dtd</include>
+  			</includes>
+  			<filtering>true</filtering>
+  		</resource>
+  	</resources>
     <plugins>
       <plugin>
         <groupId>org.apache.felix</groupId>
