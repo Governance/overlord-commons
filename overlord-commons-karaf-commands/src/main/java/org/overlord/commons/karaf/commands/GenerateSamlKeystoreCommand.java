@@ -18,6 +18,7 @@ package org.overlord.commons.karaf.commands;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.felix.gogo.commands.Command;
@@ -26,9 +27,9 @@ import org.overlord.commons.codec.AesEncrypter;
 /**
  * Karaf console command for use within JBoss Fuse. It generates/overwrites the overlord-saml.keystore file in the /etc
  * folder.  Call it w/ the keystore password as an argument.  Ex:
- * 
+ *
  * overlord:generateSamlKeystore [password]
- * 
+ *
  * Note that this uses the BouncyCastle library to encrypt the keystore file. It was not possible to directly use
  * sun.security as it does not support OSGi environments.
  *
@@ -44,6 +45,7 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
      *
      * @return the fuse config path
      */
+    @Override
     protected String getConfigPath() {
         String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
         StringBuilder fuse_config_path = new StringBuilder();
@@ -61,12 +63,13 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
      * @throws Exception
      *             the exception
      */
+    @Override
     protected void updateOverlordProperties() throws Exception {
         String filePath = getOverlordPropertiesFilePath();
         File overlordFile = new File(filePath);
 
         String encryptedPassword = "${crypt:" + AesEncrypter.encrypt(keystorePassword) + "}"; //$NON-NLS-1$ //$NON-NLS-2$
-        
+
         if (overlordFile.exists()) {
             FileInputStream in = null;
             try {
@@ -99,7 +102,10 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
             // Create a new overlord.properties file
             boolean created = overlordFile.createNewFile();
             if (created) {
+                InputStream is = getClass().getClassLoader().getResourceAsStream("overlord.properties"); //$NON-NLS-1$
+
                 Properties props = new Properties();
+                props.load(is);
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(filePath);
@@ -113,6 +119,7 @@ public class GenerateSamlKeystoreCommand extends AbstractSamlKeystoreCommand {
 
                 } finally {
                     out.close();
+                    is.close();
                 }
             }
         }
