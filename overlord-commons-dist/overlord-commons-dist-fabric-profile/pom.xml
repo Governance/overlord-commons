@@ -11,7 +11,10 @@
   <dependencies>
 
   </dependencies>
-
+  <properties>
+  	<overlord.commons.base.url>${container:httpUrl}</overlord.commons.base.url>
+  	<overlord.commons.auth.saml.keystore>profile:overlord-saml.keystore</overlord.commons.auth.saml.keystore>
+  </properties>
   <build>
     <plugins>
       <plugin>

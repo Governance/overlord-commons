@@ -11,9 +11,9 @@ import org.apache.felix.gogo.commands.Command;
  * Karaf console command for use within JBoss Fuse. It generates/overwrites the overlord-saml.keystore file and
  * configures all properties within the commons and sramp Fabric profiles.  Call it w/ the keystore password as
  * an argument.  Ex:
- * 
+ *
  * overlord:configureFabric [password]
- * 
+ *
  * Note that this uses the BouncyCastle library to encrypt the keystore file. It was not possible to directly use
  * sun.security as it does not support OSGi environments.
  *
@@ -43,6 +43,7 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
      *
      * @return the fuse config path
      */
+    @Override
     protected String getConfigPath() {
         String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
         StringBuilder fuse_config_path = new StringBuilder();
@@ -60,6 +61,7 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
      * @throws Exception
      *             the exception
      */
+    @Override
     protected void updateOverlordProperties() throws Exception {
         String filePath = getOverlordPropertiesFilePath();
         File overlordFile = new File(filePath);
@@ -72,6 +74,9 @@ public class ConfigureFabricProfilesCommand extends AbstractSamlKeystoreCommand 
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(filePath);
+                    if (props.contains(CommandConstants.OverlordProperties.OVERLORD_PORT)) {
+                        props.remove(CommandConstants.OverlordProperties.OVERLORD_PORT);
+                    }
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, keystorePassword);
                     props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, keystorePassword);
                     props.store(out, null);
