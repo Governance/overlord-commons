@@ -146,7 +146,7 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
         db.setEntityResolver(new EntityResolver() {
             @Override
             public InputSource resolveEntity(String pid, String sid) throws SAXException {
-                return new InputSource(AbstractConfigureCommand.class.getClassLoader().getResourceAsStream("xslt/configure.dtd"));
+                return new InputSource(AbstractConfigureCommand.class.getClassLoader().getResourceAsStream("xslt/configure.dtd")); //$NON-NLS-1$
             }
         });
         Document d = db.parse(xmlFile);

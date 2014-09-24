@@ -55,12 +55,12 @@ public class MergeFilesMojo extends AbstractMojo {
             OutputStream os = null;
             for (File propertiesFile : mergeData.getFiles()) {
                 if (!propertiesFile.exists())
-                    throw new MojoExecutionException("File does not exist: " + propertiesFile.getAbsolutePath());
+                    throw new MojoExecutionException("File does not exist: " + propertiesFile.getAbsolutePath()); //$NON-NLS-1$
                 try {
                     is = new FileInputStream(propertiesFile);
                     properties.load(is);
                 } catch (Exception e) {
-                    throw new MojoExecutionException("Exception while loading the file " + propertiesFile.getAbsolutePath(), e);
+                    throw new MojoExecutionException("Exception while loading the file " + propertiesFile.getAbsolutePath(), e); //$NON-NLS-1$
                 } finally {
                     if (is != null) {
                         try {
@@ -76,7 +76,7 @@ public class MergeFilesMojo extends AbstractMojo {
                 os = new FileOutputStream(destination);
                 properties.store(os, destination.getName());
             } catch (Exception e) {
-                throw new MojoExecutionException("Exception writing in the file " + destination.getName(), e);
+                throw new MojoExecutionException("Exception writing in the file " + destination.getName(), e); //$NON-NLS-1$
             } finally {
                 if (os != null) {
                     try {

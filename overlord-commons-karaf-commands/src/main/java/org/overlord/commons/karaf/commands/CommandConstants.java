@@ -9,7 +9,7 @@ public interface CommandConstants {
         public static final String OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY = "overlord.auth.saml-key-alias-password"; //$NON-NLS-1$
         public static final String OVERLORD_KEYSTORE_PASSWORD_KEY = "overlord.auth.saml-keystore-password"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_ALIAS = "overlord.auth.saml-key-alias"; //$NON-NLS-1$
-        public static final String OVERLORD_PORT = "overlord.port";
+        public static final String OVERLORD_PORT = "overlord.port"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_ALIAS_VALUE = "overlord"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_KEYSTORE = "overlord.auth.saml-keystore"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_KEYSTORE_VALUE = "${sys:karaf.home}/etc/overlord-saml.keystore"; //$NON-NLS-1$
