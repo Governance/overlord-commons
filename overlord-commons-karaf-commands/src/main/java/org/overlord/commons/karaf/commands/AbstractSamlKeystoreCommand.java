@@ -41,22 +41,21 @@ abstract public class AbstractSamlKeystoreCommand extends OsgiCommandSupport {
         String fuse_config_path = getConfigPath();
         String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
         File keystore = new File(file);
-        if (!keystore.exists()) {
-            logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
-            GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
-            util.generate(keystorePassword, keystore);
-            // Once the keystore file is generated the references to the saml
-            // password existing in the overlord.properties file should be updated.
-            updateOverlordProperties();
-            logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
-        }
+        logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
+        GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
+        util.generate(keystorePassword, keystore);
+        // Once the keystore file is generated the references to the saml
+        // password existing in the overlord.properties file should be updated.
+        updateOverlordProperties();
+        logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
+
         return null;
     }
-    
+
     abstract protected String getConfigPath();
-    
+
     abstract protected void updateOverlordProperties() throws Exception;
-    
+
     public void setKeystorePassword(String keystorePassword) {
         this.keystorePassword = keystorePassword;
     }

@@ -6,8 +6,8 @@
         </command>    
     </command-bundle>
     <command-bundle xmlns="http://karaf.apache.org/xmlns/shell/v1.0.0">
-        <command name="overlord:configureFabric">
-            <action class="org.overlord.commons.karaf.commands.ConfigureFabricProfilesCommand"/>
+        <command name="overlord:changePassword">
+            <action class="org.overlord.commons.karaf.commands.ChangePasswordCommand"/>
         </command>        
-    </command-bundle>
+    </command-bundle>    
 </blueprint>
