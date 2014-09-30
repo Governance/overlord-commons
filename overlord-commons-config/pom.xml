@@ -91,6 +91,7 @@
               io.fabric8.api,
               org.overlord.commons.codec,
               java.util,
+              org.apache.commons.io,
               !org.jboss.security.vault
             </Import-Package>
           </instructions>

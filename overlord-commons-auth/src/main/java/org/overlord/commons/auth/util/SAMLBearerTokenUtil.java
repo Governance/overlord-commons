@@ -64,10 +64,10 @@ public class SAMLBearerTokenUtil {
      * Creates a SAML Assertion that can be used as a bearer token when invoking REST
      * services.  The REST service must be configured to accept SAML Assertion bearer
      * tokens.
-     * 
+     *
      * In JBoss this means protecting the REST services with {@link org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule}.
      * In Tomcat7 this means protecting the REST services with {@link org.overlord.commons.auth.tomcat7.SAMLBearerTokenAuthenticator}.
-     * 
+     *
      * @param principal the authenticated principal
      * @param roles the authenticated principal's roles
      * @param issuerName the issuer name (typically the context of the calling web app)
@@ -81,10 +81,10 @@ public class SAMLBearerTokenUtil {
      * Creates a SAML Assertion that can be used as a bearer token when invoking REST
      * services.  The REST service must be configured to accept SAML Assertion bearer
      * tokens.
-     * 
+     *
      * In JBoss this means protecting the REST services with {@link org.overlord.commons.auth.jboss7.SAMLBearerTokenLoginModule}.
      * In Tomcat7 this means protecting the REST services with {@link org.overlord.commons.auth.tomcat7.SAMLBearerTokenAuthenticator}.
-     * 
+     *
      * @param principal
      * @param roles
      * @param issuerName
@@ -120,7 +120,7 @@ public class SAMLBearerTokenUtil {
         ASTChoiceType attributeAST = new ASTChoiceType(attribute);
         AttributeStatementType roleStatement = new AttributeStatementType();
         roleStatement.addAttribute(attributeAST);
-        
+
         if (roles != null) {
             for (String role : roles) {
                 attribute.addAttributeValue(role);
@@ -179,7 +179,14 @@ public class SAMLBearerTokenUtil {
      * @throws Exception
      */
     public static KeyStore loadKeystore(String keystorePath, String keystorePassword) throws Exception {
-        File keystoreFile = new File(keystorePath);
+        File keystoreFile;
+
+        if (keystorePath.startsWith("file:")) {
+            keystoreFile = new File(new URI(keystorePath));
+        } else {
+            keystoreFile = new File(keystorePath);
+        }
+
         if (!keystoreFile.isFile()) {
             throw new Exception(Messages.format("SAMLBearerTokenUtil.NoKeystore", keystorePath)); //$NON-NLS-1$
         }
@@ -193,7 +200,7 @@ public class SAMLBearerTokenUtil {
             if (is != null) { try { is.close(); } catch (Exception e) {} }
         }
     }
-    
+
     /**
      * Validates that the assertion is acceptable based on configurable criteria.
      * @param assertion

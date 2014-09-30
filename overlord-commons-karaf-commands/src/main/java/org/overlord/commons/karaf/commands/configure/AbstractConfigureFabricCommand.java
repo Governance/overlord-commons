@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import org.apache.felix.gogo.commands.Argument;
-import org.apache.karaf.shell.console.OsgiCommandSupport;
+import org.overlord.commons.karaf.commands.AbstracFabricCommand;
 import org.overlord.commons.karaf.commands.CommandConstants;
 import org.overlord.commons.karaf.commands.i18n.Messages;
 import org.overlord.commons.karaf.commands.saml.GenerateSamlKeystoreUtil;
@@ -17,25 +17,23 @@ import org.slf4j.LoggerFactory;
  * generates/overwrites the overlord-saml.keystore file and configures all
  * properties within the commons and sramp Fabric profiles. Call it w/ the
  * keystore password as an argument.
- * 
+ *
  * Note that this uses the BouncyCastle library to encrypt the keystore file. It
  * was not possible to directly use sun.security as it does not support OSGi
  * environments.
- * 
+ *
  * @author David Virgil Naranjo
  */
 
-abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport {
+abstract public class AbstractConfigureFabricCommand extends AbstracFabricCommand {
 
     private static String OVERLORD_COMMONS_PROFILE_PATH;
 
-    private static final String FABRIC_PROFILES_WINDOWS_DIR = "fabric\\import\\fabric\\configs\\versions\\1.0\\profiles"; //$NON-NLS-1$
-    private static final String FABRIC_PROFILES_UNIX_DIR = "fabric/import/fabric/configs/versions/1.0/profiles"; //$NON-NLS-1$
-
-    protected static String FABRIC_PROFILES_DIR;
 
     @Argument(index = 0, name = "password", required = true, multiValued = false)
     protected String password = null;
+
+    boolean allowedPasswordOverwrite;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractConfigureFabricCommand.class);
     static {
@@ -46,32 +44,18 @@ abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport 
         }
     }
 
-    static {
-        if (File.separator.equals("/")) { //$NON-NLS-1$
-            FABRIC_PROFILES_DIR = FABRIC_PROFILES_UNIX_DIR;
-        } else {
-            FABRIC_PROFILES_DIR = FABRIC_PROFILES_WINDOWS_DIR;
-        }
-    }
 
 
-    protected String getFabricProfilesePath() {
-        String karaf_home = System.getProperty("karaf.home"); //$NON-NLS-1$
-        StringBuilder fuse_config_path = new StringBuilder();
-        fuse_config_path.append(karaf_home);
-        if (!karaf_home.endsWith(File.separator)) {
-            fuse_config_path.append(File.separator);
-        }
-        fuse_config_path.append(FABRIC_PROFILES_DIR).append(File.separator);
-        return fuse_config_path.toString();
+    public AbstractConfigureFabricCommand() {
+        allowedPasswordOverwrite = false;
     }
 
     @Override
     protected Object doExecute() throws Exception {
-        String fuse_config_path = getFabricProfilePath();
+        String fuse_config_path = getOverlordProfilePath();
         String file = fuse_config_path + CommandConstants.OverlordProperties.FILE_KEYSTORE_NAME;
         File keystore = new File(file);
-        if (!keystore.exists()) {
+        if (allowedPasswordOverwrite || !keystore.exists()) {
             logger.info(Messages.getString("generate.saml.keystore.command.correctly.begin")); //$NON-NLS-1$
             GenerateSamlKeystoreUtil util = new GenerateSamlKeystoreUtil();
             util.generate(password, keystore);
@@ -80,6 +64,10 @@ abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport 
             // updated.
             updateOverlordProperties();
             logger.info(Messages.getString("generate.saml.keystore.command.correctly.created")); //$NON-NLS-1$
+        } else {
+            String message = Messages.getString("overlord.commons.fabric.configured.already");//$NON-NLS-1$
+            logger.info(message);
+            System.out.println(message);
         }
         return null;
     }
@@ -89,9 +77,9 @@ abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport 
      *
      * @return the fuse config path
      */
-    public String getFabricProfilePath() {
+    public String getOverlordProfilePath() {
         StringBuilder fuse_config_path = new StringBuilder();
-        fuse_config_path.append(getFabricProfilesePath()).append(OVERLORD_COMMONS_PROFILE_PATH).append(File.separator);
+        fuse_config_path.append(getFabricProfilesPath()).append(OVERLORD_COMMONS_PROFILE_PATH).append(File.separator);
         return fuse_config_path.toString();
     }
 
@@ -129,7 +117,7 @@ abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport 
      */
     private String getOverlordPropertiesFilePath() {
         StringBuilder fuse_config_path = new StringBuilder();
-        fuse_config_path.append(getFabricProfilePath())
+        fuse_config_path.append(getOverlordProfilePath())
                 .append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
         return fuse_config_path.toString();
     }
@@ -141,5 +129,14 @@ abstract public class AbstractConfigureFabricCommand extends OsgiCommandSupport 
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean isAllowedPasswordOverwrite() {
+        return allowedPasswordOverwrite;
+    }
+
+    public void setAllowedPasswordOverwrite(boolean allowedPasswordOverwrite) {
+        this.allowedPasswordOverwrite = allowedPasswordOverwrite;
+    }
+
 
 }

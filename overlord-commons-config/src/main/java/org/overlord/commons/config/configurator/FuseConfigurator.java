@@ -19,12 +19,15 @@ import io.fabric8.api.FabricService;
 import io.fabric8.api.Profile;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.overlord.commons.services.ServiceRegistryUtil;
@@ -68,7 +71,7 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
         String karafDir = System.getProperty("karaf.home"); //$NON-NLS-1$
         return karafDir != null || getFabricService() != null;
     }
-    
+
     /**
      * @see org.overlord.commons.config.configurator.AbstractPropertiesFileConfigurator#provideConfiguration(java.lang.String, java.lang.Long)
      */
@@ -76,8 +79,31 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
     public Configuration provideConfiguration(String configName, Long refreshDelay)
             throws ConfigurationException {
         if (getFabricService() != null) {
-            Map<String, String> properties = getProperties(configName);
-            return new MapConfiguration(properties);
+            byte[] properties = getProperties(configName);
+            if (properties != null) {
+                OutputStream os = null;
+                try {
+                    File f = File.createTempFile("temp.overlord", "properties");
+                    f.deleteOnExit();
+                    os = new FileOutputStream(f);
+                    IOUtils.write(properties, os);
+                    return new PropertiesConfiguration(f);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    try {
+                        if (os != null) {
+                            os.close();
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+            } else {
+                return super.provideConfiguration(configName, refreshDelay);
+            }
+
         } else {
             return super.provideConfiguration(configName, refreshDelay);
         }
@@ -85,23 +111,16 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
 
     /**
      * Gets the properties from Fabric8.
-     * 
+     *
      * @param urlFile
      * @return the properties
      */
-    protected Map<String, String> getProperties(String urlFile) {
+    protected byte[] getProperties(String urlFile) {
         if (getFabricService() != null && getFabricService().getCurrentContainer() != null
                 && getFabricService().getCurrentContainer().getOverlayProfile() != null) {
 
             Profile profile = getFabricService().getCurrentContainer().getOverlayProfile();
-            String file_name = ""; //$NON-NLS-1$
-            if (urlFile.contains(".")) { //$NON-NLS-1$
-                file_name = urlFile.substring(0, urlFile.lastIndexOf(".")); //$NON-NLS-1$
-            } else {
-                file_name = urlFile;
-            }
-            Map<String, String> toReturn = profile.getConfiguration(file_name);
-            return toReturn;
+            return profile.getFileConfiguration(urlFile);
         }
         return null;
     }
