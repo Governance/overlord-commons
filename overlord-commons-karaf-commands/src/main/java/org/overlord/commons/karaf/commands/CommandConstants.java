@@ -13,7 +13,7 @@ public interface CommandConstants {
         public static final String OVERLORD_SAML_ALIAS_VALUE = "overlord"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_KEYSTORE = "overlord.auth.saml-keystore"; //$NON-NLS-1$
         public static final String OVERLORD_SAML_KEYSTORE_VALUE = "${sys:karaf.home}/etc/overlord-saml.keystore"; //$NON-NLS-1$
-        public static final String OVERLORD_SAML_KEYSTORE_FABRIC_VALUE = "profile:overlord-saml.keystore"; //$NON-NLS-1$
+        public static final String OVERLORD_SAML_KEYSTORE_FABRIC_VALUE = "${profile:overlord-saml.keystore}"; //$NON-NLS-1$
         public static final String OVERLORD_BASE_URL = "overlord.baseUrl"; //$NON-NLS-1$
         public static final String OVERLORD_BASE_URL_VALUE = "${container:httpUrl}"; //$NON-NLS-1$
     }

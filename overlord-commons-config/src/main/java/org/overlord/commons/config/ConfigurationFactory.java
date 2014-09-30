@@ -26,6 +26,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.overlord.commons.config.configurator.Configurator;
 import org.overlord.commons.config.crypt.CryptLookup;
+import org.overlord.commons.config.fabric.ContainerLookup;
+import org.overlord.commons.config.fabric.ProfileLookup;
 import org.overlord.commons.config.vault.VaultLookup;
 import org.overlord.commons.services.ServiceRegistryUtil;
 
@@ -122,6 +124,8 @@ public class ConfigurationFactory {
         if (!globalLookupsRegistered) {
             ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup()); //$NON-NLS-1$
             ConfigurationInterpolator.registerGlobalLookup("crypt", new CryptLookup()); //$NON-NLS-1$
+            ConfigurationInterpolator.registerGlobalLookup("container", new ContainerLookup()); //$NON-NLS-1$
+            ConfigurationInterpolator.registerGlobalLookup("profile", new ProfileLookup()); //$NON-NLS-1$
             globalLookupsRegistered = true;
         }
     }
