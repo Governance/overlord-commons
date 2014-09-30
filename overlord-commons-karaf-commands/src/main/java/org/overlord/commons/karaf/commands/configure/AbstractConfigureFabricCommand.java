@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 JBoss Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.overlord.commons.karaf.commands.configure;
 
 import java.io.File;
@@ -5,7 +20,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import org.apache.felix.gogo.commands.Argument;
-import org.overlord.commons.karaf.commands.AbstracFabricCommand;
+import org.overlord.commons.karaf.commands.AbstractFabricCommand;
 import org.overlord.commons.karaf.commands.CommandConstants;
 import org.overlord.commons.karaf.commands.i18n.Messages;
 import org.overlord.commons.karaf.commands.saml.GenerateSamlKeystoreUtil;
@@ -25,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author David Virgil Naranjo
  */
 
-abstract public class AbstractConfigureFabricCommand extends AbstracFabricCommand {
+abstract public class AbstractConfigureFabricCommand extends AbstractFabricCommand {
 
     private static String OVERLORD_COMMONS_PROFILE_PATH;
 

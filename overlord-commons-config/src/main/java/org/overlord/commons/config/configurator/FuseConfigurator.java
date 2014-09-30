@@ -83,7 +83,7 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
             if (properties != null) {
                 OutputStream os = null;
                 try {
-                    File f = File.createTempFile("temp.overlord", "properties");
+                    File f = File.createTempFile("temp.overlord", "properties"); //$NON-NLS-1$ //$NON-NLS-2$
                     f.deleteOnExit();
                     os = new FileOutputStream(f);
                     IOUtils.write(properties, os);

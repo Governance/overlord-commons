@@ -71,19 +71,19 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
     @Override
     protected Object doExecute() throws Exception {
         File destFile = new File(karafConfigPath + "overlord.properties"); //$NON-NLS-1$
-        logger.info(Messages.getString("overlord.configure.execution"));
+        logger.info(Messages.getString("overlord.configure.execution")); //$NON-NLS-1$
         // Note: We're using the existence of overlord.properties to identify
         // that Overlord has been installed, period.
         if (destFile.exists()) {
             // Already installed an overlord commons installation.
-            String message = Messages.getString("overlord.configure.password.previous.installation");
+            String message = Messages.getString("overlord.configure.password.previous.installation"); //$NON-NLS-1$
             System.out.println(message);
             logger.info(message);
             return null;
         } else if (StringUtils.isBlank(password)) {
-            throw new RuntimeException(Messages.getString("overlord.configure.password.required.first.install"));
+            throw new RuntimeException(Messages.getString("overlord.configure.password.required.first.install")); //$NON-NLS-1$
         } else {
-            logger.debug(Messages.getString("overlord.configure.execution.started"));
+            logger.debug(Messages.getString("overlord.configure.execution.started")); //$NON-NLS-1$
             commonActions();
 
             ChangePasswordCommand passwordCommand = new ChangePasswordCommand();
@@ -91,14 +91,14 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
             passwordCommand.setBundleContext(bundleContext);
             passwordCommand.setPassword(password);
             passwordCommand.execute(session);
-            logger.debug(Messages.getString("overlord.configure.execution.ended"));
+            logger.debug(Messages.getString("overlord.configure.execution.ended")); //$NON-NLS-1$
         }
 
         return null;
     }
 
     public void commonActions() throws Exception {
-        logger.debug(Messages.getString("overlord.configure.common.actions.started"));
+        logger.debug(Messages.getString("overlord.configure.common.actions.started")); //$NON-NLS-1$
         // Add realm to jetty.xml
         File xmlFile = new File(karafConfigPath + "jetty.xml"); //$NON-NLS-1$
         InputStream xsltFile = AbstractConfigureCommand.class.getClassLoader().getResourceAsStream("/addRealm-fuse-6.1.xslt"); //$NON-NLS-1$
@@ -120,7 +120,7 @@ public abstract class AbstractConfigureCommand extends OsgiCommandSupport {
                 mvnProperties.getProperty("org.ops4j.pax.url.mvn.repositories") //$NON-NLS-1$
                         + ", http://repository.jboss.org/nexus/content/groups/developer/@snapshots"); //$NON-NLS-1$
         mvnProperties.store(new FileOutputStream(srcFile), ""); //$NON-NLS-1$
-        logger.debug(Messages.getString("overlord.configure.common.actions.started"));
+        logger.debug(Messages.getString("overlord.configure.common.actions.started")); //$NON-NLS-1$
     }
 
     /**

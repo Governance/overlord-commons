@@ -28,31 +28,27 @@ public class ProfileLookup extends StrLookup {
         return fabricService;
     }
 
+    /**
+     * @see org.apache.commons.lang.text.StrLookup#lookup(java.lang.String)
+     */
     @Override
     public String lookup(String key) {
         if (this.getFabricService() != null) {
-                byte[] fileContent = this.getFabricService().getCurrentContainer().getOverlayProfile().getFileConfiguration(key);
-                OutputStream os = null;
-                try {
-                    File f = File.createTempFile(key, "");
-                    os = new FileOutputStream(f);
-                    f.deleteOnExit();
-                    IOUtils.write(fileContent, os);
-                    return f.toURI().toURL().toString();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                }
+            byte[] fileContent = this.getFabricService().getCurrentContainer().getOverlayProfile().getFileConfiguration(key);
+            OutputStream os = null;
+            try {
+                File f = File.createTempFile(key, ""); //$NON-NLS-1$
+                os = new FileOutputStream(f);
+                f.deleteOnExit();
+                IOUtils.write(fileContent, os);
+                return f.toURI().toURL().toString();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                IOUtils.closeQuietly(os);
+            }
         }
-        return "profile:" + key;
+        return "profile:" + key; //$NON-NLS-1$
     }
 
 }

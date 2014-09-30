@@ -181,7 +181,7 @@ public class SAMLBearerTokenUtil {
     public static KeyStore loadKeystore(String keystorePath, String keystorePassword) throws Exception {
         File keystoreFile;
 
-        if (keystorePath.startsWith("file:")) {
+        if (keystorePath.startsWith("file:")) { //$NON-NLS-1$
             keystoreFile = new File(new URI(keystorePath));
         } else {
             keystoreFile = new File(keystorePath);

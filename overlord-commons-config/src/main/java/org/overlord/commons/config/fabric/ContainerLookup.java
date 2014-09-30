@@ -25,11 +25,11 @@ public class ContainerLookup extends StrLookup {
     @Override
     public String lookup(String key) {
         if (this.getFabricService() != null) {
-            if (key.equals("httpUrl")) {
+            if (key.equals("httpUrl")) { //$NON-NLS-1$
                 return this.getFabricService().getCurrentContainer().getHttpUrl();
             }
         }
-        return "container:" + key;
+        return "container:" + key; //$NON-NLS-1$
     }
 
 }

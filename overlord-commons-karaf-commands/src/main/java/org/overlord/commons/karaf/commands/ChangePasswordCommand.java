@@ -80,7 +80,7 @@ public class ChangePasswordCommand extends OsgiCommandSupport {
      */
     @Override
     protected Object doExecute() throws Exception {
-        logger.debug(Messages.getString("overlord.change.password.start"));
+        logger.debug(Messages.getString("overlord.change.password.start")); //$NON-NLS-1$
 
         File destFile = new File(karafConfigPath + "overlord.properties"); //$NON-NLS-1$
 
@@ -108,16 +108,16 @@ public class ChangePasswordCommand extends OsgiCommandSupport {
             }
             usersProperties.setProperty("admin", pass + "," + StringUtils.join(roles, ",")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             usersProperties.store(new FileOutputStream(srcFile), ""); //$NON-NLS-1$
-            logger.info(Messages.getString("overlord.change.password.user.added"));
+            logger.info(Messages.getString("overlord.change.password.user.added")); //$NON-NLS-1$
 
-            logger.debug(Messages.getString("overlord.change.password.generating.keystore"));
+            logger.debug(Messages.getString("overlord.change.password.generating.keystore")); //$NON-NLS-1$
             GenerateSamlKeystoreCommand keystoreCommand = new GenerateSamlKeystoreCommand();
             keystoreCommand.setBundleContext(bundleContext);
             keystoreCommand.setKeystorePassword(password);
             keystoreCommand.execute(session);
-            logger.debug(Messages.getString("overlord.change.password.end"));
+            logger.debug(Messages.getString("overlord.change.password.end")); //$NON-NLS-1$
         } else {
-            String message = Messages.getString("overlord.change.no.previous.installation");
+            String message = Messages.getString("overlord.change.no.previous.installation"); //$NON-NLS-1$
             logger.info(message);
             System.out.println(message);
         }
