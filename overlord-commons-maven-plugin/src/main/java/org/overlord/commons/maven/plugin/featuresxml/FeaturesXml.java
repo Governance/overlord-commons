@@ -128,6 +128,24 @@ public class FeaturesXml {
     }
     
     /**
+     * Adds a configfile to the feature in features.xml.
+     * @param name
+     * @param version
+     * @param finalName
+     * @param value
+     */
+    public void addConfigFile(String name, String version, String finalName, String value) {
+        String featureKey = name + "||" + version; //$NON-NLS-1$
+        Element featureElem = features.get(featureKey);
+        if (featureElem != null) {
+            Element configFileElem = document.createElementNS(FEATURES_XML_NS, "configfile"); //$NON-NLS-1$
+            featureElem.appendChild(configFileElem);
+            configFileElem.setTextContent(value);
+            configFileElem.setAttribute("finalname", finalName); //$NON-NLS-1$
+        }
+    }
+    
+    /**
      * Writes the features.xml file out.
      * @param outputFile
      * @throws Exception

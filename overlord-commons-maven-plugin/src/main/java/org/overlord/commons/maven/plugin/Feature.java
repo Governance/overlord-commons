@@ -31,6 +31,7 @@ public class Feature {
     private String comment;
     private String startLevel;
     private List<Feature> dependsOnFeatures;
+    private List<ConfigFile> configFiles;
     private List<String> includes;
     private List<String> excludes;
     private List<String> bundles;
@@ -151,6 +152,20 @@ public class Feature {
      */
     public void setStartLevel(String startLevel) {
         this.startLevel = startLevel;
+    }
+
+    /**
+     * @return the configFiles
+     */
+    public List<ConfigFile> getConfigFiles() {
+        return configFiles;
+    }
+
+    /**
+     * @param configFiles the configFiles to set
+     */
+    public void setConfigFiles(List<ConfigFile> configFiles) {
+        this.configFiles = configFiles;
     }
     
 }

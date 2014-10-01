@@ -32,32 +32,23 @@ import java.util.Set;
 public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     
     private Map<Class<?>, Set<?>> servicesCache = new HashMap<Class<?>, Set<?>>();
-    private Map<Class<?>, Object> serviceCache = new HashMap<Class<?>, Object>();
 
     /**
      * @see org.overlord.commons.services.ServiceRegistry#getSingleService(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
-        synchronized (serviceCache) {
-            if (serviceCache.containsKey(serviceInterface))
-                return (T) serviceCache.get(serviceInterface);
-    
-            // Cached single service values are derived from the values cached when checking
-            // for multiple services
-            T rval = null;
-            Set<T> services=getServices(serviceInterface);
-            
-            if (services.size() > 1) {
-                throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
-            } else if (!services.isEmpty()) {
-                rval = services.iterator().next();
-            }
-    
-            serviceCache.put(serviceInterface, rval);
-            return rval;
+        // Cached single service values are derived from the values cached when checking
+        // for multiple services
+        T rval = null;
+        Set<T> services=getServices(serviceInterface);
+        
+        if (services.size() > 1) {
+            throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
+        } else if (!services.isEmpty()) {
+            rval = services.iterator().next();
         }
+        return rval;
     }
 
     /**

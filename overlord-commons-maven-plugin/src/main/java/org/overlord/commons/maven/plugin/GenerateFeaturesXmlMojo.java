@@ -193,6 +193,15 @@ public class GenerateFeaturesXmlMojo extends AbstractMojo {
                     featuresXml.addBundle(feature.getName(), feature.getVersion(), bundle, startLevel);
                 }
             }
+            
+            // Add config files if any are specified in the pom
+            List<ConfigFile> configFiles = feature.getConfigFiles();
+            if (configFiles != null && !configFiles.isEmpty()) {
+                for (ConfigFile configFile : configFiles) {
+                    getLog().debug("   Adding config file: " + configFile.getValue()); //$NON-NLS-1$
+                    featuresXml.addConfigFile(feature.getName(), feature.getVersion(), configFile.getFinalName(), configFile.getValue());
+                }
+            }
         }
     }
 
