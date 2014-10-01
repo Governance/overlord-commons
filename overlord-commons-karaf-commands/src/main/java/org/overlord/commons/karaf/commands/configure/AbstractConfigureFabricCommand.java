@@ -130,7 +130,7 @@ abstract public class AbstractConfigureFabricCommand extends AbstractFabricComma
      *
      * @return the overlord properties file path
      */
-    private String getOverlordPropertiesFilePath() {
+    protected String getOverlordPropertiesFilePath() {
         StringBuilder fuse_config_path = new StringBuilder();
         fuse_config_path.append(getOverlordProfilePath())
                 .append(CommandConstants.OverlordProperties.OVERLORD_PROPERTIES_FILE_NAME);
