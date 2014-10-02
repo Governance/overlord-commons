@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import org.apache.felix.gogo.commands.Argument;
+import org.overlord.commons.codec.AesEncrypter;
 import org.overlord.commons.karaf.commands.AbstractFabricCommand;
 import org.overlord.commons.karaf.commands.CommandConstants;
 import org.overlord.commons.karaf.commands.i18n.Messages;
@@ -109,14 +110,18 @@ abstract public class AbstractConfigureFabricCommand extends AbstractFabricComma
 
         Properties props = new Properties();
         FileOutputStream out = null;
+        String aesEncryptedValue = AesEncrypter.encrypt(password);
+        StringBuilder aesEncrypterBuilder = new StringBuilder();
+        aesEncrypterBuilder.append("${crypt:").append(aesEncryptedValue).append("}"); //$NON-NLS-1$ //$NON-NLS-2$
+        aesEncryptedValue = aesEncrypterBuilder.toString();
         try {
             out = new FileOutputStream(filePath);
             props.setProperty(CommandConstants.OverlordProperties.OVERLORD_BASE_URL, CommandConstants.OverlordProperties.OVERLORD_BASE_URL_VALUE);
             props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE,
                     CommandConstants.OverlordProperties.OVERLORD_SAML_KEYSTORE_FABRIC_VALUE);
             props.setProperty(CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS, CommandConstants.OverlordProperties.OVERLORD_SAML_ALIAS_VALUE);
-            props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, password);
-            props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, password);
+            props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_ALIAS_PASSWORD_KEY, aesEncryptedValue);
+            props.setProperty(CommandConstants.OverlordProperties.OVERLORD_KEYSTORE_PASSWORD_KEY, aesEncryptedValue);
             props.store(out, null);
 
         } finally {
