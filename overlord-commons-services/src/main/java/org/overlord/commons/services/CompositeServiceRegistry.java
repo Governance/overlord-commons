@@ -17,6 +17,7 @@
 package org.overlord.commons.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,11 +56,21 @@ public class CompositeServiceRegistry implements ServiceRegistry {
      */
     @Override
     public <T> Set<T> getServices(Class<T> serviceInterface) {
+        // It's necessary to prevent duplicates in this manner.  In OSGi, ServiceLoaderServiceRegistry *AND*
+        // OSGiServiceRegistry can both return the same service impl, under certain circumstances (ex: A needs a
+        // service impl in B.  If B is on A's classpath, due to manifest imports, etc., ServiceLoader will work).
+        Set<Class<?>> implClasses = new HashSet<Class<?>>();
+        
         Set<T> rval = new LinkedHashSet<T>();
         for (ServiceRegistry registry : registries) {
             Set<T> svcs = registry.getServices(serviceInterface);
             if (svcs != null) {
-                rval.addAll(svcs);
+                for (T svc : svcs) {
+                    if (!implClasses.contains(svc.getClass())) {
+                        rval.add(svc);
+                        implClasses.add(svc.getClass());
+                    }
+                }
             }
         }
         return rval;
