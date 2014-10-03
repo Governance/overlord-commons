@@ -124,8 +124,8 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
             byte[] returned = profile.getFileConfiguration(urlFile);
             String content = new String(returned);
 
-            content = StringUtils.replace(content, "\\{", "{"); //$NON-NLS-1$ $NON-NLS-2$
-            content = StringUtils.replace(content, "\\}", "}");//$NON-NLS-1$ $NON-NLS-2$
+            content = StringUtils.replace(content, "\\{", "{"); //$NON-NLS-1$ //$NON-NLS-2$
+            content = StringUtils.replace(content, "\\}", "}"); //$NON-NLS-1$ //$NON-NLS-2$
 
             return content.getBytes();
 
