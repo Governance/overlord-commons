@@ -28,6 +28,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.overlord.commons.services.ServiceRegistryUtil;
@@ -120,7 +121,14 @@ public class FuseConfigurator extends AbstractPropertiesFileConfigurator {
                 && getFabricService().getCurrentContainer().getOverlayProfile() != null) {
 
             Profile profile = getFabricService().getCurrentContainer().getOverlayProfile();
-            return profile.getFileConfiguration(urlFile);
+            byte[] returned = profile.getFileConfiguration(urlFile);
+            String content = new String(returned);
+
+            content = StringUtils.replace(content, "\\{", "{"); //$NON-NLS-1$ $NON-NLS-2$
+            content = StringUtils.replace(content, "\\}", "}");//$NON-NLS-1$ $NON-NLS-2$
+
+            return content.getBytes();
+
         }
         return null;
     }

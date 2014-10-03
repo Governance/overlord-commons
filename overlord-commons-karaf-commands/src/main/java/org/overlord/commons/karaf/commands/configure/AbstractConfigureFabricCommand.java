@@ -112,7 +112,7 @@ abstract public class AbstractConfigureFabricCommand extends AbstractFabricComma
         FileOutputStream out = null;
         String aesEncryptedValue = AesEncrypter.encrypt(password);
         StringBuilder aesEncrypterBuilder = new StringBuilder();
-        aesEncrypterBuilder.append("${crypt:").append(aesEncryptedValue).append("}"); //$NON-NLS-1$ //$NON-NLS-2$
+        aesEncrypterBuilder.append("$\\{crypt:").append(aesEncryptedValue).append("\\}"); //$NON-NLS-1$ //$NON-NLS-2$
         aesEncryptedValue = aesEncrypterBuilder.toString();
         try {
             out = new FileOutputStream(filePath);
