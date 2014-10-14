@@ -31,8 +31,16 @@
       <artifactId>jboss-logging-processor</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jboss.msc</groupId>
+      <artifactId>jboss-msc</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss</groupId>
+      <artifactId>staxmapper</artifactId>
     </dependency>
   </dependencies>
 
