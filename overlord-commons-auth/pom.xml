@@ -10,6 +10,16 @@
   <packaging>bundle</packaging>
   <name>Overlord Commons: Auth</name>
   <description>Contains authentication and authorization classes shared by the Overlord projects.</description>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.security.jacc</groupId>
+        <artifactId>javax.security.jacc-api</artifactId>
+        <version>1.4</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- Project Dependencies -->
@@ -19,6 +29,21 @@
     </dependency>
 
     <!-- PicketLink -->
+    <dependency>
+      <groupId>org.picketbox</groupId>
+      <artifactId>picketbox</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-config</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-federation</artifactId>
