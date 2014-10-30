@@ -103,6 +103,7 @@
     <version.org.jboss.msc>1.1.5.Final-redhat-1</version.org.jboss.msc>
     <version.org.picketbox>4.0.19.SP4</version.org.picketbox>
     <version.org.picketlink>2.5.3.SP4</version.org.picketlink>
+    <version.jolokia>1.1.4</version.jolokia>
   </properties>
 
   <modules>
@@ -135,6 +136,7 @@
     <module>overlord-commons-eap-deploy-extension</module>
     <module>overlord-commons-eap-deploy-module</module>
     <module>overlord-commons-codec</module>
+    <module>overlord-commons-fabric-utils</module>
     <module>bundles</module>
   </modules>
 
@@ -503,6 +505,11 @@
         <artifactId>maven-model-builder</artifactId>
         <version>${version.org.apache.maven}</version>
       </dependency>    
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-client-java</artifactId>
+        <version>${version.jolokia}</version>
+      </dependency>
      </dependencies>
   </dependencyManagement>
 
