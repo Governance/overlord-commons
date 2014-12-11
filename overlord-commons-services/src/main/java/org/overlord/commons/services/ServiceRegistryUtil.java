@@ -32,11 +32,6 @@ public class ServiceRegistryUtil {
         } catch (Throwable t) {
             // do nothing
         }
-        try {
-            registry.addRegistry(new OSGiServiceRegistry());
-        } catch (Throwable t) {
-            // do nothing
-        }
     }
 
     /**

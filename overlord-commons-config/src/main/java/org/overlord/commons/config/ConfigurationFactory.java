@@ -15,21 +15,18 @@
  */
 package org.overlord.commons.config;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Set;
-
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.overlord.commons.config.configurator.Configurator;
-import org.overlord.commons.config.crypt.CryptLookup;
-import org.overlord.commons.config.fabric.ContainerLookup;
-import org.overlord.commons.config.fabric.ProfileLookup;
 import org.overlord.commons.config.vault.VaultLookup;
 import org.overlord.commons.services.ServiceRegistryUtil;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Set;
 
 /**
  * Factory used to create instances of {@link Configuration}, used by various
@@ -123,9 +120,6 @@ public class ConfigurationFactory {
     private synchronized static void registerGlobalLookups() {
         if (!globalLookupsRegistered) {
             ConfigurationInterpolator.registerGlobalLookup("vault", new VaultLookup()); //$NON-NLS-1$
-            ConfigurationInterpolator.registerGlobalLookup("crypt", new CryptLookup()); //$NON-NLS-1$
-            ConfigurationInterpolator.registerGlobalLookup("container", new ContainerLookup()); //$NON-NLS-1$
-            ConfigurationInterpolator.registerGlobalLookup("profile", new ProfileLookup()); //$NON-NLS-1$
             globalLookupsRegistered = true;
         }
     }

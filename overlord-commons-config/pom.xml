@@ -3,28 +3,24 @@
   <parent>
     <groupId>org.overlord</groupId>
     <artifactId>overlord-commons</artifactId>
-    <version>2.0.13-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>overlord-commons-config</artifactId>
-  <packaging>bundle</packaging>
   <name>Overlord Commons: Config</name>
   <description>Contains configuration classes used by the various overlord projects.</description>
 
   <dependencies>
+    <dependency>
+      <groupId>org.picketbox</groupId>
+      <artifactId>jboss-security-spi</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- Project Dependencies -->
     <dependency>
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-services</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.overlord</groupId>
-      <artifactId>overlord-commons-auth</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.overlord</groupId>
-      <artifactId>overlord-commons-codec</artifactId>
     </dependency>
     <!-- Third Party -->
     <dependency>
@@ -39,65 +35,5 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
     </dependency>
-    <!-- Declarative Service Annotations -->
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-    </dependency>    
-    
-    <!-- Provided Dependencies -->
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric-api</artifactId>
-        <scope>provided</scope>
-     </dependency>
-    <dependency>
-      <groupId>org.picketbox</groupId>
-      <artifactId>picketbox</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Name>${project.name}</Bundle-Name>
-            <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
-              org.overlord.commons.config,
-              org.overlord.commons.config.configurator,
-              org.overlord.commons.config.saml.sp
-            </Export-Package>
-            <Import-Package>
-              javax.naming,
-              org.overlord.commons.auth.saml.sp,
-              org.apache.commons.configuration,
-              org.apache.commons.configuration.interpol,
-              org.apache.commons.configuration.reloading,
-              org.apache.commons.lang.text,
-              org.apache.commons.lang,
-              org.osgi.framework,
-              org.overlord.commons.services,
-              io.fabric8.api,
-              org.overlord.commons.codec,
-              java.util,
-              org.apache.commons.io,
-              !org.jboss.security.vault
-            </Import-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>

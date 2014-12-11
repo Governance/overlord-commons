@@ -3,11 +3,10 @@
   <parent>
     <groupId>org.overlord</groupId>
     <artifactId>overlord-commons</artifactId>
-    <version>2.0.13-SNAPSHOT</version>
+    <version>3.0.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>overlord-commons-uiheader</artifactId>
-  <packaging>bundle</packaging>
   <name>Overlord Commons: UI Header</name>
 
   <dependencies>
@@ -48,31 +47,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Name>${project.name}</Bundle-Name>
-            <Bundle-Version>${project.version}</Bundle-Version>
-            <Export-Package>
-              org.overlord.commons.ui.header
-            </Export-Package>
-            <Import-Package>
-              javax.servlet,
-              javax.servlet.http,
-              org.apache.commons.io,
-              org.codehaus.jackson,
-              org.overlord.commons.config
-            </Import-Package>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
