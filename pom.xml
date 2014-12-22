@@ -113,7 +113,6 @@
     <module>overlord-commons-i18n</module>
     <module>overlord-commons-maven-plugin</module>
     <module>overlord-commons-services</module>
-    <module>overlord-commons-uiheader</module>
   </modules>
 
   <build>
