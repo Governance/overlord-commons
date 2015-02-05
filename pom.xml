@@ -200,7 +200,7 @@
           <argLine>-Xmx256M -XX:MaxPermSize=512m</argLine>
         </configuration>
       </plugin>
-      <!-- Build a test-jar for each project, so that src/test/* resources and classes can be used in other projects. 
+      <!-- Build a test-jar for each project, so that src/test/* resources and classes can be used in other projects.
         Also customize how the jar files are assembled. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -504,7 +504,7 @@
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-model-builder</artifactId>
         <version>${version.org.apache.maven}</version>
-      </dependency>    
+      </dependency>
       <dependency>
         <groupId>org.jolokia</groupId>
         <artifactId>jolokia-client-java</artifactId>

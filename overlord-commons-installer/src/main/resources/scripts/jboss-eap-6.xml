@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Install Overlord Commons Components into JBoss EAP 6" default="install">
-  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JbossGetPassword" classpath="${overlord-commons.ant.jar}">
-  </taskdef>
+  <taskdef name="inputPassword" classname="org.overlord.commons.ant.user.JbossGetPassword" classpath="${overlord-commons.ant.jar}"/>
+
   <!-- Configure the properties that will drive the installer -->
   <target name="all-properties">
     <echo message="Setting all Overlord Commons properties" />
@@ -97,7 +97,7 @@
     <!-- Install the overlord commons EAP extension modules -->
     <unzip src="${overlord-commons.eap-dist.file}" dest="${overlord-commons.appserver.dir}" overwrite="true" />
     
-    <!-- Create the password vault keystore -->
+    <!-- Create the password vault keystore.  Note that, as of EAP 6.4, this *cannot* use genkey! -->
     <genkey keystore="${overlord-commons.jboss.config.dir}/vault.keystore" storepass="${overlord-commons.vault.password}"
             keyalg="RSA" keysize="1024" alias="vault" storetype="jks"
             dname="CN=Picketbox vault, OU=picketbox, O=Jboss, L=Westford, ST=Mass, C=US"/>

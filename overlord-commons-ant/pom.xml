@@ -10,15 +10,20 @@
 
   <artifactId>overlord-commons-ant</artifactId>
   <name>Overlord Commons: Ant</name>
+
   <dependencies>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
 		</dependency> 
-        <dependency>
-            <groupId>org.overlord</groupId>
-            <artifactId>overlord-commons-codec</artifactId>
-        </dependency>   
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.picketbox</groupId>
+      <artifactId>picketbox</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
