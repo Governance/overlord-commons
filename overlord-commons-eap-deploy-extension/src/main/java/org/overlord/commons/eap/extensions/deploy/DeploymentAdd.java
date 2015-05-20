@@ -17,12 +17,15 @@
 package org.overlord.commons.eap.extensions.deploy;
 
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ARCHIVE;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.CONTENT;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.DEPLOYMENT;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ENABLED;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.PATH;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.PERSISTENT;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.URL;
 
+import java.io.File;
 import java.net.URL;
 
 import org.jboss.as.controller.AbstractAddStepHandler;
@@ -98,10 +101,20 @@ public class DeploymentAdd extends AbstractAddStepHandler {
                     throw SubsystemMessages.MESSAGES.couldNotLocateDeployment(moduleIdentifier, name);
                 }
                 
+                File deployment = new File(url.toURI());
+                
                 SubsystemLogger.ROOT_LOGGER.deploymentURL(url);
                 
                 final ModelNode contentItem = new ModelNode();
-                contentItem.get(URL).set(url.toExternalForm());
+                
+                if (deployment.isDirectory()) {
+                    // an exploded deployment
+                    contentItem.get(PATH).set(deployment.getAbsolutePath());
+                    contentItem.get(ARCHIVE).set(false);
+                } else {
+                    // an unexploded deployment archive
+                    contentItem.get(URL).set(url.toExternalForm());
+                }
     
                 op.get(CONTENT).add(contentItem);
     
@@ -114,6 +127,8 @@ public class DeploymentAdd extends AbstractAddStepHandler {
             } catch (final ModuleLoadException mle) {
                 SubsystemLogger.ROOT_LOGGER.failedToLoadModule(mle, moduleIdentifier);
                 throw SubsystemMessages.MESSAGES.failedToLoadModule(mle, moduleIdentifier);
+            } catch (Exception e) {
+                throw new OperationFailedException("Deployments failed", e);
             }
         }
     }
