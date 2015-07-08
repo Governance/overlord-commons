@@ -22,7 +22,6 @@ import org.picketbox.util.KeyStoreUtil;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.KeyStore;
@@ -41,12 +40,6 @@ public class CreateKeystore extends Task {
 
     @Override
     public void execute() throws BuildException {
-        Console console = System.console();
-
-        if (console == null) {
-            throw new BuildException("\tConsole is not available");
-        }
-
         assertProperty("keyStore", keyStore);
         assertProperty("keyStorePassword", keyStorePassword);
         assertProperty("keySize", keySize);
