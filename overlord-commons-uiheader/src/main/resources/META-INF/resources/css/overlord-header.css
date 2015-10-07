@@ -238,3 +238,36 @@
 
 }
 
+/* Red Hat: Product specific overrides */
+#overlord-header .overlord-navbar {
+  border-top: 2px solid #cc0001;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand {
+  border-top: 1px solid #b10d0e;
+  background-color: #383f47;
+  background-image: none;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand a.brand {
+  background-image: url(overlord-header-images/logo-type_rh.png);
+  background-position: 20px 8px;
+  background-repeat: no-repeat;
+  text-indent: -5000px;
+  width: 280px;
+  padding-left: 20px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand a.subbrand {
+  text-indent: -5000px;
+}
+#overlord-header .overlord-navbar .overlord-navbar-nav {
+  background-image: url('overlord-header-images/tab-normal-bg_rh.png');
+}
+#overlord-header .overlord-navbar .overlord-navbar-nav .overlord-navbar-tabs .overlord-navbar-tab.active {
+  background-image: url('overlord-header-images/tab-active-bg_rh.png');
+}
+#overlord-header .overlord-navbar .overlord-navbar-brand .overlord-nav-user-menu {
+  background-color: #3a3f45;
+}
+#overlord-header .overlord-mobile-nav .overlord-nav-list {
+  background-color: #464b4f;
+}
+
