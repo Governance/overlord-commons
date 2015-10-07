@@ -97,7 +97,7 @@ public class CompositeServiceRegistry implements ServiceRegistry {
     }
 
     /**
-     * @param registry
+     * @param registry The service registry
      */
     public void addRegistry(ServiceRegistry registry) {
         registries.add(registry);

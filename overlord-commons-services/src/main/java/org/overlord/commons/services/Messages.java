@@ -34,7 +34,7 @@ public class Messages {
 
     /**
      * Gets a string translation.
-     * @param key
+     * @param key The key
      * @return the translated string
      */
     public static String getString(String key) {
@@ -48,8 +48,8 @@ public class Messages {
     /**
      * Look up a message in the i18n resource message bundle by key, then format the
      * message with the given params and return the result.
-     * @param key
-     * @param params
+     * @param key The key
+     * @param params The parameters
      * @return the translated and formatted string
      */
     public static String format(String key, Object ... params) {

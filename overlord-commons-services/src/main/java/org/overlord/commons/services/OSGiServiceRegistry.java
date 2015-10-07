@@ -55,6 +55,7 @@ public class OSGiServiceRegistry extends AbstractServiceRegistry {
      * 
      * @param serviceInterface The service interface
      * @param service The service
+     * @param <T> The service type
      */
     protected <T> void init(final Class<T> serviceInterface, Object service) {
         boolean createListener=false;

@@ -29,14 +29,18 @@ public interface ServiceRegistry {
     /**
      * Gets a single service.  If multiple services are registered for the service
      * interface, this method will fail.
-     * @param service
+     * @param serviceInterface The service interface
+     * @param <T> The service type
+     * @return The service, or null if not found
      */
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException;
 
     /**
      * Gets a set of all the services that have been registered for the given service
      * interface.
-     * @param serviceInterface
+     * @param serviceInterface The service interface
+     * @param <T> The service type
+     * @return The service, or null if not found
      */
     public <T> Set<T> getServices(Class<T> serviceInterface);
 
@@ -45,6 +49,7 @@ public interface ServiceRegistry {
      * 
      * @param serviceInterface The service type
      * @param listener The service listener
+     * @param <T> The service type
      */
     public <T> void addServiceListener(Class<T> serviceInterface, ServiceListener<T> listener);
 
@@ -52,6 +57,7 @@ public interface ServiceRegistry {
      * This method unregisters a service listener.
      * 
      * @param listener The service listener
+     * @param <T> The service type
      */
     public <T> void removeServiceListener(ServiceListener<T> listener);
 
