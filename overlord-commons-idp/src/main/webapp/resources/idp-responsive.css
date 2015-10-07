@@ -44,4 +44,14 @@
   #rcue-login-screen form {
     min-width: 100%;
   }
+  
+  /* Red Hat: product overrides */
+  #rcue-login-screen {
+    background-image: url("images/login-background-phone_rh.jpg");
+  }
+  .login-logo {
+    position: absolute;
+    right: 0px;
+    bottom: 45px;
+  }
 }

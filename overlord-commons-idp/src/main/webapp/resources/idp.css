@@ -186,3 +186,31 @@ p.login-failed {
   margin-bottom: 20px;
   color: #FF4532;
 }
+
+/* Red Hat: product overrides */
+#rcue-login-screen {
+  background-image: url("images/login-background_rh.jpg");
+}
+@media (min-width: 1280px) {
+    #rcue-login-screen {
+      background-size: 100% auto;
+    }
+}
+.product-name {
+  text-indent: -5000px;
+  float: left;
+  width: 298px;
+  background-image: url(images/logo-type_rh.png);
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+.login-logo {
+  background-image: url(images/login-screen-logo_rh.png);
+  display: block;
+  float: right;
+  margin-top: 50px;
+  margin-right: 50px;
+  width: 150px;
+  height: 47px;
+}
+
