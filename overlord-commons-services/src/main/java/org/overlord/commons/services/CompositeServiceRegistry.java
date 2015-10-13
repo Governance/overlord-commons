@@ -103,4 +103,11 @@ public class CompositeServiceRegistry implements ServiceRegistry {
         registries.add(registry);
     }
 
+    /**
+     * @return The list of service registries
+     */
+    protected List<ServiceRegistry> getRegistries() {
+        return registries;
+    }
+
 }

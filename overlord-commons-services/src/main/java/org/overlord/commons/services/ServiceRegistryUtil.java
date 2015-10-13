@@ -16,6 +16,8 @@
 
 package org.overlord.commons.services;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Set;
 
 /**
@@ -24,6 +26,8 @@ import java.util.Set;
  * @author eric.wittmann@redhat.com
  */
 public class ServiceRegistryUtil {
+
+    private static final Logger LOG=Logger.getLogger(ServiceRegistryUtil.class.getName());
 
     private static CompositeServiceRegistry registry = new CompositeServiceRegistry();
     static {
@@ -36,6 +40,10 @@ public class ServiceRegistryUtil {
             registry.addRegistry(new OSGiServiceRegistry());
         } catch (Throwable t) {
             // do nothing
+        }
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Initialized service registry util with registries: "+registry.getRegistries()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
