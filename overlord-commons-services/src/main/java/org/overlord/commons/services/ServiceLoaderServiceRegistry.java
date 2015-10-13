@@ -16,6 +16,8 @@
 
 package org.overlord.commons.services;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -31,6 +33,8 @@ import java.util.Set;
  */
 public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     
+    private static final Logger LOG=Logger.getLogger(ServiceLoaderServiceRegistry.class.getName());
+
     private Map<Class<?>, Set<?>> servicesCache = new HashMap<Class<?>, Set<?>>();
 
     /**
@@ -38,16 +42,29 @@ public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
      */
     @Override
     public <T> T getSingleService(Class<T> serviceInterface) throws IllegalStateException {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Get single service for class: "+serviceInterface); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
         // Cached single service values are derived from the values cached when checking
         // for multiple services
         T rval = null;
         Set<T> services=getServices(serviceInterface);
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Found services: "+services); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
         if (services.size() > 1) {
             throw new IllegalStateException(Messages.getString("ServiceLoaderServiceRegistry.MultipleImplsFound") + serviceInterface); //$NON-NLS-1$
         } else if (!services.isEmpty()) {
             rval = services.iterator().next();
         }
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Returning service: "+rval); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
         return rval;
     }
 
@@ -58,8 +75,19 @@ public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
     @Override
     public <T> Set<T> getServices(Class<T> serviceInterface) {
         synchronized(servicesCache) {
-            if (servicesCache.containsKey(serviceInterface))
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Get services for class: "+serviceInterface); //$NON-NLS-1$ //$NON-NLS-2$
+
+                LOG.finest("Service Registry Details: registry="+this+" registry classloader="+getClass().getClassLoader()
+                        +" tccl="+Thread.currentThread().getContextClassLoader()+" cache="+servicesCache);  //$NON-NLS-1$ //$NON-NLS-2$
+            }
+
+            if (servicesCache.containsKey(serviceInterface)) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Returning existing services: "+servicesCache.get(serviceInterface)); //$NON-NLS-1$ //$NON-NLS-2$
+                }
                 return (Set<T>) servicesCache.get(serviceInterface);
+            }
     
             Set<T> services = new LinkedHashSet<T>();
             try {
@@ -69,8 +97,16 @@ public class ServiceLoaderServiceRegistry extends AbstractServiceRegistry {
                 }
             } catch (ServiceConfigurationError sce) {
                 // No services found - don't check again.
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "ERROR while loading services for interface="+serviceInterface, sce); //$NON-NLS-1$ //$NON-NLS-2$
+                }
             }
             servicesCache.put(serviceInterface, services);
+
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Returning services: "+services); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+
             return services;
         }
     }
