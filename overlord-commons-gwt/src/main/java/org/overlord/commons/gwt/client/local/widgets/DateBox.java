@@ -15,14 +15,14 @@
  */
 package org.overlord.commons.gwt.client.local.widgets;
 
-import java.util.Date;
-
-import javax.annotation.PostConstruct;
-
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.TextBox;
+
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Like a text box, except it deals with dates and presents the user with
@@ -41,11 +41,13 @@ public class DateBox extends TextBox {
 
     private String cid;
 
+
     /**
      * Constructor.
      */
     public DateBox() {
     }
+
 
     /**
      * Called after construction.
@@ -65,6 +67,7 @@ public class DateBox extends TextBox {
             }
         });
     }
+    
 
     /**
      * Initializes the bootstrap-datepicker javascript.
@@ -75,6 +78,9 @@ public class DateBox extends TextBox {
               autoclose: true,
               todayBtn: true,
               todayHighlight: true
+          });
+          $wnd.jQuery(selector).change(function () {
+            
           });
     }-*/;
 
